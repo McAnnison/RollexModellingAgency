@@ -1,0 +1,12 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /applications/{uid}/{applicationId}/{fileName} {
+      // Applicants can upload to their own UID folder.
+      allow write: if request.auth != null && request.auth.uid == uid;
+
+      // Keep uploads private (admin can view via console).
+      allow read: if false;
+    }
+  }
+}

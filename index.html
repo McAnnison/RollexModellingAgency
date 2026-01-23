@@ -97,6 +97,13 @@
                             class="focus-ring w-full bg-transparent border-b border-black/15 py-3 focus:outline-none focus:border-black/40 transition-colors placeholder:text-black/30">
                         <p id="emailError" class="mt-2 text-xs text-rose-700 hidden" aria-live="polite"></p>
                     </div>
+
+                    <div class="relative">
+                        <label for="phoneNumber" class="sr-only">Phone Number</label>
+                        <input id="phoneNumber" name="phoneNumber" type="tel" placeholder="Phone Number" autocomplete="tel" required
+                            class="focus-ring w-full bg-transparent border-b border-black/15 py-3 focus:outline-none focus:border-black/40 transition-colors placeholder:text-black/30">
+                        <p id="phoneNumberError" class="mt-2 text-xs text-rose-700 hidden" aria-live="polite"></p>
+                    </div>
                     <div class="relative">
                         <label for="instagram" class="sr-only">Instagram handle</label>
                         <input id="instagram" name="instagram" type="text" placeholder="Instagram Handle (optional)" autocomplete="off"
@@ -248,16 +255,20 @@
         <button id="successClose" type="button" class="absolute top-4 right-4 w-10 h-10 rounded-full border border-black/10 hover:bg-black/5 transition-colors focus-ring" aria-label="Close success dialog">
             <span aria-hidden="true">✕</span>
         </button>
-        <p class="text-[11px] tracking-[0.32em] uppercase opacity-60 mb-4">Application received</p>
+        <p class="text-[11px] tracking-[0.32em] uppercase opacity-60 mb-4">Next step</p>
         <h3 id="successTitle" class="serif text-5xl md:text-7xl mb-4 tracking-tight">SUCCESS</h3>
         <p class="text-sm tracking-[0.45em] uppercase font-light opacity-80">Your journey has officially begun.</p>
         <div class="mt-10 h-px w-24 bg-black/20 mx-auto"></div>
-        <p class="mt-6 text-xs opacity-60 uppercase">Check your email for the next casting call.</p>
+        <p class="mt-6 text-xs opacity-60 uppercase">Complete your submission in the Google Form tab.</p>
         <button type="button" class="mt-8 px-8 py-3 rounded-full border border-black/15 hover:bg-black hover:text-white transition-colors uppercase tracking-widest text-[11px] font-semibold focus-ring" onclick="closeSuccess()">Back to start</button>
     </div>
 </div>
 
 <script>
+    // Paste your Google Form "viewform" link here.
+    // Example: https://docs.google.com/forms/d/e/<FORM_ID>/viewform
+    const GOOGLE_FORM_URL = '';
+
     const previewUrls = {
         headshot: null,
         runway: null,
@@ -399,6 +410,11 @@
 
     function submitFinal() {
         if (!validateStep4()) return;
+
+        if (GOOGLE_FORM_URL && GOOGLE_FORM_URL.startsWith('https://docs.google.com/forms/')) {
+            // Open in a new tab without giving it access to window.opener.
+            window.open(GOOGLE_FORM_URL, '_blank', 'noopener,noreferrer');
+        }
         openSuccess();
     }
 </script>
