@@ -124,23 +124,17 @@
         </form>
     </section>
 
-    <section id="step3" class="hidden min-h-[100svh] flex items-center justify-center bg-[#fbfaf8] overflow-hidden relative">
-        <div class="absolute inset-0 bg-gradient-to-br from-white via-[#fbfaf8] to-[#f5f0eb]"></div>
-        <div class="absolute -top-28 -left-28 w-72 h-72 bg-[rgba(183,110,121,0.18)] blur-[120px] rounded-full"></div>
-        <div class="absolute -bottom-32 -right-20 w-72 h-72 bg-[rgba(201,162,39,0.18)] blur-[140px] rounded-full"></div>
-
-        <div class="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 p-8 items-center relative z-10">
-            <div class="glass soft-shadow rounded-3xl p-8 md:p-10 space-y-8">
+    <section id="step3" class="hidden min-h-[100svh] flex items-center justify-center bg-[#fbfaf8] overflow-hidden">
+        <div class="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-10 p-8 items-center">
+            <div class="rounded-3xl bg-white/80 border border-black/10 shadow-[0_30px_60px_rgba(17,24,39,0.08)] p-8 md:p-10 space-y-8">
                 <div>
                     <p class="text-[10px] uppercase tracking-[0.3em] opacity-60">Model metrics</p>
                     <h2 class="serif text-4xl mt-2">The Specs</h2>
                     <p class="text-[11px] tracking-[0.24em] opacity-60 uppercase mt-2">Precision is key for digital casting</p>
                 </div>
 
-                <div class="h-px bg-black/10"></div>
-
-                <div class="space-y-6">
-                    <div class="p-4 rounded-2xl bg-white/70 border border-black/5">
+                <div class="grid gap-5">
+                    <div class="rounded-2xl border border-black/10 p-4 bg-white">
                         <div class="flex justify-between items-end">
                             <label class="text-xs uppercase tracking-widest opacity-70">Height</label>
                             <span class="text-2xl font-light"><span id="heightVal">175</span><span class="text-sm opacity-50 ml-1">cm</span></span>
@@ -150,7 +144,7 @@
                             oninput="document.getElementById('heightVal').innerText = this.value">
                     </div>
 
-                    <div class="p-4 rounded-2xl bg-white/70 border border-black/5">
+                    <div class="rounded-2xl border border-black/10 p-4 bg-white">
                         <div class="flex justify-between items-end">
                             <label class="text-xs uppercase tracking-widest opacity-70">Waist</label>
                             <span class="text-2xl font-light"><span id="waistVal">60</span><span class="text-sm opacity-50 ml-1">cm</span></span>
@@ -159,26 +153,26 @@
                             class="w-full mt-4 h-2 bg-black/10 rounded-full appearance-none cursor-pointer accent-[color:#B76E79]" 
                             oninput="document.getElementById('waistVal').innerText = this.value">
                     </div>
+                </div>
 
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="p-4 glass rounded-2xl text-center border border-black/5">
-                            <p class="text-[10px] uppercase opacity-50 mb-1">Shoe Size (EU)</p>
-                            <label class="sr-only" for="shoeSize">Shoe size (EU)</label>
-                            <select id="shoeSize" name="shoeSize" class="bg-transparent text-xl outline-none w-full text-center focus-ring rounded-md">
-                                <option>38</option><option>39</option><option selected>40</option><option>41</option>
-                            </select>
-                        </div>
-                        <div class="p-4 glass rounded-2xl text-center border border-black/5">
-                            <p class="text-[10px] uppercase opacity-50 mb-1">Eye Color</p>
-                            <label class="sr-only" for="eyeColor">Eye color</label>
-                            <select id="eyeColor" name="eyeColor" class="bg-transparent text-xl outline-none w-full text-center focus-ring rounded-md">
-                                <option>Brown</option><option>Blue</option><option>Green</option>
-                            </select>
-                        </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="rounded-2xl border border-black/10 p-4 text-center bg-white">
+                        <p class="text-[10px] uppercase opacity-50 mb-1">Shoe Size (EU)</p>
+                        <label class="sr-only" for="shoeSize">Shoe size (EU)</label>
+                        <select id="shoeSize" name="shoeSize" class="bg-transparent text-xl outline-none w-full text-center focus-ring rounded-md">
+                            <option>38</option><option>39</option><option selected>40</option><option>41</option>
+                        </select>
+                    </div>
+                    <div class="rounded-2xl border border-black/10 p-4 text-center bg-white">
+                        <p class="text-[10px] uppercase opacity-50 mb-1">Eye Color</p>
+                        <label class="sr-only" for="eyeColor">Eye color</label>
+                        <select id="eyeColor" name="eyeColor" class="bg-transparent text-xl outline-none w-full text-center focus-ring rounded-md">
+                            <option>Brown</option><option>Blue</option><option>Green</option>
+                        </select>
                     </div>
                 </div>
 
-                <div class="flex flex-wrap gap-4 text-[10px] uppercase tracking-[0.28em] opacity-60">
+                <div class="flex flex-wrap gap-3 text-[10px] uppercase tracking-[0.28em] opacity-60">
                     <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full" style="background:#B76E79"></span> Digital casting ready</span>
                     <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full" style="background:#C9A227"></span> Editorial standard</span>
                 </div>
@@ -189,11 +183,10 @@
             </div>
 
             <div class="relative flex justify-center items-center order-last md:order-none">
-                <div class="absolute inset-0 bg-[rgba(183,110,121,0.14)] blur-[120px] rounded-full"></div>
-                <div class="glass soft-shadow rounded-3xl p-3 md:p-4 w-full max-w-sm md:max-w-md lg:max-w-lg aspect-[3/4] md:aspect-auto md:h-[560px] overflow-hidden">
+                <div class="rounded-3xl border border-black/10 bg-white/70 p-4 w-full max-w-sm md:max-w-md lg:max-w-lg aspect-[3/4] md:aspect-auto md:h-[560px] shadow-[0_30px_60px_rgba(17,24,39,0.08)] overflow-hidden">
                     <img loading="lazy" decoding="async" src="assets/Model (1).jpeg" class="w-full h-full object-contain" alt="Editorial model portrait">
                 </div>
-                <div class="absolute top-6 right-6 glass p-4 rounded-lg">
+                <div class="absolute top-6 right-6 rounded-xl border border-black/10 bg-white/80 px-4 py-2">
                     <p class="text-[10px] uppercase tracking-tighter">Pro Status</p>
                     <p class="text-xs font-bold" style="color:#B76E79">Ready for Runway</p>
                 </div>
