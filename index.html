@@ -2,97 +2,243 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mensah Anni Portfolio.</title>
+    <title>Rolex Model | Model Academy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-
-      *{
-margin: 0;
-padding: 0;
-box-size: border-box;
-font-family: "Poppins", sans-serif;
-}
-body{
-	heigth: 100vh;
-	display: flex;
-	aling-items: center;
-	justify-content: center;
-	background-color: lightgrey;
-
-        .image {
-            position: relative;
-            height: 350px;
-            width: 350px;
-            border-radius: 50%;
-            background-color: cadetblue;
-            padding: 3px;
-            margin-bottom: 10px;
-            overflow: hidden;
+        body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: white; overflow-x: hidden; }
+        .serif { font-family: 'Playfair Display', serif; }
+        .accent-gradient { background: linear-gradient(135deg, #007AFF, #00C6FF); }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        
+        /* Custom Shutter Animation */
+        @keyframes shutter {
+            0% { transform: scaleY(0); }
+            100% { transform: scaleY(1); }
         }
-
-            .image .profile-img {
-                height: 100%;
-                width: 100%;
-                object-fit: cover;
-                border-radius: 50%;
-                border: 5px solid floralwhite;
-            }
-
-       .profile-card {
-	max-width: 370px;
-	width: 100vh;
-	backgorund-color: #fff;
-	border-radius: 24px;
-	padding: 24px;
-	box-shadow: 0 5px 	10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-
-        .text-data {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .name {
-            font-size: 2.0rem;
-            font-weight: bold;
-        }
-
-        .job {
-            font-size: 1.5rem;
-            color: #777;
-        }
-.about me{
-font-size: 1.0rem;
-color: #777;
-}
-.Projects{
-font-size: 
+        .animate-shutter { animation: shutter 0.6s cubic-bezier(0.85, 0, 0.15, 1) forwards; }
+        
+        .fade-in { opacity: 0; transform: translateY(20px); transition: all 0.8s ease-out; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 <body>
 
-	
+    <nav class="fixed top-0 w-full z-50 p-8 flex justify-between items-center">
+        <div class="serif text-xl tracking-widest font-bold">ROLEX MODEL <br><span class="text-xs font-light tracking-[0.3em] uppercase">Model Academy</span></div>
+        <div class="text-xs tracking-widest uppercase opacity-50">01 / 04 — The Entry</div>
+    </nav>
 
-    <div class="profile-card">
-        <div class="image">
-            <img src="profile.jpg" alt="" class="profile-img" />
-        </div>
-
-        <div class="text-data">
-            <span class="name">Mensah Anni</span>
-            <span class="job">Developer and Blogger</span>
-	<span class="about me"><a href="about.html">About Me</a></span>
-	<span class="Projects"><a href="projects">Projects</a></span>
-            
-        </div>
-	
+    <div class="fixed top-0 left-0 w-full h-1 z-50 bg-white/10">
+        <div id="progress" class="h-full accent-gradient transition-all duration-700" style="width: 25%;"></div>
     </div>
+
+    <section id="step1" class="h-screen flex flex-col justify-center items-center relative overflow-hidden">
+        <div class="absolute inset-0 z-0 opacity-40">
+            <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=2000" alt="Model" class="w-full h-full object-cover">
+        </div>
+        
+        <div class="relative z-10 text-center px-4">
+            <h1 class="serif text-6xl md:text-8xl mb-6 tracking-tight leading-none">UNLEASH YOUR<br><span class="italic text-transparent bg-clip-text accent-gradient">POTENTIAL</span></h1>
+            <p class="text-sm md:text-lg font-light tracking-[0.2em] mb-12 opacity-80 uppercase">Apply to the future of fashion</p>
+            
+            <button onclick="nextStep(2)" class="group relative px-12 py-4 overflow-hidden border border-white/20 rounded-full hover:border-transparent transition-all">
+                <span class="relative z-10 uppercase tracking-widest text-xs font-semibold">Begin Application</span>
+                <div class="absolute inset-0 accent-gradient transform translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+            </button>
+        </div>
+
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce opacity-30">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+        </div>
+    </section>
+
+    <section id="step2" class="hidden h-screen flex items-center justify-center bg-zinc-950">
+        <div class="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-12 p-8">
+            <div class="flex flex-col justify-center">
+                <h2 class="serif text-4xl mb-8">Tell Us About<br>Yourself</h2>
+                <div class="space-y-6">
+                    <div class="relative">
+                        <input type="text" placeholder="Full Name" class="w-full bg-transparent border-b border-white/20 py-3 focus:outline-none focus:border-blue-500 transition-colors placeholder:text-white/20">
+                    </div>
+                    <div class="relative">
+                        <input type="email" placeholder="Email Address" class="w-full bg-transparent border-b border-white/20 py-3 focus:outline-none focus:border-blue-500 transition-colors placeholder:text-white/20">
+                    </div>
+                    <div class="relative">
+                        <input type="text" placeholder="Instagram Handle" class="w-full bg-transparent border-b border-white/20 py-3 focus:outline-none focus:border-blue-500 transition-colors placeholder:text-white/20">
+                    </div>
+                    <button onclick="nextStep(3)" class="mt-8 accent-gradient w-full py-4 rounded-lg uppercase tracking-widest text-xs font-bold shadow-xl shadow-blue-500/20">Continue</button>
+                </div>
+            </div>
+            <div class="hidden md:block glass rounded-2xl overflow-hidden shadow-2xl">
+                <img src="https://images.unsplash.com/photo-1539109132381-31a1ea92e9c3?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover">
+            </div>
+        </div>
+    </section>
+
+    <section id="step3" class="hidden h-screen flex items-center justify-center bg-zinc-950 overflow-hidden">
+    <div class="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 p-8 items-center">
+        
+        <div class="space-y-10">
+            <div>
+                <h2 class="serif text-4xl mb-2">The Specs</h2>
+                <p class="text-xs tracking-[0.2em] opacity-50 uppercase mb-8">Precision is key for digital casting</p>
+            </div>
+
+            <div class="space-y-8">
+                <div class="space-y-4">
+                    <div class="flex justify-between items-end">
+                        <label class="text-xs uppercase tracking-widest opacity-70">Height</label>
+                        <span class="text-2xl font-light"><span id="heightVal">175</span><span class="text-sm opacity-50 ml-1">cm</span></span>
+                    </div>
+                    <input type="range" min="150" max="210" value="175" 
+                        class="w-full h-1 bg-white/10 appearance-none cursor-pointer accent-blue-500" 
+                        oninput="document.getElementById('heightVal').innerText = this.value">
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex justify-between items-end">
+                        <label class="text-xs uppercase tracking-widest opacity-70">Waist</label>
+                        <span class="text-2xl font-light"><span id="waistVal">60</span><span class="text-sm opacity-50 ml-1">cm</span></span>
+                    </div>
+                    <input type="range" min="50" max="100" value="60" 
+                        class="w-full h-1 bg-white/10 appearance-none cursor-pointer accent-blue-500" 
+                        oninput="document.getElementById('waistVal').innerText = this.value">
+                </div>
+
+                <div class="flex gap-4">
+                    <div class="flex-1 p-4 glass rounded-xl text-center border-blue-500/30">
+                        <p class="text-[10px] uppercase opacity-50 mb-1">Shoe Size (EU)</p>
+                        <select class="bg-transparent text-xl outline-none w-full text-center">
+                            <option>38</option><option>39</option><option selected>40</option><option>41</option>
+                        </select>
+                    </div>
+                    <div class="flex-1 p-4 glass rounded-xl text-center border-white/5">
+                        <p class="text-[10px] uppercase opacity-50 mb-1">Eye Color</p>
+                        <select class="bg-transparent text-xl outline-none w-full text-center">
+                            <option>Brown</option><option>Blue</option><option>Green</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="nextStep(4)" class="mt-4 border border-white/20 hover:bg-white hover:text-black transition-all w-full py-4 rounded-full uppercase tracking-widest text-xs font-bold">
+                Continue to Portfolio
+            </button>
+        </div>
+
+        <div class="relative hidden md:flex justify-center items-center h-[600px]">
+            <div class="absolute inset-0 bg-blue-500/10 blur-[120px] rounded-full"></div>
+            <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=800" 
+                 class="h-full object-contain relative z-10 drop-shadow-[0_35px_35px_rgba(0,0,0,0.5)] transition-transform duration-500 hover:scale-105" 
+                 alt="Model Reference">
+            
+            <div class="absolute top-20 right-10 glass p-4 rounded-lg animate-pulse">
+                <p class="text-[10px] uppercase tracking-tighter">Pro Status</p>
+                <p class="text-xs font-bold text-blue-400">Ready for Runway</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="step4" class="hidden h-screen flex items-center justify-center bg-zinc-950">
+    <div class="max-w-5xl w-full p-8">
+        <div class="text-center mb-12">
+            <h2 class="serif text-5xl mb-4">The Showcase</h2>
+            <p class="text-xs tracking-[0.3em] opacity-50 uppercase">Upload your digital comp card</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-[400px]">
+            <div class="glass group relative overflow-hidden rounded-2xl border-dashed border-2 border-white/10 hover:border-blue-500 transition-all cursor-pointer flex flex-col items-center justify-center">
+                <div class="text-center group-hover:scale-110 transition-transform duration-500">
+                    <svg class="w-8 h-8 mx-auto mb-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <p class="text-[10px] uppercase tracking-widest font-bold">Headshot</p>
+                    <p class="text-[8px] opacity-40 mt-1 uppercase italic">Close-up face</p>
+                </div>
+                <input type="file" class="absolute inset-0 opacity-0 cursor-pointer">
+            </div>
+
+            <div class="glass group relative overflow-hidden rounded-2xl border-2 border-blue-500/50 flex flex-col items-center justify-center bg-blue-500/5">
+                <div class="absolute inset-0 bg-gradient-to-t from-blue-500/20 to-transparent"></div>
+                <div class="relative z-10 text-center">
+                    <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-all shadow-xl shadow-blue-500/20">
+                        <svg class="w-6 h-6 text-black fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                    <p class="text-[10px] uppercase tracking-widest font-bold">Runway Walk</p>
+                    <p class="text-[8px] opacity-60 mt-1 uppercase">10-Sec Video Reel</p>
+                </div>
+                <input type="file" class="absolute inset-0 opacity-0 cursor-pointer">
+            </div>
+
+            <div class="glass group relative overflow-hidden rounded-2xl border-dashed border-2 border-white/10 hover:border-blue-500 transition-all cursor-pointer flex flex-col items-center justify-center">
+                <div class="text-center group-hover:scale-110 transition-transform duration-500">
+                    <svg class="w-8 h-8 mx-auto mb-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    <p class="text-[10px] uppercase tracking-widest font-bold">Full Body</p>
+                    <p class="text-[8px] opacity-40 mt-1 uppercase italic">Profile & Straight</p>
+                </div>
+                <input type="file" class="absolute inset-0 opacity-0 cursor-pointer">
+            </div>
+        </div>
+
+        <button onclick="submitFinal()" class="mt-12 w-full py-5 accent-gradient rounded-full text-xs font-bold uppercase tracking-[0.4em] hover:shadow-[0_0_30px_rgba(0,122,255,0.4)] transition-all">
+            Submit to the Agency
+        </button>
+    </div>
+</section>
+
+<div id="success" class="hidden fixed inset-0 z-[100] bg-white text-black flex items-center justify-center text-center p-8">
+    <div class="animate-shutter">
+        <h3 class="serif text-7xl md:text-9xl mb-4 tracking-tighter">SUCCESS</h3>
+        <p class="text-sm tracking-[0.5em] uppercase font-light">Your journey has officially begun.</p>
+        <div class="mt-12 h-px w-24 bg-black mx-auto"></div>
+        <p class="mt-8 text-xs opacity-50 uppercase">Check your email for the next casting call.</p>
+    </div>
+</div>
+
+<script>
+    function submitFinal() {
+        const success = document.getElementById('success');
+        success.classList.remove('hidden');
+        success.classList.add('flex');
+        
+        // Final progress bar fill
+        document.getElementById('progress').style.width = '100%';
+    }
+</script>
+
+    <script>
+        function nextStep(step) {
+            // Shutter transition effect
+            const body = document.body;
+            
+            // Fade out current step
+            const current = document.querySelector('section:not(.hidden)');
+            current.classList.add('opacity-0');
+            
+            setTimeout(() => {
+                current.classList.add('hidden');
+                const next = document.getElementById(`step${step}`);
+                next.classList.remove('hidden');
+                
+                // Trigger visibility animations
+                setTimeout(() => {
+                    next.classList.remove('opacity-0');
+                    document.getElementById('progress').style.width = (step * 25) + '%';
+                }, 50);
+            }, 500);
+        }
+
+        // Initialize fade-in elements
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('visible');
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+        });
+    </script>
 </body>
 </html>
