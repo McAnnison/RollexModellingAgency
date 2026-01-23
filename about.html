@@ -1,79 +1,77 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
-		<title>About Me</title>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>About | Model Academy</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 		<style>
-
-			body{
-				background-color: white;
-				background-size: cover;
-				background-position: center center;
-								
-			}
-			body{
-				font-family: Arial, sans-serif;
-				line-height: 1.6;
-				color: black;
-				margin: 0;
-				padding: 0;
-				margin-right: 2.5px;
-				}
-			h1,h2{
-				font-weight: bold;
-				color: #2c3e50;
-			}
-			h1{
-				font-size: 2.5rem;
-				text-align: center;
-				margin-top: 2rem;
-			}
-			h2{
-				font-size: 1.8rem;
-				margin-top: 2rem;
-				margin-bottom: 1rem;
-			}
-			p{
-				margin: 1rem 0;
-			}
-			.container {
-  display: flex;
-  justify-content: space-between;
-}
-
-.column-1 {
-  background-image: url('profilepic1.jpg');
-  background-size: cover;
-  background-position: center;
-  padding: 20px;
-  height: 800px;
-}
-
-.column-2 {
-  background-image: url('profilepic2.jpg');
-  background-size: cover;
-  background-position: center;
-  padding: 20px;
-}
-			
+			body { font-family: 'Inter', sans-serif; background-color: #fbfaf8; color: #111827; }
+			.serif { font-family: 'Playfair Display', serif; }
+			.accent-gradient { background: linear-gradient(135deg, #B76E79, #C9A227); }
+			.glass { background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(12px); border: 1px solid rgba(17, 24, 39, 0.08); }
+			.soft-shadow { box-shadow: 0 30px 60px rgba(17, 24, 39, 0.10); }
+			.focus-ring:focus { outline: 2px solid rgba(183, 110, 121, 0.7); outline-offset: 3px; }
 		</style>
 	</head>
-	
 	<body>
-		
-		<div class="container">
-  <div class="column column-1">
-  	    <p>Hello there! My name is Mensah Anni, and I am a passionate web developer seeking to solve problems using online platforms.</p>
-    <h2>My Background.</h2>
-    <p>I was born in Akatsi in the Volta Region but raised in Accra.<br> I became fascinated by how the computer and internet works during my high school education and decided to pursue a career in the computer science field.</p>
-  </div>
-  <div class="column column-2"> 
-    <h2>My Experience</h2>
-    <p>Well, for now I do not have any experience yet since I am still a student.</p>
-    <h2>My Hobbies.</h2>
-    <p>When I am not coding, you will definitely find me on the basketball court releasing some stress. I also enjoy going out with friends and having some good fun.</p>
-  </div>
-</div>
-	
+		<nav class="sticky top-0 z-50 px-6 md:px-10 py-6 flex justify-between items-center bg-[#fbfaf8]/80" style="backdrop-filter: blur(10px);">
+			<a href="index.html" class="serif text-lg md:text-xl tracking-widest font-bold focus-ring rounded-sm">
+				ROLEX MODEL <br><span class="text-[10px] font-light tracking-[0.35em] uppercase opacity-70">Model Academy</span>
+			</a>
+			<div class="flex items-center gap-6">
+				<a href="index.html" class="text-[11px] tracking-widest uppercase opacity-70 hover:opacity-100 transition-opacity focus-ring rounded-sm">Home</a>
+				<a href="about.html" class="text-[11px] tracking-widest uppercase opacity-100">About</a>
+			</div>
+		</nav>
 
+		<header class="relative overflow-hidden">
+			<div class="absolute inset-0 opacity-20">
+				<img src="https://images.unsplash.com/photo-1520975693410-0018f0f5e6a2?auto=format&fit=crop&q=80&w=2000" alt="" class="w-full h-full object-cover" loading="eager" fetchpriority="high" decoding="async" />
+			</div>
+			<div class="absolute inset-0 bg-gradient-to-b from-white/90 via-white/70 to-[#fbfaf8]/95"></div>
+			<div class="relative px-6 md:px-10 py-16 md:py-20 max-w-6xl mx-auto">
+				<p class="text-[11px] tracking-[0.32em] uppercase opacity-60">About</p>
+				<h1 class="serif text-5xl md:text-6xl tracking-tight mt-3">A little about me</h1>
+				<p class="mt-4 max-w-2xl text-sm md:text-base opacity-80">
+					Hello there! My name is Mensah Anni, and I am a passionate web developer seeking to solve problems using online platforms.
+				</p>
+				<div class="mt-8 h-1 w-20 accent-gradient rounded-full"></div>
+			</div>
+		</header>
+
+		<main class="px-6 md:px-10 pb-16">
+			<div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 -mt-10">
+				<section class="glass soft-shadow rounded-3xl p-8 md:p-10">
+					<h2 class="serif text-3xl">My Background</h2>
+					<p class="mt-4 opacity-80 leading-relaxed">
+						I was born in Akatsi in the Volta Region but raised in Accra. I became fascinated by how the computer and internet works during my high school education and decided to pursue a career in the computer science field.
+					</p>
+					<div class="mt-6 grid grid-cols-2 gap-3">
+						<div class="rounded-2xl overflow-hidden border border-black/10">
+							<img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1520975958225-35f9033b7a32?auto=format&fit=crop&q=80&w=900" alt="Portrait" class="w-full h-44 object-cover" />
+						</div>
+						<div class="rounded-2xl overflow-hidden border border-black/10">
+								<img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1524503033411-f7a2fe8c7a8f?auto=format&fit=crop&q=80&w=900" alt="Editorial" class="w-full h-44 object-cover" />
+						</div>
+					</div>
+				</section>
+
+				<section class="glass soft-shadow rounded-3xl p-8 md:p-10">
+					<h2 class="serif text-3xl">My Experience</h2>
+					<p class="mt-4 opacity-80 leading-relaxed">Well, for now I do not have any experience yet since I am still a student.</p>
+
+					<h2 class="serif text-3xl mt-10">My Hobbies</h2>
+					<p class="mt-4 opacity-80 leading-relaxed">
+						When I am not coding, you will definitely find me on the basketball court releasing some stress. I also enjoy going out with friends and having some good fun.
+					</p>
+					<div class="mt-8 flex items-center gap-3">
+						<span class="inline-block w-2 h-2 rounded-full" style="background:#B76E79"></span>
+						<span class="text-[11px] tracking-[0.32em] uppercase opacity-60">Always building, always learning</span>
+					</div>
+				</section>
+			</div>
+		</main>
 	</body>
 </html>

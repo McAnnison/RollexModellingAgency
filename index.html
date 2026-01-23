@@ -7,10 +7,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: white; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background-color: #fbfaf8; color: #111827; overflow-x: hidden; }
         .serif { font-family: 'Playfair Display', serif; }
-        .accent-gradient { background: linear-gradient(135deg, #007AFF, #00C6FF); }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .accent-gradient { background: linear-gradient(135deg, #B76E79, #C9A227); }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(17, 24, 39, 0.08); }
+        .soft-shadow { box-shadow: 0 30px 60px rgba(17, 24, 39, 0.10); }
+        .focus-ring:focus { outline: 2px solid rgba(183, 110, 121, 0.7); outline-offset: 3px; }
         
         /* Custom Shutter Animation */
         @keyframes shutter {
@@ -21,69 +23,103 @@
         
         .fade-in { opacity: 0; transform: translateY(20px); transition: all 0.8s ease-out; }
         .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        .hero-text-shadow { text-shadow: 0 14px 40px rgba(0, 0, 0, 0.55); }
+        .hero-sub-shadow { text-shadow: 0 10px 26px rgba(0, 0, 0, 0.45); }
+        .hero-accent-shadow { filter: drop-shadow(0 14px 26px rgba(0, 0, 0, 0.35)); }
+
+        /* Utility for screen-reader-only labels */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
     </style>
 </head>
 <body>
 
-    <nav class="fixed top-0 w-full z-50 p-8 flex justify-between items-center">
-        <div class="serif text-xl tracking-widest font-bold">ROLEX MODEL <br><span class="text-xs font-light tracking-[0.3em] uppercase">Model Academy</span></div>
-        <div class="text-xs tracking-widest uppercase opacity-50">01 / 04 — The Entry</div>
+    <nav class="fixed top-0 w-full z-50 px-6 md:px-10 py-6 flex justify-between items-center">
+        <a href="index.html" class="serif text-lg md:text-xl tracking-widest font-bold focus-ring rounded-sm">
+            ROLEX MODEL <br><span class="text-[10px] font-light tracking-[0.35em] uppercase opacity-70">Model Academy</span>
+        </a>
+        <div class="flex items-center gap-6">
+            <a href="about.html" class="text-[11px] tracking-widest uppercase opacity-70 hover:opacity-100 transition-opacity focus-ring rounded-sm">About</a>
+            <div class="text-[11px] tracking-widest uppercase opacity-60">01 / 04 — The Entry</div>
+        </div>
     </nav>
 
-    <div class="fixed top-0 left-0 w-full h-1 z-50 bg-white/10">
+    <div class="fixed top-0 left-0 w-full h-1 z-50 bg-black/5">
         <div id="progress" class="h-full accent-gradient transition-all duration-700" style="width: 25%;"></div>
     </div>
 
-    <section id="step1" class="h-screen flex flex-col justify-center items-center relative overflow-hidden">
-        <div class="absolute inset-0 z-0 opacity-40">
-            <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=2000" alt="Model" class="w-full h-full object-cover">
+    <section id="step1" class="min-h-[100svh] flex flex-col justify-center items-center relative overflow-hidden">
+        <div class="absolute inset-0 z-0">
+              <img src="assets/hreo.jpeg" alt="Models in an editorial group portrait" class="w-full h-full object-cover" style="object-position: 50% 20%;" loading="eager" fetchpriority="high" decoding="async"
+                onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1520975693410-0018f0f5e6a2?auto=format&fit=crop&q=80&w=2000';">
         </div>
         
         <div class="relative z-10 text-center px-4">
-            <h1 class="serif text-6xl md:text-8xl mb-6 tracking-tight leading-none">UNLEASH YOUR<br><span class="italic text-transparent bg-clip-text accent-gradient">POTENTIAL</span></h1>
-            <p class="text-sm md:text-lg font-light tracking-[0.2em] mb-12 opacity-80 uppercase">Apply to the future of fashion</p>
+            <h1 class="serif text-5xl md:text-7xl mb-6 tracking-tight leading-none text-white hero-text-shadow">UNLEASH YOUR<br><span class="italic text-transparent bg-clip-text accent-gradient hero-accent-shadow">POTENTIAL</span></h1>
+            <p class="text-xs md:text-base font-light tracking-[0.28em] mb-12 text-white/90 uppercase hero-sub-shadow">Apply to the future of fashion</p>
             
-            <button onclick="nextStep(2)" class="group relative px-12 py-4 overflow-hidden border border-white/20 rounded-full hover:border-transparent transition-all">
-                <span class="relative z-10 uppercase tracking-widest text-xs font-semibold">Begin Application</span>
+            <button onclick="goToStep(2)" class="group relative px-12 py-4 overflow-hidden border border-white/35 rounded-full hover:border-transparent transition-all focus-ring">
+                <span class="relative z-10 uppercase tracking-widest text-xs font-semibold text-white hero-sub-shadow">Begin Application</span>
                 <div class="absolute inset-0 accent-gradient transform translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
             </button>
         </div>
 
-        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce opacity-30">
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-white/90 opacity-40 hero-sub-shadow">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
         </div>
     </section>
 
-    <section id="step2" class="hidden h-screen flex items-center justify-center bg-zinc-950">
-        <div class="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-12 p-8">
+    <section id="step2" class="hidden min-h-[100svh] flex items-center justify-center bg-[#fbfaf8]">
+        <form id="applicationForm" novalidate class="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-12 p-8">
             <div class="flex flex-col justify-center">
-                <h2 class="serif text-4xl mb-8">Tell Us About<br>Yourself</h2>
+                <h2 class="serif text-4xl mb-2">Tell Us About<br>Yourself</h2>
+                <p class="text-[11px] tracking-[0.24em] uppercase opacity-60 mb-8">Casting details</p>
                 <div class="space-y-6">
                     <div class="relative">
-                        <input type="text" placeholder="Full Name" class="w-full bg-transparent border-b border-white/20 py-3 focus:outline-none focus:border-blue-500 transition-colors placeholder:text-white/20">
+                        <label for="fullName" class="sr-only">Full name</label>
+                        <input id="fullName" name="fullName" type="text" placeholder="Full Name" autocomplete="name" required
+                            class="focus-ring w-full bg-transparent border-b border-black/15 py-3 focus:outline-none focus:border-black/40 transition-colors placeholder:text-black/30">
+                        <p id="fullNameError" class="mt-2 text-xs text-rose-700 hidden" aria-live="polite"></p>
                     </div>
                     <div class="relative">
-                        <input type="email" placeholder="Email Address" class="w-full bg-transparent border-b border-white/20 py-3 focus:outline-none focus:border-blue-500 transition-colors placeholder:text-white/20">
+                        <label for="email" class="sr-only">Email address</label>
+                        <input id="email" name="email" type="email" placeholder="Email Address" autocomplete="email" required
+                            class="focus-ring w-full bg-transparent border-b border-black/15 py-3 focus:outline-none focus:border-black/40 transition-colors placeholder:text-black/30">
+                        <p id="emailError" class="mt-2 text-xs text-rose-700 hidden" aria-live="polite"></p>
                     </div>
                     <div class="relative">
-                        <input type="text" placeholder="Instagram Handle" class="w-full bg-transparent border-b border-white/20 py-3 focus:outline-none focus:border-blue-500 transition-colors placeholder:text-white/20">
+                        <label for="instagram" class="sr-only">Instagram handle</label>
+                        <input id="instagram" name="instagram" type="text" placeholder="Instagram Handle (optional)" autocomplete="off"
+                            inputmode="text"
+                            class="focus-ring w-full bg-transparent border-b border-black/15 py-3 focus:outline-none focus:border-black/40 transition-colors placeholder:text-black/30">
+                        <p class="mt-2 text-[11px] opacity-60">Tip: use @yourhandle</p>
                     </div>
-                    <button onclick="nextStep(3)" class="mt-8 accent-gradient w-full py-4 rounded-lg uppercase tracking-widest text-xs font-bold shadow-xl shadow-blue-500/20">Continue</button>
+                    <button type="button" onclick="goToStep(3)" class="mt-6 accent-gradient w-full py-4 rounded-lg uppercase tracking-widest text-xs font-bold soft-shadow focus-ring">Continue</button>
                 </div>
             </div>
-            <div class="hidden md:block glass rounded-2xl overflow-hidden shadow-2xl">
-                <img src="https://images.unsplash.com/photo-1539109132381-31a1ea92e9c3?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover">
+            <div class="hidden md:block glass rounded-2xl overflow-hidden soft-shadow">
+                <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1539109132381-31a1ea92e9c3?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover" alt="Editorial model portrait">
             </div>
-        </div>
+        </form>
     </section>
 
-    <section id="step3" class="hidden h-screen flex items-center justify-center bg-zinc-950 overflow-hidden">
+    <section id="step3" class="hidden min-h-[100svh] flex items-center justify-center bg-[#fbfaf8] overflow-hidden">
     <div class="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 p-8 items-center">
         
         <div class="space-y-10">
             <div>
                 <h2 class="serif text-4xl mb-2">The Specs</h2>
-                <p class="text-xs tracking-[0.2em] opacity-50 uppercase mb-8">Precision is key for digital casting</p>
+                <p class="text-[11px] tracking-[0.24em] opacity-60 uppercase mb-8">Precision is key for digital casting</p>
             </div>
 
             <div class="space-y-8">
@@ -93,7 +129,7 @@
                         <span class="text-2xl font-light"><span id="heightVal">175</span><span class="text-sm opacity-50 ml-1">cm</span></span>
                     </div>
                     <input type="range" min="150" max="210" value="175" 
-                        class="w-full h-1 bg-white/10 appearance-none cursor-pointer accent-blue-500" 
+                        class="w-full h-1 bg-black/10 appearance-none cursor-pointer accent-[color:#B76E79]" 
                         oninput="document.getElementById('heightVal').innerText = this.value">
                 </div>
 
@@ -103,134 +139,314 @@
                         <span class="text-2xl font-light"><span id="waistVal">60</span><span class="text-sm opacity-50 ml-1">cm</span></span>
                     </div>
                     <input type="range" min="50" max="100" value="60" 
-                        class="w-full h-1 bg-white/10 appearance-none cursor-pointer accent-blue-500" 
+                        class="w-full h-1 bg-black/10 appearance-none cursor-pointer accent-[color:#B76E79]" 
                         oninput="document.getElementById('waistVal').innerText = this.value">
                 </div>
 
                 <div class="flex gap-4">
-                    <div class="flex-1 p-4 glass rounded-xl text-center border-blue-500/30">
+                    <div class="flex-1 p-4 glass rounded-xl text-center">
                         <p class="text-[10px] uppercase opacity-50 mb-1">Shoe Size (EU)</p>
-                        <select class="bg-transparent text-xl outline-none w-full text-center">
+                        <label class="sr-only" for="shoeSize">Shoe size (EU)</label>
+                        <select id="shoeSize" name="shoeSize" class="bg-transparent text-xl outline-none w-full text-center focus-ring rounded-md">
                             <option>38</option><option>39</option><option selected>40</option><option>41</option>
                         </select>
                     </div>
-                    <div class="flex-1 p-4 glass rounded-xl text-center border-white/5">
+                    <div class="flex-1 p-4 glass rounded-xl text-center">
                         <p class="text-[10px] uppercase opacity-50 mb-1">Eye Color</p>
-                        <select class="bg-transparent text-xl outline-none w-full text-center">
+                        <label class="sr-only" for="eyeColor">Eye color</label>
+                        <select id="eyeColor" name="eyeColor" class="bg-transparent text-xl outline-none w-full text-center focus-ring rounded-md">
                             <option>Brown</option><option>Blue</option><option>Green</option>
                         </select>
                     </div>
                 </div>
             </div>
 
-            <button onclick="nextStep(4)" class="mt-4 border border-white/20 hover:bg-white hover:text-black transition-all w-full py-4 rounded-full uppercase tracking-widest text-xs font-bold">
+            <button type="button" onclick="goToStep(4)" class="mt-4 border border-black/15 hover:bg-black hover:text-white transition-all w-full py-4 rounded-full uppercase tracking-widest text-xs font-bold focus-ring">
                 Continue to Portfolio
             </button>
         </div>
 
         <div class="relative hidden md:flex justify-center items-center h-[600px]">
-            <div class="absolute inset-0 bg-blue-500/10 blur-[120px] rounded-full"></div>
-            <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=800" 
-                 class="h-full object-contain relative z-10 drop-shadow-[0_35px_35px_rgba(0,0,0,0.5)] transition-transform duration-500 hover:scale-105" 
+            <div class="absolute inset-0 bg-[rgba(183,110,121,0.14)] blur-[120px] rounded-full"></div>
+              <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=800" 
+                 class="h-full object-contain relative z-10 drop-shadow-[0_35px_35px_rgba(0,0,0,0.18)] transition-transform duration-500 hover:scale-105" 
                  alt="Model Reference">
             
-            <div class="absolute top-20 right-10 glass p-4 rounded-lg animate-pulse">
+            <div class="absolute top-20 right-10 glass p-4 rounded-lg">
                 <p class="text-[10px] uppercase tracking-tighter">Pro Status</p>
-                <p class="text-xs font-bold text-blue-400">Ready for Runway</p>
+                <p class="text-xs font-bold" style="color:#B76E79">Ready for Runway</p>
             </div>
         </div>
     </div>
 </section>
 
-<section id="step4" class="hidden h-screen flex items-center justify-center bg-zinc-950">
+<section id="step4" class="hidden min-h-[100svh] flex items-center justify-center bg-[#fbfaf8]">
     <div class="max-w-5xl w-full p-8">
         <div class="text-center mb-12">
             <h2 class="serif text-5xl mb-4">The Showcase</h2>
-            <p class="text-xs tracking-[0.3em] opacity-50 uppercase">Upload your digital comp card</p>
+            <p class="text-[11px] tracking-[0.3em] opacity-60 uppercase">Upload your digital comp card</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-[400px]">
-            <div class="glass group relative overflow-hidden rounded-2xl border-dashed border-2 border-white/10 hover:border-blue-500 transition-all cursor-pointer flex flex-col items-center justify-center">
-                <div class="text-center group-hover:scale-110 transition-transform duration-500">
+            <div class="glass group relative overflow-hidden rounded-2xl border-dashed border-2 border-black/10 hover:border-black/25 transition-all cursor-pointer flex flex-col items-center justify-center soft-shadow">
+                <label for="headshotFile" class="absolute inset-0 cursor-pointer">
+                    <span class="sr-only">Upload headshot</span>
+                </label>
+                <div class="text-center group-hover:scale-105 transition-transform duration-500 px-6">
                     <svg class="w-8 h-8 mx-auto mb-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                     <p class="text-[10px] uppercase tracking-widest font-bold">Headshot</p>
                     <p class="text-[8px] opacity-40 mt-1 uppercase italic">Close-up face</p>
+                    <p id="headshotName" class="mt-3 text-[11px] opacity-70"></p>
+                    <img id="headshotPreview" alt="Headshot preview" class="hidden mt-4 w-28 h-28 object-cover rounded-xl mx-auto border border-black/10" />
                 </div>
-                <input type="file" class="absolute inset-0 opacity-0 cursor-pointer">
+                <input id="headshotFile" name="headshotFile" type="file" accept="image/*" required class="absolute inset-0 opacity-0 cursor-pointer" />
+                <p id="headshotError" class="absolute bottom-4 left-4 right-4 text-xs text-rose-700 hidden" aria-live="polite"></p>
             </div>
 
-            <div class="glass group relative overflow-hidden rounded-2xl border-2 border-blue-500/50 flex flex-col items-center justify-center bg-blue-500/5">
-                <div class="absolute inset-0 bg-gradient-to-t from-blue-500/20 to-transparent"></div>
+            <div class="glass group relative overflow-hidden rounded-2xl border-2 flex flex-col items-center justify-center soft-shadow" style="border-color: rgba(183,110,121,0.45); background: rgba(183,110,121,0.05);">
+                <div class="absolute inset-0 bg-gradient-to-t" style="--tw-gradient-from: rgba(183,110,121,0.18); --tw-gradient-to: transparent;"></div>
+                <label for="runwayFile" class="absolute inset-0 cursor-pointer">
+                    <span class="sr-only">Upload runway walk video</span>
+                </label>
                 <div class="relative z-10 text-center">
-                    <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-all shadow-xl shadow-blue-500/20">
+                    <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 mx-auto group-hover:scale-105 transition-all" style="box-shadow: 0 20px 40px rgba(183,110,121,0.20);">
                         <svg class="w-6 h-6 text-black fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                     </div>
                     <p class="text-[10px] uppercase tracking-widest font-bold">Runway Walk</p>
                     <p class="text-[8px] opacity-60 mt-1 uppercase">10-Sec Video Reel</p>
+                    <p id="runwayName" class="mt-3 text-[11px] opacity-70"></p>
+                    <video id="runwayPreview" class="hidden mt-4 w-full max-w-[220px] rounded-xl mx-auto border border-black/10" playsinline muted controls></video>
                 </div>
-                <input type="file" class="absolute inset-0 opacity-0 cursor-pointer">
+                <input id="runwayFile" name="runwayFile" type="file" accept="video/*" required class="absolute inset-0 opacity-0 cursor-pointer" />
+                <p id="runwayError" class="absolute bottom-4 left-4 right-4 text-xs text-rose-700 hidden" aria-live="polite"></p>
             </div>
 
-            <div class="glass group relative overflow-hidden rounded-2xl border-dashed border-2 border-white/10 hover:border-blue-500 transition-all cursor-pointer flex flex-col items-center justify-center">
-                <div class="text-center group-hover:scale-110 transition-transform duration-500">
+            <div class="glass group relative overflow-hidden rounded-2xl border-dashed border-2 border-black/10 hover:border-black/25 transition-all cursor-pointer flex flex-col items-center justify-center soft-shadow">
+                <label for="fullBodyFile" class="absolute inset-0 cursor-pointer">
+                    <span class="sr-only">Upload full body photos</span>
+                </label>
+                <div class="text-center group-hover:scale-105 transition-transform duration-500 px-6">
                     <svg class="w-8 h-8 mx-auto mb-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                     <p class="text-[10px] uppercase tracking-widest font-bold">Full Body</p>
                     <p class="text-[8px] opacity-40 mt-1 uppercase italic">Profile & Straight</p>
+                    <p id="fullBodyName" class="mt-3 text-[11px] opacity-70"></p>
+                    <img id="fullBodyPreview" alt="Full body preview" class="hidden mt-4 w-28 h-28 object-cover rounded-xl mx-auto border border-black/10" />
                 </div>
-                <input type="file" class="absolute inset-0 opacity-0 cursor-pointer">
+                <input id="fullBodyFile" name="fullBodyFile" type="file" accept="image/*" required class="absolute inset-0 opacity-0 cursor-pointer" />
+                <p id="fullBodyError" class="absolute bottom-4 left-4 right-4 text-xs text-rose-700 hidden" aria-live="polite"></p>
             </div>
         </div>
 
-        <button onclick="submitFinal()" class="mt-12 w-full py-5 accent-gradient rounded-full text-xs font-bold uppercase tracking-[0.4em] hover:shadow-[0_0_30px_rgba(0,122,255,0.4)] transition-all">
+        <button id="submitButton" type="button" onclick="submitFinal()" class="mt-12 w-full py-5 accent-gradient rounded-full text-xs font-bold uppercase tracking-[0.4em] transition-all soft-shadow focus-ring">
             Submit to the Agency
         </button>
     </div>
 </section>
 
-<div id="success" class="hidden fixed inset-0 z-[100] bg-white text-black flex items-center justify-center text-center p-8">
-    <div class="animate-shutter">
-        <h3 class="serif text-7xl md:text-9xl mb-4 tracking-tighter">SUCCESS</h3>
-        <p class="text-sm tracking-[0.5em] uppercase font-light">Your journey has officially begun.</p>
-        <div class="mt-12 h-px w-24 bg-black mx-auto"></div>
-        <p class="mt-8 text-xs opacity-50 uppercase">Check your email for the next casting call.</p>
+<div id="success" class="hidden fixed inset-0 z-[100] bg-black/40 text-black flex items-center justify-center text-center p-6" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+    <div class="glass soft-shadow w-full max-w-2xl rounded-3xl p-10 relative animate-shutter">
+        <button id="successClose" type="button" class="absolute top-4 right-4 w-10 h-10 rounded-full border border-black/10 hover:bg-black/5 transition-colors focus-ring" aria-label="Close success dialog">
+            <span aria-hidden="true">✕</span>
+        </button>
+        <p class="text-[11px] tracking-[0.32em] uppercase opacity-60 mb-4">Application received</p>
+        <h3 id="successTitle" class="serif text-5xl md:text-7xl mb-4 tracking-tight">SUCCESS</h3>
+        <p class="text-sm tracking-[0.45em] uppercase font-light opacity-80">Your journey has officially begun.</p>
+        <div class="mt-10 h-px w-24 bg-black/20 mx-auto"></div>
+        <p class="mt-6 text-xs opacity-60 uppercase">Check your email for the next casting call.</p>
+        <button type="button" class="mt-8 px-8 py-3 rounded-full border border-black/15 hover:bg-black hover:text-white transition-colors uppercase tracking-widest text-[11px] font-semibold focus-ring" onclick="closeSuccess()">Back to start</button>
     </div>
 </div>
 
 <script>
-    function submitFinal() {
+    const previewUrls = {
+        headshot: null,
+        runway: null,
+        fullBody: null,
+    };
+
+    function setError(id, message) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (!message) {
+            el.textContent = '';
+            el.classList.add('hidden');
+        } else {
+            el.textContent = message;
+            el.classList.remove('hidden');
+        }
+    }
+
+    function validateStep2() {
+        let ok = true;
+        const fullName = document.getElementById('fullName');
+        const email = document.getElementById('email');
+
+        setError('fullNameError', '');
+        setError('emailError', '');
+
+        if (!fullName.value.trim()) {
+            setError('fullNameError', 'Please enter your full name.');
+            ok = false;
+        }
+
+        if (!email.value.trim()) {
+            setError('emailError', 'Please enter your email address.');
+            ok = false;
+        } else if (!email.checkValidity()) {
+            setError('emailError', 'Please enter a valid email address.');
+            ok = false;
+        }
+
+        if (!ok) {
+            const firstInvalid = document.querySelector('#step2 input:invalid') || document.querySelector('#step2 input');
+            if (firstInvalid) firstInvalid.focus();
+        }
+
+        return ok;
+    }
+
+    function validateStep4() {
+        let ok = true;
+        const headshot = document.getElementById('headshotFile');
+        const runway = document.getElementById('runwayFile');
+        const fullBody = document.getElementById('fullBodyFile');
+
+        setError('headshotError', '');
+        setError('runwayError', '');
+        setError('fullBodyError', '');
+
+        if (!headshot.files || headshot.files.length === 0) {
+            setError('headshotError', 'Headshot is required.');
+            ok = false;
+        }
+        if (!runway.files || runway.files.length === 0) {
+            setError('runwayError', 'Runway walk video is required.');
+            ok = false;
+        }
+        if (!fullBody.files || fullBody.files.length === 0) {
+            setError('fullBodyError', 'Full body photo is required.');
+            ok = false;
+        }
+
+        if (!ok) {
+            const firstInvalid = document.querySelector('#step4 input:invalid') || document.getElementById('headshotFile');
+            if (firstInvalid) firstInvalid.focus();
+        }
+        return ok;
+    }
+
+    function updateFilePreview(kind) {
+        const input = document.getElementById(`${kind}File`);
+        const nameEl = document.getElementById(`${kind}Name`);
+        const imgEl = document.getElementById(`${kind}Preview`);
+        const videoEl = document.getElementById(`${kind}Preview`);
+
+        if (previewUrls[kind]) {
+            URL.revokeObjectURL(previewUrls[kind]);
+            previewUrls[kind] = null;
+        }
+
+        if (!input.files || input.files.length === 0) {
+            if (nameEl) nameEl.textContent = '';
+            if (imgEl && imgEl.tagName === 'IMG') imgEl.classList.add('hidden');
+            if (videoEl && videoEl.tagName === 'VIDEO') videoEl.classList.add('hidden');
+            return;
+        }
+
+        const file = input.files[0];
+        if (nameEl) nameEl.textContent = file.name;
+
+        previewUrls[kind] = URL.createObjectURL(file);
+
+        const previewEl = document.getElementById(`${kind}Preview`);
+        if (!previewEl) return;
+
+        if (previewEl.tagName === 'IMG') {
+            previewEl.src = previewUrls[kind];
+            previewEl.classList.remove('hidden');
+        } else if (previewEl.tagName === 'VIDEO') {
+            previewEl.src = previewUrls[kind];
+            previewEl.classList.remove('hidden');
+        }
+    }
+
+    function openSuccess() {
         const success = document.getElementById('success');
         success.classList.remove('hidden');
         success.classList.add('flex');
-        
+        document.body.classList.add('overflow-hidden');
+
         // Final progress bar fill
         document.getElementById('progress').style.width = '100%';
+
+        const closeBtn = document.getElementById('successClose');
+        if (closeBtn) closeBtn.focus();
+    }
+
+    function closeSuccess() {
+        const success = document.getElementById('success');
+        success.classList.add('hidden');
+        success.classList.remove('flex');
+        document.body.classList.remove('overflow-hidden');
+
+        // Return focus to submit button when possible
+        const submit = document.getElementById('submitButton');
+        if (submit) submit.focus();
+
+        // Return to start
+        showStep(1);
+    }
+
+    function submitFinal() {
+        if (!validateStep4()) return;
+        openSuccess();
     }
 </script>
 
     <script>
-        function nextStep(step) {
-            // Shutter transition effect
-            const body = document.body;
-            
-            // Fade out current step
+        function showStep(step) {
             const current = document.querySelector('section:not(.hidden)');
-            current.classList.add('opacity-0');
-            
-            setTimeout(() => {
-                current.classList.add('hidden');
-                const next = document.getElementById(`step${step}`);
-                next.classList.remove('hidden');
-                
-                // Trigger visibility animations
+            if (current) {
+                current.classList.add('opacity-0');
                 setTimeout(() => {
-                    next.classList.remove('opacity-0');
-                    document.getElementById('progress').style.width = (step * 25) + '%';
-                }, 50);
-            }, 500);
+                    current.classList.add('hidden');
+                    current.classList.remove('opacity-0');
+                }, 350);
+            }
+
+            const next = document.getElementById(`step${step}`);
+            if (!next) return;
+            next.classList.remove('hidden');
+
+            document.getElementById('progress').style.width = (step * 25) + '%';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goToStep(step) {
+            if (step === 3 && !validateStep2()) return;
+            showStep(step);
         }
 
         // Initialize fade-in elements
         document.addEventListener('DOMContentLoaded', () => {
+            // File previews
+            document.getElementById('headshotFile')?.addEventListener('change', () => updateFilePreview('headshot'));
+            document.getElementById('runwayFile')?.addEventListener('change', () => updateFilePreview('runway'));
+            document.getElementById('fullBodyFile')?.addEventListener('change', () => updateFilePreview('fullBody'));
+
+            // Success modal close behaviors
+            const success = document.getElementById('success');
+            const closeBtn = document.getElementById('successClose');
+            closeBtn?.addEventListener('click', closeSuccess);
+            success?.addEventListener('click', (e) => {
+                if (e.target === success) closeSuccess();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !document.getElementById('success')?.classList.contains('hidden')) {
+                    closeSuccess();
+                }
+            });
+
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) entry.target.classList.add('visible');
