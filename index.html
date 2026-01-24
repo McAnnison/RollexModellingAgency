@@ -55,6 +55,61 @@
             <div class="flex items-center gap-6">
                 <a href="about.html" class="text-[11px] tracking-widest uppercase opacity-70 hover:opacity-100 transition-opacity focus-ring rounded-sm">About</a>
                 <div class="text-[11px] tracking-widest uppercase opacity-60">01 / 04 — The Entry</div>
+            <script>
+                (() => {
+                    const STEP_TITLES = {
+                        1: 'The Entry',
+                        2: 'Casting details',
+                        3: 'The Specs',
+                        4: 'The Showcase',
+                    };
+
+                    function getIndicatorEl() {
+                        // Targets the existing "01 / 04 — The Entry" element in the nav
+                        return document.querySelector('nav div.tracking-widest.uppercase.opacity-60');
+                    }
+
+                    function getCurrentStep() {
+                        const visible = document.querySelector('section[id^="step"]:not(.hidden)');
+                        const m = visible?.id?.match(/^step(\d+)$/);
+                        return m ? Number(m[1]) : 1;
+                    }
+
+                    function setNavStep(step) {
+                        const el = getIndicatorEl();
+                        if (!el) return;
+
+                        const n = Math.min(4, Math.max(1, Number(step) || 1));
+                        const num = String(n).padStart(2, '0');
+                        const title = STEP_TITLES[n] || '';
+                        el.textContent = `${num} / 04 — ${title}`;
+                    }
+
+                    function wrapShowStep() {
+                        if (typeof window.showStep !== 'function' || window.showStep.__navWrapped) return;
+
+                        const original = window.showStep;
+                        function wrapped(step) {
+                            setNavStep(step);
+                            return original(step);
+                        }
+                        wrapped.__navWrapped = true;
+                        window.showStep = wrapped;
+
+                        setNavStep(getCurrentStep());
+                    }
+
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const tick = () => {
+                            wrapShowStep();
+                            if (typeof window.showStep !== 'function' || !window.showStep.__navWrapped) {
+                                setTimeout(tick, 50);
+                            }
+                        };
+                        tick();
+                    });
+                })();
+            </script>
             </div>
         </div>
     </nav>
@@ -119,7 +174,7 @@
                 </div>
             </div>
             <div class="block md:block glass rounded-2xl overflow-hidden soft-shadow order-last md:order-none mt-8 md:mt-0 w-full aspect-[3/4] md:aspect-auto md:h-auto">
-                <img loading="lazy" decoding="async" src="assets/Model (1).jpeg" class="w-full h-full object-fit" alt="Editorial model portrait">
+                <img loading="lazy" decoding="async" src="assets/model.jpeg" class="w-full h-full object-fit" alt="Editorial model portrait">
             </div>
         </form>
     </section>
@@ -184,11 +239,7 @@
 
             <div class="relative flex justify-center items-center order-last md:order-none">
                 <div class="rounded-3xl border border-black/10 bg-white/70 p-4 w-full max-w-sm md:max-w-md lg:max-w-lg aspect-[3/4] md:aspect-auto md:h-[560px] shadow-[0_30px_60px_rgba(17,24,39,0.08)] overflow-hidden">
-                    <img loading="lazy" decoding="async" src="assets/Model (1).jpeg" class="w-full h-full object-contain" alt="Editorial model portrait">
-                </div>
-                <div class="absolute top-6 right-6 rounded-xl border border-black/10 bg-white/80 px-4 py-2">
-                    <p class="text-[10px] uppercase tracking-tighter">Pro Status</p>
-                    <p class="text-xs font-bold" style="color:#B76E79">Ready for Runway</p>
+                    <img loading="lazy" decoding="async" src="assets/model2.jpeg" class="w-full h-full object-contain" alt="Editorial model portrait">
                 </div>
             </div>
         </div>
