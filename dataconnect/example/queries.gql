@@ -1,0 +1,30 @@
+mutation AddNewUser($email: String!, $firstName: String, $lastName: String, $passwordHash: String!, $phoneNumber: String, $role: String!) @auth(level: PUBLIC, insecureReason: "This mutation is safe to expose to the public") {
+  user_insert(data: {email: $email, firstName: $firstName, lastName: $lastName, passwordHash: $passwordHash, phoneNumber: $phoneNumber, role: $role, createdAt_expr: "request.time"})
+}
+
+query GetUserByEmail($email: String!) @auth(level: USER, insecureReason: "This operation is safe to expose to all logged in users.") {
+  users(where: {email: {eq: $email}}) {
+    id
+    email
+    firstName
+    lastName
+    phoneNumber
+    role
+  }
+}
+
+mutation EnrollStudentInCourse($studentId: UUID!, $courseId: UUID!) @auth(level: USER) {
+  enrollment_insert(data: {studentId: $studentId, courseId: $courseId, enrollmentDate_expr: "request.time"})
+}
+
+query ListCoursesForStudent($studentId: UUID!) @auth(level: USER) {
+  student(id: $studentId) {
+    courses_via_Enrollment {
+      id
+      courseCode
+      name
+      description
+      credits
+    }
+  }
+}

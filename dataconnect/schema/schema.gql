@@ -1,0 +1,41 @@
+type User @table {
+  email: String!
+  passwordHash: String!
+  createdAt: Timestamp!
+  role: String!
+  firstName: String
+  lastName: String
+  phoneNumber: String
+}
+
+type Registration @table {
+  user: User!
+  submissionDate: Timestamp!
+  status: String!
+  courseInterest: String
+  rejectionReason: String
+}
+
+type Student @table {
+  user: User!
+  studentId: String!
+  enrollmentDate: Timestamp!
+  status: String!
+  programOfStudy: String
+  graduationDate: Timestamp
+}
+
+type Course @table {
+  name: String!
+  courseCode: String!
+  description: String
+  credits: Int
+}
+
+type Enrollment @table(key: ["student", "course"]) {
+  student: Student!
+  course: Course!
+  enrollmentDate: Timestamp!
+  completionDate: Timestamp
+  grade: String
+}

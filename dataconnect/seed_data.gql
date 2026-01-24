@@ -1,0 +1,55 @@
+mutation SeedDatabase @transaction @auth(level: NO_ACCESS) {
+  user_insertMany(data: [
+    {
+      id: "6b29c2e0-902b-41e0-b916-1b3f9f639973",
+      createdAt: "2024-04-01T00:00:00Z",
+      email: "user1@example.com",
+      passwordHash: "passwordhash1",
+      role: "student"
+    },
+    {
+      id: "7b39d3f1-a13c-42f1-c027-2c4a0a74aa84",
+      createdAt: "2024-04-02T00:00:00Z",
+      email: "user2@example.com",
+      passwordHash: "passwordhash2",
+      role: "instructor"
+    }
+  ])
+  course_insertMany(data: [
+    {
+      id: "8c4ae502-b24d-4302-d138-3d5b1b85bb95",
+      courseCode: "CS101",
+      name: "Introduction to Computer Science"
+    },
+    {
+      id: "9d5bf613-c35e-4413-e249-4e6c2c96cc06",
+      courseCode: "MATH201",
+      name: "Calculus I"
+    }
+  ])
+  student_insertMany(data: [
+    {
+      id: "ae6cf724-d46f-4524-f35a-5f7d3d97dd17",
+      userId: "6b29c2e0-902b-41e0-b916-1b3f9f639973",
+      studentId: "S1001",
+      enrollmentDate: "2024-04-03T00:00:00Z",
+      status: "active"
+    }
+  ])
+    registration_insertMany(data: [
+    {
+      id: "0a0a0a0a-b35e-4413-e249-4e6c2c96cc06",
+      userId: "6b29c2e0-902b-41e0-b916-1b3f9f639973",
+      courseInterest: "Computer Science",
+      status: "pending",
+      submissionDate: "2024-04-01T00:00:00Z"
+    }
+  ])
+  enrollment_insertMany(data: [
+    {
+      studentId: "ae6cf724-d46f-4524-f35a-5f7d3d97dd17",
+      courseId: "8c4ae502-b24d-4302-d138-3d5b1b85bb95",
+      enrollmentDate: "2024-04-04T00:00:00Z"
+    }
+  ])
+}
