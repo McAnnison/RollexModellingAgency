@@ -44,6 +44,16 @@
 </head>
 <body>
 
+    <div id="pageLoader" class="fixed inset-0 z-[200] bg-[#fbfaf8] flex items-center justify-center">
+        <div class="text-center px-6">
+            <img src="assets/logo.jpeg" alt="Rolex Modeling Agency logo" class="w-20 h-20 object-contain mx-auto mb-6" loading="eager" decoding="async">
+            <p class="text-[11px] tracking-[0.4em] uppercase opacity-60">Loading</p>
+            <div class="mt-6 w-48 h-1 bg-black/10 rounded-full overflow-hidden mx-auto">
+                <div class="h-full accent-gradient animate-pulse" style="width: 60%;"></div>
+            </div>
+        </div>
+    </div>
+
     <nav class="w-full px-6 md:px-10 py-6">
         <div class="w-full max-w-6xl mx-auto flex justify-between items-center">
             <a href="index.html" class="flex items-center gap-3 serif text-lg md:text-xl tracking-widest font-bold focus-ring rounded-sm">
@@ -359,16 +369,31 @@
         <h3 id="successTitle" class="serif text-5xl md:text-7xl mb-4 tracking-tight">SUCCESS</h3>
         <p class="text-sm tracking-[0.45em] uppercase font-light opacity-80">Your journey has officially begun.</p>
         <div class="mt-10 h-px w-24 bg-black/20 mx-auto"></div>
-        <p class="mt-6 text-xs opacity-60 uppercase">Complete your submission in the Google Form tab.</p>
+        <p class="mt-6 text-xs opacity-60 uppercase">A confirmation email is on the way.</p>
         <button type="button" class="mt-8 px-8 py-3 rounded-full accent-gradient text-white transition-opacity hover:opacity-90 uppercase tracking-widest text-[11px] font-semibold focus-ring" onclick="closeSuccess()">Back to start</button>
     </div>
 </div>
 
+<!-- Firebase (compat SDKs) -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 <script>
-    // Paste your Google Form "viewform" link here.
-    // Example: https://docs.google.com/forms/d/e/<FORM_ID>/viewform
-    const GOOGLE_FORM_URL = '';
+    // Firebase Web App config
+    window.FIREBASE_CONFIG = {
+        apiKey: "AIzaSyBZsPqtu2a0A-75HvQxa14v9KY1vS4pPdc",
+        authDomain: "rolex-modelling.firebaseapp.com",
+        projectId: "rolex-modelling",
+        storageBucket: "rolex-modelling.firebasestorage.app",
+        messagingSenderId: "633376014550",
+        appId: "1:633376014550:web:a6a993a9805d8db8340977",
+        measurementId: "G-FYY4BM20PR"
+    };
+</script>
+<script src="js/firebase-client.js"></script>
 
+<script>
     const previewUrls = {
         headshot: null,
         runway: null,
@@ -391,9 +416,11 @@
         let ok = true;
         const fullName = document.getElementById('fullName');
         const email = document.getElementById('email');
+        const phoneNumber = document.getElementById('phoneNumber');
 
         setError('fullNameError', '');
         setError('emailError', '');
+        setError('phoneNumberError', '');
 
         if (!fullName.value.trim()) {
             setError('fullNameError', 'Please enter your full name.');
@@ -405,6 +432,11 @@
             ok = false;
         } else if (!email.checkValidity()) {
             setError('emailError', 'Please enter a valid email address.');
+            ok = false;
+        }
+
+        if (!phoneNumber.value.trim()) {
+            setError('phoneNumberError', 'Please enter your phone number.');
             ok = false;
         }
 
@@ -515,11 +547,44 @@
     function submitFinal() {
         if (!validateStep4()) return;
 
-        if (GOOGLE_FORM_URL && GOOGLE_FORM_URL.startsWith('https://docs.google.com/forms/')) {
-            // Open in a new tab without giving it access to window.opener.
-            window.open(GOOGLE_FORM_URL, '_blank', 'noopener,noreferrer');
+        const submitBtn = document.getElementById('submitButton');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting…';
         }
-        openSuccess();
+
+        (async () => {
+            try {
+                if (typeof window.submitApplicationToFirebase !== 'function') {
+                    throw new Error('Firebase submission is not available yet.');
+                }
+
+                await window.submitApplicationToFirebase({
+                    fullName: document.getElementById('fullName')?.value,
+                    email: document.getElementById('email')?.value,
+                    phone: document.getElementById('phoneNumber')?.value,
+                    instagram: document.getElementById('instagram')?.value,
+                    heightCm: document.getElementById('heightVal')?.textContent,
+                    waistCm: document.getElementById('waistVal')?.textContent,
+                    shoeSizeEU: document.getElementById('shoeSize')?.value,
+                    eyeColor: document.getElementById('eyeColor')?.value,
+                    files: {
+                        headshot: document.getElementById('headshotFile')?.files?.[0] || null,
+                        runway: document.getElementById('runwayFile')?.files?.[0] || null,
+                        fullBody: document.getElementById('fullBodyFile')?.files?.[0] || null,
+                    },
+                });
+
+                openSuccess();
+            } catch (err) {
+                alert(err?.message || 'Submission failed. Please try again.');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit to the Agency';
+                }
+            }
+        })();
     }
 </script>
 
@@ -549,6 +614,11 @@
 
         // Initialize fade-in elements
         document.addEventListener('DOMContentLoaded', () => {
+            const loader = document.getElementById('pageLoader');
+            window.addEventListener('load', () => {
+                if (loader) loader.classList.add('hidden');
+            });
+
             // File previews
             document.getElementById('headshotFile')?.addEventListener('change', () => updateFilePreview('headshot'));
             document.getElementById('runwayFile')?.addEventListener('change', () => updateFilePreview('runway'));
