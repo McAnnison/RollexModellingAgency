@@ -62,9 +62,84 @@
                     ROLEX MODELLING <br><span class="text-[10px] font-light tracking-[0.35em] uppercase opacity-70"> AGENCY</span>
                 </span>
             </a>
-            <div class="flex items-center gap-6">
-                <a href="about.html" class="inline-flex items-center whitespace-nowrap text-[11px] leading-none tracking-widest uppercase opacity-70 hover:opacity-100 transition-opacity focus-ring rounded-sm">About</a>
-                <div class="text-[11px] tracking-widest uppercase opacity-60">01 / 04 — The Entry</div>
+            <div class="flex items-center gap-3">
+                <!-- Desktop nav (hidden on mobile) -->
+                <div class="hidden md:flex flex-col items-end gap-2 text-right md:flex-row md:items-center md:gap-6 md:text-left">
+                    <a href="about.html" class="inline-flex items-center whitespace-nowrap text-[11px] leading-none tracking-widest uppercase opacity-70 hover:opacity-100 transition-opacity focus-ring rounded-sm">About</a>
+                    <div class="text-[11px] tracking-widest uppercase opacity-60">01 / 04 — The Entry</div>
+                </div>
+
+                <!-- Mobile hamburger (shown on mobile) -->
+                <div class="md:hidden relative">
+                    <button id="navMenuButton"
+                        type="button"
+                        class="w-11 h-11 rounded-full border border-black/10 bg-white/70 glass flex items-center justify-center focus-ring"
+                        aria-label="Open menu"
+                        aria-expanded="false"
+                        aria-controls="navMenuPanel">
+                        <svg class="w-5 h-5 opacity-80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                            <path d="M4 7h16M4 12h16M4 17h16"></path>
+                        </svg>
+                    </button>
+
+                    <div id="navMenuPanel" class="hidden absolute right-0 mt-3 w-60 z-50 glass soft-shadow rounded-2xl border border-black/10 p-4">
+                        <a href="about.html" class="block px-3 py-2 rounded-xl text-[11px] tracking-widest uppercase opacity-80 hover:opacity-100 hover:bg-black/5 focus-ring">
+                            About
+                        </a>
+                        <div id="mobileStepIndicator" class="mt-3 px-3 text-[11px] tracking-widest uppercase opacity-60">
+                            01 / 04 — The Entry
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                // Mobile menu toggle + keep step indicator text in sync
+                document.addEventListener('DOMContentLoaded', () => {
+                    const btn = document.getElementById('navMenuButton');
+                    const panel = document.getElementById('navMenuPanel');
+
+                    const open = () => {
+                        if (!panel || !btn) return;
+                        panel.classList.remove('hidden');
+                        btn.setAttribute('aria-expanded', 'true');
+                    };
+
+                    const close = () => {
+                        if (!panel || !btn) return;
+                        panel.classList.add('hidden');
+                        btn.setAttribute('aria-expanded', 'false');
+                    };
+
+                    btn?.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (!panel) return;
+                        panel.classList.contains('hidden') ? open() : close();
+                    });
+
+                    document.addEventListener('click', (e) => {
+                        if (!panel || !btn) return;
+                        if (!panel.classList.contains('hidden') && !panel.contains(e.target) && !btn.contains(e.target)) close();
+                    });
+
+                    document.addEventListener('keydown', (e) => {
+                        if (e.key === 'Escape') close();
+                    });
+
+                    const desktopIndicator = document.querySelector('nav div.tracking-widest.uppercase.opacity-60');
+                    const mobileIndicator = document.getElementById('mobileStepIndicator');
+
+                    if (desktopIndicator && mobileIndicator) {
+                        mobileIndicator.textContent = desktopIndicator.textContent;
+
+                        const obs = new MutationObserver(() => {
+                            mobileIndicator.textContent = desktopIndicator.textContent;
+                        });
+
+                        obs.observe(desktopIndicator, { childList: true, characterData: true, subtree: true });
+                    }
+                });
+            </script>
             <script>
                 (() => {
                     const STEP_TITLES = {
@@ -120,7 +195,6 @@
                     });
                 })();
             </script>
-            </div>
         </div>
     </nav>
 
@@ -151,7 +225,7 @@
     <section id="step2" class="hidden min-h-[100svh] flex items-center justify-center bg-[#fbfaf8]">
         <form id="applicationForm" novalidate class="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-12 p-8">
             <div class="flex flex-col justify-center">
-                <h2 class="serif text-4xl mb-2">Tell Us About<br>Yourself</h2>
+                <h2 class="serif text-3xl mb-2">Tell Us About<br>Yourself</h2>
                 <p class="text-[11px] tracking-[0.24em] uppercase opacity-60 mb-8">Casting details</p>
                 <div class="space-y-6">
                     <div class="relative">
@@ -249,9 +323,9 @@
 
             <div class="relative flex justify-center items-center order-last md:order-none">
                 <div class="rounded-3xl border border-black/10 bg-white/70 p-4 w-full max-w-sm md:max-w-md lg:max-w-lg aspect-[3/4] md:aspect-auto md:h-[560px] shadow-[0_30px_60px_rgba(17,24,39,0.08)] overflow-hidden">
-                    <img loading="lazy" decoding="async" src="assets/model2.jpeg" class="w-full h-full object-contain" alt="Editorial model portrait">
+                    <img loading="lazy" decoding="async" src="assets/model2.jpeg" class="w-full h-full object-fit" alt="Editorial model portrait">
                 </div>
-            </div>
+            </div> 
         </div>
     </section>
 
