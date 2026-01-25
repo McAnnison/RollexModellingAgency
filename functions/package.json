@@ -1,7 +1,9 @@
 {
   "main": "lib/index.js",
   "scripts": {
-    "genkit:start": "genkit start -- tsx --watch src/genkit-sample.ts"
+    "genkit:start": "genkit start -- tsx --watch src/genkit-sample.ts",
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc"
   },
   "name": "ground-up-tech-functions",
   "private": true,
@@ -17,6 +19,12 @@
     "genkit-cli": "^1.28.0"
   },
   "devDependencies": {
+    "@types/node": "^20.11.30",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.29.1",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }
