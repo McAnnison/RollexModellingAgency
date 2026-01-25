@@ -1,5 +1,5 @@
 import {genkit, z} from "genkit";
-import {vertexAI} from "@genkit-ai/google-genai";
+import {googleAI} from "@genkit-ai/google-genai";
 
 // Cloud Functions for Firebase supports Genkit natively. The onCallGenkit function creates a callable
 // function from a Genkit action. It automatically implements streaming if your flow does.
@@ -23,11 +23,11 @@ enableFirebaseTelemetry();
 
 const ai = genkit({
   plugins: [
-    // Load the VertexAI provider. You can optionally specify your location
-    // and projectID by passing in a config object; if you don't, the provider
-    // uses the value from environment variables like GCLOUD_PROJECT and GCLOUD_LOCATION.
-    // If you want to use Vertex Express Mode, you can specify apiKey instead.
-    vertexAI({location: "global"})
+    // Load the GoogleAI provider. You can optionally specify your API key by
+    // passing in a config object; if you don't, the provider uses the value
+    // from the GOOGLE_GENAI_API_KEY environment variable, which is the
+    // recommended practice.
+    googleAI()
   ],
 });
 
@@ -42,7 +42,7 @@ const menuSuggestionFlow = ai.defineFlow({
     const prompt =
       `Suggest an item for the menu of a ${subject} themed restaurant`;
     const { response, stream } = ai.generateStream({
-      model: vertexAI.model("gemini-2.5-flash"),
+      model: googleAI.model("gemini-2.5-flash"),
       prompt: prompt,
       config: {
         temperature: 1,
