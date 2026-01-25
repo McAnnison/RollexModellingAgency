@@ -1,32 +1,67 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * import {onCall} from "firebase-functions/v2/https";
- * import {onDocumentWritten} from "firebase-functions/v2/firestore";
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
+import sgMail from "@sendgrid/mail";
 
-import {setGlobalOptions} from "firebase-functions";
-import {onRequest} from "firebase-functions/https";
-import * as logger from "firebase-functions/logger";
+admin.initializeApp();
 
-// Start writing functions
-// https://firebase.google.com/docs/functions/typescript
+function mustGetConfig(path: string): string {
+	const cfg = functions.config();
+	const parts = path.split(".");
+	let cur: any = cfg;
+	for (const p of parts) {
+		cur = cur?.[p];
+	}
+	if (!cur) {
+		throw new Error(`Missing functions config: ${path}`);
+	}
+	return String(cur);
+}
 
-// For cost control, you can set the maximum number of containers that can be
-// running at the same time. This helps mitigate the impact of unexpected
-// traffic spikes by instead downgrading performance. This limit is a
-// per-function limit. You can override the limit for each function using the
-// `maxInstances` option in the function's options, e.g.
-// `onRequest({ maxInstances: 5 }, (req, res) => { ... })`.
-// NOTE: setGlobalOptions does not apply to functions using the v1 API. V1
-// functions should each use functions.runWith({ maxInstances: 10 }) instead.
-// In the v1 API, each function can only serve one request per container, so
-// this will be the maximum concurrent request count.
-setGlobalOptions({ maxInstances: 10 });
+export const onApplicationCreated = functions.firestore
+	.document("applications/{applicationId}")
+	.onCreate(async (snap, context) => {
+		const data = snap.data() || {};
 
-// export const helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+		const applicantEmail = String(data.email || "").trim();
+		const applicantName = String(data.fullName || "").trim();
+
+		const sendgridKey = mustGetConfig("sendgrid.key");
+		const adminEmail = mustGetConfig("email.admin");
+		const fromEmail = mustGetConfig("email.from");
+
+		sgMail.setApiKey(sendgridKey);
+
+		const appId = context.params.applicationId;
+
+		// 1) Admin notification
+		await sgMail.send({
+			to: adminEmail,
+			from: fromEmail,
+			subject: `New registration: ${applicantName || "Applicant"} (${appId})`,
+			text:
+				"A new student registered.\n\n" +
+				`Name: ${applicantName || "(not provided)"}\n` +
+				`Email: ${applicantEmail || "(not provided)"}\n` +
+				`Phone: ${data.phone || "(not provided)"}\n` +
+				`Instagram: ${data.instagram || "(not provided)"}\n` +
+				`Application ID: ${appId}\n\n` +
+				`View in Firebase Console → Firestore → applications/${appId}`,
+		});
+
+		// 2) Applicant confirmation
+		if (applicantEmail) {
+			await sgMail.send({
+				to: applicantEmail,
+				from: fromEmail,
+				subject: "We received your registration",
+				text:
+					`Hi ${applicantName || "there"},\n\n` +
+					"Thanks for registering — we’ve received your submission.\n" +
+					`Your reference ID is: ${appId}.\n\n` +
+					"We’ll contact you with next steps.\n\n" +
+					"Rolex Modelling Agency",
+			});
+		}
+
+		return null;
+	});
