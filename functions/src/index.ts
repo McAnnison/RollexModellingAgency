@@ -5,11 +5,15 @@ import sgMail from "@sendgrid/mail";
 admin.initializeApp();
 
 function mustGetConfig(path: string): string {
-	const cfg = functions.config();
+	const cfg = functions.config() as Record<string, unknown>;
 	const parts = path.split(".");
-	let cur: any = cfg;
+	let cur: unknown = cfg;
 	for (const p of parts) {
-		cur = cur?.[p];
+		if (cur && typeof cur === "object" && p in (cur as Record<string, unknown>)) {
+			cur = (cur as Record<string, unknown>)[p];
+		} else {
+			cur = undefined;
+		}
 	}
 	if (!cur) {
 		throw new Error(`Missing functions config: ${path}`);
@@ -20,7 +24,7 @@ function mustGetConfig(path: string): string {
 export const onApplicationCreated = functions.firestore
 	.document("applications/{applicationId}")
 	.onCreate(async (snap, context) => {
-		const data = snap.data() || {};
+		const data = (snap.data() || {}) as Record<string, unknown>;
 
 		const applicantEmail = String(data.email || "").trim();
 		const applicantName = String(data.fullName || "").trim();
@@ -33,7 +37,6 @@ export const onApplicationCreated = functions.firestore
 
 		const appId = context.params.applicationId;
 
-		// 1) Admin notification
 		await sgMail.send({
 			to: adminEmail,
 			from: fromEmail,
@@ -48,7 +51,6 @@ export const onApplicationCreated = functions.firestore
 				`View in Firebase Console → Firestore → applications/${appId}`,
 		});
 
-		// 2) Applicant confirmation
 		if (applicantEmail) {
 			await sgMail.send({
 				to: applicantEmail,
