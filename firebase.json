@@ -84,7 +84,8 @@
       "functions/**",
       "dataconnect/**",
       "extensions/**",
-      "src/**"
+      "src/**",
+      "CNAME"
     ]
   },
   "extensions": {},
