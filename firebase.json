@@ -74,6 +74,19 @@
   "storage": {
     "rules": "storage.rules"
   },
+  "hosting": {
+    "public": ".",
+    "cleanUrls": true,
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      "functions/**",
+      "dataconnect/**",
+      "extensions/**",
+      "src/**"
+    ]
+  },
   "extensions": {},
   "database": {
     "rules": "database.rules.json"

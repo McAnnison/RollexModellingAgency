@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Contact | Rolex Modelling Agency</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+		<style>
+			body { font-family: 'Inter', sans-serif; background-color: #fbfaf8; color: #111827; }
+			.serif { font-family: 'Playfair Display', serif; }
+			.accent-gradient { background: linear-gradient(135deg, #B76E79, #C9A227); }
+			.glass { background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(12px); border: 1px solid rgba(17, 24, 39, 0.08); }
+			.soft-shadow { box-shadow: 0 30px 60px rgba(17, 24, 39, 0.10); }
+			.focus-ring:focus { outline: 2px solid rgba(183, 110, 121, 0.7); outline-offset: 3px; }
+			.sr-only {
+				position: absolute;
+				width: 1px;
+				height: 1px;
+				padding: 0;
+				margin: -1px;
+				overflow: hidden;
+				clip: rect(0, 0, 0, 0);
+				white-space: nowrap;
+				border: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<nav class="sticky top-0 z-50 px-6 md:px-10 py-6 flex justify-between items-center bg-[#fbfaf8]/80" style="backdrop-filter: blur(10px);">
+			<a href="index.html" class="flex items-center gap-3 serif text-lg md:text-xl tracking-widest font-bold focus-ring rounded-sm">
+				<img src="assets/logo.jpeg" alt="Rolex Modeling Agency logo" class="w-12 h-12 object-contain" loading="eager" decoding="async">
+				<span>
+					ROLEX MODELLING <br><span class="text-[10px] font-light tracking-[0.35em] uppercase opacity-70">AGENCY</span>
+				</span>
+			</a>
+			<div class="flex items-center gap-6">
+				<a href="index.html" class="text-[11px] tracking-widest uppercase opacity-70 hover:opacity-100 transition-opacity focus-ring rounded-sm">Home</a>
+				<a href="about.html" class="text-[11px] tracking-widest uppercase opacity-70 hover:opacity-100 transition-opacity focus-ring rounded-sm">About</a>
+				<a href="contact.html" class="text-[11px] tracking-widest uppercase opacity-100">Contact</a>
+			</div>
+		</nav>
+
+		<header class="relative overflow-hidden">
+			<div class="absolute inset-0 opacity-20">
+				<img src="https://images.unsplash.com/photo-1520975693410-0018f0f5e6a2?auto=format&fit=crop&q=80&w=2000" alt="" class="w-full h-full object-cover" loading="eager" fetchpriority="high" decoding="async" />
+			</div>
+			<div class="absolute inset-0 bg-gradient-to-b from-white/90 via-white/70 to-[#fbfaf8]/95"></div>
+			<div class="relative px-6 md:px-10 py-16 md:py-20 max-w-6xl mx-auto">
+				<p class="text-[11px] tracking-[0.32em] uppercase opacity-60">Contact</p>
+				<h1 class="serif text-5xl md:text-6xl tracking-tight mt-3">Let’s start the conversation.</h1>
+				<p class="mt-4 max-w-2xl text-sm md:text-base opacity-80">
+					Reach out with press inquiries, booking requests, or partnership proposals. We reply within 1–2 business days.
+				</p>
+				<div class="mt-8 h-1 w-20 accent-gradient rounded-full"></div>
+			</div>
+		</header>
+
+		<main class="px-6 md:px-10 pb-16">
+			<div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 -mt-10">
+				<section class="glass soft-shadow rounded-3xl p-8 md:p-10">
+					<h2 class="serif text-3xl">Contact Details</h2>
+					<p class="mt-4 opacity-80 leading-relaxed">
+						For new talent submissions, please use the application flow on our homepage. For all other requests, use the form or the details below.
+					</p>
+					<div class="mt-6 space-y-3 text-sm">
+						<div class="flex items-center gap-3">
+							<span class="inline-block w-2 h-2 rounded-full" style="background:#B76E79"></span>
+							<span class="opacity-80">Email: hello@rolexmodelling.com</span>
+						</div>
+						<div class="flex items-center gap-3">
+							<span class="inline-block w-2 h-2 rounded-full" style="background:#C9A227"></span>
+							<span class="opacity-80">Phone: +1 (212) 555‑0199</span>
+						</div>
+						<div class="flex items-center gap-3">
+							<span class="inline-block w-2 h-2 rounded-full" style="background:#111827"></span>
+							<span class="opacity-80">Studio: 620 Fifth Ave, New York, NY</span>
+						</div>
+					</div>
+				</section>
+
+				<section class="glass soft-shadow rounded-3xl p-8 md:p-10">
+					<h2 class="serif text-3xl">Send a Message</h2>
+					<form id="contactForm" class="mt-6 space-y-5" novalidate>
+						<div>
+							<label for="contactName" class="sr-only">Full name</label>
+							<input id="contactName" name="contactName" type="text" placeholder="Full Name" required
+								class="focus-ring w-full bg-transparent border-b border-black/15 py-3 focus:outline-none focus:border-black/40 transition-colors placeholder:text-black/30">
+						</div>
+						<div>
+							<label for="contactEmail" class="sr-only">Email address</label>
+							<input id="contactEmail" name="contactEmail" type="email" placeholder="Email Address" required
+								class="focus-ring w-full bg-transparent border-b border-black/15 py-3 focus:outline-none focus:border-black/40 transition-colors placeholder:text-black/30">
+						</div>
+						<div>
+							<label for="contactSubject" class="sr-only">Subject</label>
+							<input id="contactSubject" name="contactSubject" type="text" placeholder="Subject" required
+								class="focus-ring w-full bg-transparent border-b border-black/15 py-3 focus:outline-none focus:border-black/40 transition-colors placeholder:text-black/30">
+						</div>
+						<div>
+							<label for="contactMessage" class="sr-only">Message</label>
+							<textarea id="contactMessage" name="contactMessage" rows="5" placeholder="Tell us how we can help" required
+								class="focus-ring w-full bg-transparent border border-black/15 rounded-2xl p-4 focus:outline-none focus:border-black/40 transition-colors placeholder:text-black/30"></textarea>
+						</div>
+						<button type="submit" class="accent-gradient text-white w-full py-4 rounded-full uppercase tracking-widest text-xs font-bold soft-shadow transition-opacity hover:opacity-90 focus-ring">
+							Send Message
+						</button>
+						<p class="text-[11px] tracking-[0.24em] uppercase opacity-60 text-center">We respect your privacy.</p>
+					</form>
+				</section>
+			</div>
+		</main>
+
+		<script>
+			document.getElementById('contactForm')?.addEventListener('submit', (e) => {
+				e.preventDefault();
+				const name = document.getElementById('contactName')?.value || '';
+				const email = document.getElementById('contactEmail')?.value || '';
+				const subject = document.getElementById('contactSubject')?.value || '';
+				const message = document.getElementById('contactMessage')?.value || '';
+
+				const mailto = `mailto:hello@rolexmodelling.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
+					`Name: ${name}\nEmail: ${email}\n\n${message}`
+				)}`;
+				window.location.href = mailto;
+			});
+		</script>
+	</body>
+</html>
