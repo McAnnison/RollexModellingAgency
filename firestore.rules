@@ -7,10 +7,13 @@ service cloud.firestore {
         && request.resource.data.uid == request.auth.uid;
 
       allow update: if request.auth != null
-        && resource.data.uid == request.auth.uid
-        && request.resource.data.uid == request.auth.uid;
+        && (
+          (resource.data.uid == request.auth.uid && request.resource.data.uid == request.auth.uid)
+          || request.auth.token.admin == true
+        );
 
-      allow read, delete: if false;
+      allow read: if request.auth != null && request.auth.token.admin == true;
+      allow delete: if false;
     }
 
     match /{document=**} {
