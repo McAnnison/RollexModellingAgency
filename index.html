@@ -428,9 +428,27 @@
             </div>
         </div>
 
-        <button id="submitButton" type="button" onclick="submitFinal()" class="mt-12 w-full py-5 accent-gradient text-white rounded-full text-xs font-bold uppercase tracking-[0.4em] transition-opacity hover:opacity-90 soft-shadow focus-ring">
-            Submit to the Agency
-        </button>
+        <div class="mt-10 text-center">
+            <p class="text-[11px] tracking-[0.32em] uppercase opacity-60">Registration fee applies</p>
+            <p class="mt-2 text-xs opacity-60">Pay via mobile money or enter a cash code from the admin.</p>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button id="submitButton" type="button" onclick="startPaystackPayment()" class="w-full py-5 accent-gradient text-white rounded-full text-xs font-bold uppercase tracking-[0.4em] transition-opacity hover:opacity-90 soft-shadow focus-ring">
+                Pay for your registration
+            </button>
+
+            <div class="glass rounded-2xl p-4 md:p-5 border border-black/10">
+                <label for="cashCode" class="text-[10px] uppercase tracking-widest opacity-60">Cash payment code</label>
+                <div class="mt-2 flex gap-3">
+                    <input id="cashCode" type="text" placeholder="Enter code" class="focus-ring flex-1 bg-transparent border-b border-black/15 py-2 text-sm focus:outline-none focus:border-black/40" />
+                    <button type="button" onclick="redeemCashCode()" class="px-4 py-2 rounded-full accent-gradient text-white text-[10px] uppercase tracking-widest font-semibold transition-opacity hover:opacity-90 focus-ring">
+                        Submit
+                    </button>
+                </div>
+                <p id="cashCodeError" class="mt-3 text-xs text-rose-700 hidden" aria-live="polite"></p>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -453,6 +471,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+<script src="https://js.paystack.co/v1/inline.js"></script>
 <script>
     // Firebase Web App config
     window.FIREBASE_CONFIG = {
@@ -468,6 +487,11 @@
 <script src="js/firebase-client.js"></script>
 
 <script>
+    // Paystack
+    const PAYSTACK_PUBLIC_KEY = ""; // e.g. pk_test_xxx or pk_live_xxx
+    const PAYSTACK_AMOUNT_KOBO = 500000; // NGN 5,000 = 500000 kobo
+    const PAYSTACK_CURRENCY = "NGN";
+
     const previewUrls = {
         headshot: null,
         runway: null,
@@ -618,7 +642,7 @@
         showStep(1);
     }
 
-    function submitFinal() {
+    function submitFinal(paymentRef, paymentMethod, paymentCode) {
         if (!validateStep4()) return;
 
         const submitBtn = document.getElementById('submitButton');
@@ -642,6 +666,11 @@
                     waistCm: document.getElementById('waistVal')?.textContent,
                     shoeSizeEU: document.getElementById('shoeSize')?.value,
                     eyeColor: document.getElementById('eyeColor')?.value,
+                    paymentRef: paymentRef || null,
+                    paymentMethod: paymentMethod || null,
+                    paymentCode: paymentCode || null,
+                    paymentAmount: PAYSTACK_AMOUNT_KOBO,
+                    paymentCurrency: PAYSTACK_CURRENCY,
                     files: {
                         headshot: document.getElementById('headshotFile')?.files?.[0] || null,
                         runway: document.getElementById('runwayFile')?.files?.[0] || null,
@@ -655,10 +684,98 @@
             } finally {
                 if (submitBtn) {
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Submit to the Agency';
+                    submitBtn.textContent = 'Pay for your registration';
                 }
             }
         })();
+    }
+
+    function startPaystackPayment() {
+        if (!validateStep4()) return;
+
+        const email = document.getElementById('email')?.value?.trim();
+        if (!email) {
+            setError('emailError', 'Please enter your email address.');
+            showStep(2);
+            return;
+        }
+
+        if (!PAYSTACK_PUBLIC_KEY) {
+            alert('Missing Paystack public key. Please add it in the script section.');
+            return;
+        }
+
+        const handler = PaystackPop.setup({
+            key: PAYSTACK_PUBLIC_KEY,
+            email,
+            amount: PAYSTACK_AMOUNT_KOBO,
+            currency: PAYSTACK_CURRENCY,
+            ref: `ROLEX-${Date.now()}`,
+            callback: function (response) {
+                submitFinal(response.reference, 'paystack', null);
+            },
+            onClose: function () {
+                alert('Payment cancelled.');
+            },
+        });
+
+        handler.openIframe();
+    }
+
+    async function redeemCashCode() {
+        const errorEl = document.getElementById('cashCodeError');
+        if (errorEl) {
+            errorEl.textContent = '';
+            errorEl.classList.add('hidden');
+        }
+
+        const codeInput = document.getElementById('cashCode');
+        const code = (codeInput?.value || '').trim().toUpperCase();
+        if (!code) {
+            if (errorEl) {
+                errorEl.textContent = 'Please enter the cash code.';
+                errorEl.classList.remove('hidden');
+            }
+            return;
+        }
+
+        try {
+            if (!window.firebase || !window.FIREBASE_CONFIG) {
+                throw new Error('Firebase not available.');
+            }
+            if (!firebase.apps.length) {
+                firebase.initializeApp(window.FIREBASE_CONFIG);
+            }
+            const auth = firebase.auth();
+            if (!auth.currentUser) {
+                await auth.signInAnonymously();
+            }
+
+            const db = firebase.firestore();
+            const ref = db.collection('paymentCodes').doc(code);
+            const snap = await ref.get();
+
+            if (!snap.exists || snap.data()?.used) {
+                if (errorEl) {
+                    errorEl.textContent = 'Invalid or already used code.';
+                    errorEl.classList.remove('hidden');
+                }
+                return;
+            }
+
+            await ref.update({
+                used: true,
+                usedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                usedBy: auth.currentUser?.uid || null,
+            });
+
+            submitFinal(`CASH-${code}`, 'cash', code);
+        } catch (err) {
+            if (errorEl) {
+                errorEl.textContent = err?.message || 'Unable to validate code.';
+                errorEl.classList.remove('hidden');
+            }
+        }
     }
 </script>
 

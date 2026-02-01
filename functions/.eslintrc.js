@@ -22,6 +22,7 @@ module.exports = {
     "/generated/**/*", // Ignore generated files.
     "/index.js", // Ignore legacy JS entry if present.
     "/src/genkit-sample.ts", // Ignore generated Genkit sample.
+    "/tools/**/*", // Ignore admin tooling scripts.
   ],
   plugins: [
     "@typescript-eslint",

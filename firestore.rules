@@ -16,6 +16,18 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    match /paymentCodes/{code} {
+      allow create: if request.auth != null && request.auth.token.admin == true;
+
+      // Allow authenticated users to read and redeem a code once.
+      allow read: if request.auth != null && resource.data.used == false;
+      allow update: if request.auth != null
+        && resource.data.used == false
+        && request.resource.data.used == true;
+
+      allow delete: if false;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }

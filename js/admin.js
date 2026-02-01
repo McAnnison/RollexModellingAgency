@@ -47,6 +47,18 @@
         }
     }
 
+    function setCashNotice(message) {
+        const notice = $('cashCodeNotice');
+        if (!notice) return;
+        if (!message) {
+            hide(notice);
+            notice.textContent = '';
+        } else {
+            notice.textContent = message;
+            show(notice, 'block');
+        }
+    }
+
     function formatDate(value) {
         if (!value) return '—';
         try {
@@ -183,6 +195,43 @@
         }
     }
 
+    function generateCode() {
+        const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        let out = '';
+        for (let i = 0; i < 8; i += 1) {
+            out += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+        }
+        return `RM-${out}`;
+    }
+
+    async function createCashCode() {
+        if (!state.isAdmin || !state.user) {
+            setCashNotice('Admin access required.');
+            return;
+        }
+        try {
+            ensureFirebase();
+            const db = firebase.firestore();
+            const code = generateCode();
+            const amountValue = Number($('cashAmount')?.value || 0) || null;
+
+            await db.collection('paymentCodes').doc(code).set({
+                code,
+                amount: amountValue,
+                currency: 'NGN',
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                createdBy: state.user.uid,
+                used: false,
+            });
+
+            const output = $('generatedCashCode');
+            if (output) output.textContent = `Code: ${code}`;
+            setCashNotice('');
+        } catch (err) {
+            setCashNotice('Unable to generate code.');
+        }
+    }
+
     function attachListeners() {
         $('searchInput')?.addEventListener('input', renderTable);
         $('statusFilter')?.addEventListener('change', renderTable);
@@ -216,6 +265,8 @@
                 setNotice('Sign out failed.');
             }
         });
+
+        $('generateCashCodeBtn')?.addEventListener('click', createCashCode);
     }
 
     function subscribeApplications() {
