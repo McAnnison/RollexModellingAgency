@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Application Status | Rolex Modelling Agency</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+        <style>
+            body { font-family: 'Inter', sans-serif; background-color: #fbfaf8; color: #111827; }
+            .serif { font-family: 'Playfair Display', serif; }
+            .accent-gradient { background: linear-gradient(135deg, #B76E79, #C9A227); }
+            .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(17, 24, 39, 0.08); }
+            .soft-shadow { box-shadow: 0 30px 60px rgba(17, 24, 39, 0.10); }
+            .focus-ring:focus { outline: 2px solid rgba(183, 110, 121, 0.7); outline-offset: 3px; }
+        </style>
+    </head>
+    <body>
+        <nav class="sticky top-0 z-50 px-6 md:px-10 py-6 flex justify-between items-center bg-[#fbfaf8]/80" style="backdrop-filter: blur(10px);">
+            <a href="index.html" class="flex items-center gap-3 serif text-lg md:text-xl tracking-widest font-bold focus-ring rounded-sm">
+                <img src="assets/logo.jpeg" alt="Rolex Modeling Agency logo" class="w-12 h-12 object-contain" loading="eager" decoding="async">
+                <span>
+                    ROLEX MODELLING <br><span class="text-[10px] font-light tracking-[0.35em] uppercase opacity-70">AGENCY</span>
+                </span>
+            </a>
+            <div class="flex items-center gap-6">
+                <a href="index.html" class="text-[11px] tracking-widest uppercase opacity-70 hover:opacity-100 transition-opacity focus-ring rounded-sm">Home</a>
+                <a href="applicant.html" class="text-[11px] tracking-widest uppercase opacity-100">Status</a>
+            </div>
+        </nav>
+
+        <header class="relative overflow-hidden">
+            <div class="absolute inset-0 opacity-20">
+                <img src="https://images.unsplash.com/photo-1520975693410-0018f0f5e6a2?auto=format&fit=crop&q=80&w=2000" alt="" class="w-full h-full object-cover" loading="eager" fetchpriority="high" decoding="async" />
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-b from-white/90 via-white/70 to-[#fbfaf8]/95"></div>
+            <div class="relative px-6 md:px-10 py-16 md:py-20 max-w-6xl mx-auto">
+                <p class="text-[11px] tracking-[0.32em] uppercase opacity-60">Application status</p>
+                <h1 class="serif text-5xl md:text-6xl tracking-tight mt-3">Track your submission</h1>
+                <p class="mt-4 max-w-2xl text-sm md:text-base opacity-80">
+                    This page shows the status of your submission on this device. Please use the same browser you applied with.
+                </p>
+                <div class="mt-8 h-1 w-20 accent-gradient rounded-full"></div>
+            </div>
+        </header>
+
+        <main class="px-6 md:px-10 pb-16">
+            <div class="max-w-5xl mx-auto grid grid-cols-1 gap-8 -mt-10">
+                <section class="glass soft-shadow rounded-3xl p-8 md:p-10">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div>
+                            <h2 class="serif text-3xl">Your applications</h2>
+                            <p class="text-[11px] tracking-[0.24em] uppercase opacity-60">Live updates</p>
+                        </div>
+                        <button id="refreshBtn" type="button" class="px-4 py-2 rounded-full border border-black/20 text-[11px] uppercase tracking-widest font-semibold focus-ring">
+                            Refresh
+                        </button>
+                    </div>
+
+                    <div id="statusNotice" class="mt-6 hidden rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700"></div>
+                    <div id="loadingState" class="mt-6 text-sm opacity-60">Loading your submissions…</div>
+
+                    <div class="mt-6 overflow-x-auto">
+                        <table class="w-full text-left text-sm" aria-label="Applications table">
+                            <thead class="text-[11px] tracking-[0.24em] uppercase opacity-60 border-b border-black/10">
+                                <tr>
+                                    <th class="py-3 pr-4">Reference ID</th>
+                                    <th class="py-3 pr-4">Status</th>
+                                    <th class="py-3 pr-4">Submitted</th>
+                                </tr>
+                            </thead>
+                            <tbody id="applicationsBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="mt-6 text-xs opacity-60">
+                        Tip: save your reference ID for support.
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+        <script>
+            window.FIREBASE_CONFIG = {
+                apiKey: "AIzaSyBZsPqtu2a0A-75HvQxa14v9KY1vS4pPdc",
+                authDomain: "rolex-modelling.firebaseapp.com",
+                projectId: "rolex-modelling",
+                storageBucket: "rolex-modelling.firebasestorage.app",
+                messagingSenderId: "633376014550",
+                appId: "1:633376014550:web:a6a993a9805d8db8340977",
+                measurementId: "G-FYY4BM20PR"
+            };
+        </script>
+        <script src="js/applicant.js"></script>
+    </body>
+</html>

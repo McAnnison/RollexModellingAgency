@@ -12,7 +12,8 @@ service cloud.firestore {
           || request.auth.token.admin == true
         );
 
-      allow read: if request.auth != null && request.auth.token.admin == true;
+      allow read: if request.auth != null
+        && (request.auth.token.admin == true || resource.data.uid == request.auth.uid);
       allow delete: if false;
     }
 
