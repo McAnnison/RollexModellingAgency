@@ -5,14 +5,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rolex Modelling Agency</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #fbfaf8; color: #111827; overflow-x: hidden; }
-        .serif { font-family: 'Playfair Display', serif; }
-        .accent-gradient { background: linear-gradient(135deg, #B76E79, #C9A227); }
-        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(17, 24, 39, 0.08); }
-        .soft-shadow { box-shadow: 0 30px 60px rgba(17, 24, 39, 0.10); }
-        .focus-ring:focus { outline: 2px solid rgba(183, 110, 121, 0.7); outline-offset: 3px; }
+        :root {
+            --sand: #f7f2ea;
+            --sand-deep: #efe7dc;
+            --ink: #0b1414;
+            --pine: #0f2a26;
+            --copper: #c97b5a;
+            --gold: #d1a864;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--sand);
+            color: var(--ink);
+            overflow-x: hidden;
+        }
+        .serif { font-family: 'Cinzel', serif; letter-spacing: 0.02em; }
+        .accent-gradient { background: linear-gradient(135deg, var(--copper), var(--gold)); }
+        .glass { background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(14px); border: 1px solid rgba(11, 20, 20, 0.10); }
+        .soft-shadow { box-shadow: 0 28px 70px rgba(11, 20, 20, 0.12); }
+        .focus-ring:focus { outline: 2px solid rgba(201, 123, 90, 0.65); outline-offset: 3px; }
+
+        .page-bg { position: fixed; inset: 0; z-index: -10; pointer-events: none; }
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 12% 18%, rgba(201, 123, 90, 0.12), transparent 45%),
+                radial-gradient(circle at 84% 12%, rgba(209, 168, 100, 0.18), transparent 48%),
+                radial-gradient(circle at 80% 78%, rgba(15, 42, 38, 0.10), transparent 52%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(247, 242, 234, 0.75));
+        }
+        .orb {
+            position: absolute;
+            width: 380px;
+            height: 380px;
+            border-radius: 999px;
+            filter: blur(60px);
+            opacity: 0.6;
+        }
+        .orb-a { top: -120px; left: -80px; background: rgba(201, 123, 90, 0.35); }
+        .orb-b { top: 30%; right: -120px; background: rgba(209, 168, 100, 0.35); }
+        .orb-c { bottom: -160px; left: 10%; background: rgba(15, 42, 38, 0.20); }
+
+        .bg-hero-overlay {
+            background: linear-gradient(180deg, rgba(11, 20, 20, 0.65), rgba(11, 20, 20, 0.25) 45%, rgba(11, 20, 20, 0.75));
+        }
+
+        .btn-primary {
+            box-shadow: 0 18px 36px rgba(201, 123, 90, 0.35);
+            letter-spacing: 0.35em;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.35rem 0.9rem;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            background: rgba(11, 20, 20, 0.35);
+            color: rgba(255, 255, 255, 0.92);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.35em;
+        }
+
+        .section-sand { background: linear-gradient(180deg, var(--sand), var(--sand-deep)); }
+
+        @keyframes sectionIn {
+            0% { opacity: 0; transform: translateY(24px) scale(0.99); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .section-animate { animation: sectionIn 0.7s ease both; }
         
         /* Custom Shutter Animation */
         @keyframes shutter {
@@ -43,6 +109,13 @@
     </style>
 </head>
 <body>
+
+    <div class="page-bg" aria-hidden="true">
+        <div class="bg-grid"></div>
+        <div class="orb orb-a"></div>
+        <div class="orb orb-b"></div>
+        <div class="orb orb-c"></div>
+    </div>
 
     <div id="pageLoader" class="fixed inset-0 z-[200] bg-[#fbfaf8] flex items-center justify-center">
         <div class="text-center px-6">
@@ -204,17 +277,27 @@
 
     <section id="step1" class="min-h-[100svh] flex flex-col justify-center items-center relative overflow-hidden">
         <div class="absolute inset-0 z-0">
-              <img src="assets/hreo.jpeg" alt="Models in an editorial group portrait" class="w-full h-full object-cover brightness-[0.55]" style="object-position: 50% 20%;" loading="eager" fetchpriority="high" decoding="async"
+              <img src="assets/hreo.jpeg" alt="Models in an editorial group portrait" class="w-full h-full object-cover brightness-[0.5]" style="object-position: 50% 20%;" loading="eager" fetchpriority="high" decoding="async"
                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1520975693410-0018f0f5e6a2?auto=format&fit=crop&q=80&w=2000';">
+              <div class="absolute inset-0 bg-hero-overlay"></div>
         </div>
         
         <div class="relative z-10 text-center px-4">
+            <div class="flex justify-center mb-5">
+                <span class="badge">Casting 2026 open</span>
+            </div>
             <h1 class="serif text-5xl md:text-7xl mb-6 tracking-tight leading-none text-white hero-text-shadow">UNLEASH YOUR<br><span class="italic text-transparent bg-clip-text accent-gradient hero-accent-shadow">POTENTIAL</span></h1>
             <p class="text-xs md:text-base font-light tracking-[0.28em] mb-12 text-white/90 uppercase hero-sub-shadow">Apply to the future of fashion</p>
             
-            <button onclick="goToStep(2)" class="relative px-12 py-4 rounded-full accent-gradient text-white uppercase tracking-widest text-xs font-semibold transition-opacity hover:opacity-90 focus-ring">
+            <button onclick="goToStep(2)" class="btn-primary relative px-12 py-4 rounded-full accent-gradient text-white uppercase text-xs font-semibold transition-opacity hover:opacity-90 focus-ring">
                 Begin Application
             </button>
+
+            <div class="mt-10 flex flex-wrap justify-center gap-6 text-[10px] tracking-[0.28em] uppercase text-white/80">
+                <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full" style="background:#d1a864"></span>Editorial</span>
+                <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full" style="background:#c97b5a"></span>Runway</span>
+                <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full" style="background:#ffffff"></span>Digital casting</span>
+            </div>
         </div>
 
         <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-white/90 opacity-40 hero-sub-shadow">
@@ -222,7 +305,7 @@
         </div>
     </section>
 
-    <section id="step2" class="hidden min-h-[100svh] flex items-center justify-center bg-[#fbfaf8]">
+    <section id="step2" class="hidden min-h-[100svh] flex items-center justify-center section-sand">
         <form id="applicationForm" novalidate class="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-12 p-8">
             <div class="flex flex-col justify-center">
                 <h2 class="serif text-3xl mb-2">Tell Us About<br>Yourself</h2>
@@ -263,7 +346,7 @@
         </form>
     </section>
 
-    <section id="step3" class="hidden min-h-[100svh] flex items-center justify-center bg-[#fbfaf8] overflow-hidden">
+    <section id="step3" class="hidden min-h-[100svh] flex items-center justify-center section-sand overflow-hidden">
         <div class="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-10 p-8 items-center">
             <div class="rounded-3xl bg-white/80 border border-black/10 shadow-[0_30px_60px_rgba(17,24,39,0.08)] p-8 md:p-10 space-y-8">
                 <div>
@@ -329,7 +412,7 @@
         </div>
     </section>
 
-<section id="step4" class="hidden min-h-[100svh] flex items-center justify-center bg-[#fbfaf8]">
+<section id="step4" class="hidden min-h-[100svh] flex items-center justify-center section-sand">
     <div class="max-w-5xl w-full p-8">
         <div class="text-center mb-12">
             <h2 class="serif text-5xl mb-4">The Showcase</h2>
@@ -832,6 +915,8 @@
             const next = document.getElementById(`step${step}`);
             if (!next) return;
             next.classList.remove('hidden');
+            next.classList.add('section-animate');
+            setTimeout(() => next.classList.remove('section-animate'), 750);
 
             document.getElementById('progress').style.width = (step * 25) + '%';
             window.scrollTo({ top: 0, behavior: 'smooth' });

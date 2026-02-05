@@ -58,60 +58,27 @@
                         </div>
                     </div>
 
-                    <div class="mt-8 grid grid-cols-1 gap-4">
-                        <div class="glass rounded-2xl border border-black/10 p-6">
-                            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                                <div>
-                                    <p class="text-[10px] uppercase tracking-widest opacity-60">Session 1</p>
-                                    <h3 class="serif text-2xl mt-2">Introduction & posture</h3>
-                                    <p class="mt-2 text-sm opacity-70">Thursday, Feb 13, 2026 — 10:00 AM</p>
-                                </div>
-                                <div class="text-sm opacity-70">
-                                    Venue: Studio A, 620 Fifth Ave, New York, NY
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="glass rounded-2xl border border-black/10 p-6">
-                            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                                <div>
-                                    <p class="text-[10px] uppercase tracking-widest opacity-60">Session 2</p>
-                                    <h3 class="serif text-2xl mt-2">Runway fundamentals</h3>
-                                    <p class="mt-2 text-sm opacity-70">Saturday, Feb 15, 2026 — 1:30 PM</p>
-                                </div>
-                                <div class="text-sm opacity-70">
-                                    Venue: Studio B, 620 Fifth Ave, New York, NY
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="glass rounded-2xl border border-black/10 p-6">
-                            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                                <div>
-                                    <p class="text-[10px] uppercase tracking-widest opacity-60">Session 3</p>
-                                    <h3 class="serif text-2xl mt-2">Camera presence</h3>
-                                    <p class="mt-2 text-sm opacity-70">Tuesday, Feb 18, 2026 — 4:00 PM</p>
-                                </div>
-                                <div class="text-sm opacity-70">
-                                    Venue: Studio C, 620 Fifth Ave, New York, NY
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="eventsLoading" class="mt-6 text-sm opacity-60">Loading events…</div>
+                    <div id="eventsList" class="mt-8 grid grid-cols-1 gap-4"></div>
                 </section>
             </div>
         </main>
 
+        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
         <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const refEl = document.getElementById('referenceId');
-                try {
-                    const id = localStorage.getItem('lastApplicationId');
-                    if (refEl && id) refEl.textContent = id;
-                } catch (err) {
-                    // ignore storage errors
-                }
-            });
+            window.FIREBASE_CONFIG = {
+                apiKey: "AIzaSyBZsPqtu2a0A-75HvQxa14v9KY1vS4pPdc",
+                authDomain: "rolex-modelling.firebaseapp.com",
+                projectId: "rolex-modelling",
+                storageBucket: "rolex-modelling.firebasestorage.app",
+                messagingSenderId: "633376014550",
+                appId: "1:633376014550:web:a6a993a9805d8db8340977",
+                measurementId: "G-FYY4BM20PR"
+            };
         </script>
+        <script src="js/training.js"></script>
     </body>
 </html>

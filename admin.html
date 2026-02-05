@@ -57,42 +57,106 @@
 
         <main class="px-6 md:px-10 pb-16">
             <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 -mt-10">
-                <section class="glass soft-shadow rounded-3xl p-8 md:p-10">
-                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                        <div>
-                            <h2 class="serif text-3xl">Submissions</h2>
-                            <p class="text-[11px] tracking-[0.24em] uppercase opacity-60">Live Firestore feed</p>
+                <div class="space-y-8">
+                    <section class="glass soft-shadow rounded-3xl p-8 md:p-10">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                            <div>
+                                <h2 class="serif text-3xl">Submissions</h2>
+                                <p class="text-[11px] tracking-[0.24em] uppercase opacity-60">Live Firestore feed</p>
+                            </div>
+                            <div class="flex gap-3">
+                                <input id="searchInput"     aria-label="Search name or email" type="text" placeholder="Search name or email" class="focus-ring bg-transparent border-b border-black/15 py-2 px-2 text-sm focus:outline-none focus:border-black/40" />
+                                <select id="statusFilter" class="focus-ring bg-transparent border-b border-black/15 py-2 px-2 text-sm focus:outline-none focus:border-black/40">
+                                    <option value="">All</option>
+                                    <option value="submitted">Submitted</option>
+                                    <option value="reviewing">Reviewing</option>
+                                    <option value="approved">Approved</option>
+                                    <option value="rejected">Rejected</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="flex gap-3">
-                            <input id="searchInput" type="text" placeholder="Search name or email" class="focus-ring bg-transparent border-b border-black/15 py-2 px-2 text-sm focus:outline-none focus:border-black/40" />
-                            <select id="statusFilter" class="focus-ring bg-transparent border-b border-black/15 py-2 px-2 text-sm focus:outline-none focus:border-black/40">
-                                <option value="">All</option>
-                                <option value="submitted">Submitted</option>
-                                <option value="reviewing">Reviewing</option>
-                                <option value="approved">Approved</option>
-                                <option value="rejected">Rejected</option>
-                            </select>
+
+                        <div id="adminNotice" class="mt-6 hidden rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700"></div>
+                        <div id="loadingState" class="mt-6 text-sm opacity-60">Loading applications…</div>
+
+                        <div class="mt-6 overflow-x-auto">
+                            <table class="w-full text-left text-sm" aria-label="Applications table">
+                                <thead class="text-[11px] tracking-[0.24em] uppercase opacity-60 border-b border-black/10">
+                                    <tr>
+                                        <th class="py-3 pr-4">Applicant</th>
+                                        <th class="py-3 pr-4">Email</th>
+                                        <th class="py-3 pr-4">Status</th>
+                                        <th class="py-3 pr-4">Submitted</th>
+                                        <th class="py-3 pr-4">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="applicationsBody"></tbody>
+                            </table>
                         </div>
-                    </div>
+                    </section>
 
-                    <div id="adminNotice" class="mt-6 hidden rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700"></div>
-                    <div id="loadingState" class="mt-6 text-sm opacity-60">Loading applications…</div>
+                    <section class="glass soft-shadow rounded-3xl p-8 md:p-10">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                            <div>
+                                <h2 class="serif text-3xl">Training events</h2>
+                                <p class="text-[11px] tracking-[0.24em] uppercase opacity-60">Post sessions for students</p>
+                            </div>
+                            <button id="newEventBtn" type="button" class="px-4 py-2 rounded-full accent-gradient text-white text-[10px] uppercase tracking-widest font-semibold transition-opacity hover:opacity-90 focus-ring">
+                                Add new event
+                            </button>
+                        </div>
 
-                    <div class="mt-6 overflow-x-auto">
-                        <table class="w-full text-left text-sm" aria-label="Applications table">
-                            <thead class="text-[11px] tracking-[0.24em] uppercase opacity-60 border-b border-black/10">
-                                <tr>
-                                    <th class="py-3 pr-4">Applicant</th>
-                                    <th class="py-3 pr-4">Email</th>
-                                    <th class="py-3 pr-4">Status</th>
-                                    <th class="py-3 pr-4">Submitted</th>
-                                    <th class="py-3 pr-4">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="applicationsBody"></tbody>
-                        </table>
-                    </div>
-                </section>
+                        <div id="eventForm" class="mt-6 hidden rounded-2xl border border-black/10 p-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-[10px] uppercase tracking-widest opacity-60" for="eventTitle">Event title</label>
+                                    <input id="eventTitle" type="text" placeholder="Runway fundamentals" class="focus-ring w-full bg-transparent border-b border-black/15 py-2 text-sm focus:outline-none focus:border-black/40" />
+                                </div>
+                                <div>
+                                    <label class="text-[10px] uppercase tracking-widest opacity-60" for="eventLocation">Location</label>
+                                    <input id="eventLocation" type="text" placeholder="New York" class="focus-ring w-full bg-transparent border-b border-black/15 py-2 text-sm focus:outline-none focus:border-black/40" />
+                                </div>
+                                <div>
+                                    <label class="text-[10px] uppercase tracking-widest opacity-60" for="eventTime">Date & time</label>
+                                    <input id="eventTime" type="datetime-local" class="focus-ring w-full bg-transparent border-b border-black/15 py-2 text-sm focus:outline-none focus:border-black/40" />
+                                </div>
+                                <div>
+                                    <label class="text-[10px] uppercase tracking-widest opacity-60" for="eventVenue">Venue</label>
+                                    <input id="eventVenue" type="text" placeholder="Studio A, 620 Fifth Ave" class="focus-ring w-full bg-transparent border-b border-black/15 py-2 text-sm focus:outline-none focus:border-black/40" />
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <label class="text-[10px] uppercase tracking-widest opacity-60" for="eventImage">Venue image</label>
+                                <input id="eventImage" type="file" accept="image/*" class="mt-2 w-full text-sm" />
+                                <p class="mt-2 text-[11px] opacity-60">JPG/PNG/WebP recommended.</p>
+                            </div>
+                            <div class="mt-4 flex items-center gap-3">
+                                <button id="saveEventBtn" type="button" class="px-4 py-2 rounded-full accent-gradient text-white text-[10px] uppercase tracking-widest font-semibold transition-opacity hover:opacity-90 focus-ring">
+                                    Publish event
+                                </button>
+                                <button id="cancelEventBtn" type="button" class="px-4 py-2 rounded-full border border-black/20 text-[10px] uppercase tracking-widest font-semibold focus-ring">
+                                    Cancel
+                                </button>
+                                <p id="eventNotice" class="text-xs text-rose-700 hidden" aria-live="polite"></p>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 overflow-x-auto">
+                            <table class="w-full text-left text-sm" aria-label="Events table">
+                                <thead class="text-[11px] tracking-[0.24em] uppercase opacity-60 border-b border-black/10">
+                                    <tr>
+                                        <th class="py-3 pr-4">Title</th>
+                                        <th class="py-3 pr-4">Time</th>
+                                        <th class="py-3 pr-4">Location</th>
+                                        <th class="py-3 pr-4">Venue</th>
+                                        <th class="py-3 pr-4">Image</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="eventsBody"></tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
 
                 <aside class="glass soft-shadow rounded-3xl p-8 md:p-10">
                     <h2 class="serif text-3xl">Admin access</h2>
@@ -127,7 +191,7 @@
                         <p class="mt-2 text-sm opacity-70">Generate a one-time code for cash payments.</p>
 
                         <div class="mt-4 flex gap-3">
-                            <input id="cashAmount" type="number" min="0" placeholder="Amount (optional)" class="focus-ring flex-1 bg-transparent border-b border-black/15 py-2 text-sm focus:outline-none focus:border-black/40" />
+                            <input id="cashAmount" aria-label="Amount (optional)" type="number" min="0" placeholder="Amount (optional)" class="focus-ring flex-1 bg-transparent border-b border-black/15 py-2 text-sm focus:outline-none focus:border-black/40" />
                             <button id="generateCashCodeBtn" type="button" class="px-4 py-2 rounded-full accent-gradient text-white text-[10px] uppercase tracking-widest font-semibold transition-opacity hover:opacity-90 focus-ring">
                                 Generate
                             </button>

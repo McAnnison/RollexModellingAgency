@@ -14,6 +14,7 @@
     const state = {
         applications: [],
         unsubscribe: null,
+        unsubscribeEvents: null,
         user: null,
         isAdmin: false,
         selected: null,
@@ -49,6 +50,18 @@
 
     function setCashNotice(message) {
         const notice = $('cashCodeNotice');
+        if (!notice) return;
+        if (!message) {
+            hide(notice);
+            notice.textContent = '';
+        } else {
+            notice.textContent = message;
+            show(notice, 'block');
+        }
+    }
+
+    function setEventNotice(message) {
+        const notice = $('eventNotice');
         if (!notice) return;
         if (!message) {
             hide(notice);
@@ -122,6 +135,112 @@
             show(loader, 'block');
         } else {
             hide(loader);
+        }
+    }
+
+    function renderEvents(events) {
+        const body = $('eventsBody');
+        if (!body) return;
+        body.innerHTML = '';
+
+        if (!events.length) {
+            body.innerHTML = '<tr><td colspan="5" class="py-6 text-center text-sm opacity-60">No events posted yet.</td></tr>';
+            return;
+        }
+
+        events.forEach((evt) => {
+            const row = document.createElement('tr');
+            row.className = 'border-b border-black/5';
+            const timeText = evt.time ? formatDate(evt.time) : '—';
+            const imageLabel = evt.imagePath ? 'View' : '—';
+            row.innerHTML = `
+                <td class="py-4 pr-4 font-semibold">${evt.title || '—'}</td>
+                <td class="py-4 pr-4">${timeText}</td>
+                <td class="py-4 pr-4">${evt.location || '—'}</td>
+                <td class="py-4 pr-4">${evt.venue || '—'}</td>
+                <td class="py-4 pr-4">
+                    <button class="text-[11px] uppercase tracking-widest font-semibold underline" ${evt.imagePath ? '' : 'disabled'}>
+                        ${imageLabel}
+                    </button>
+                </td>
+            `;
+
+            const btn = row.querySelector('button');
+            if (btn && evt.imagePath) {
+                btn.addEventListener('click', () => openStorageFile(evt.imagePath));
+            }
+            body.appendChild(row);
+        });
+    }
+
+    function toggleEventForm(showForm) {
+        const form = $('eventForm');
+        if (!form) return;
+        if (showForm) {
+            show(form, 'block');
+        } else {
+            hide(form);
+            $('eventTitle').value = '';
+            $('eventLocation').value = '';
+            $('eventTime').value = '';
+            $('eventVenue').value = '';
+            $('eventImage').value = '';
+            setEventNotice('');
+        }
+    }
+
+    async function uploadEventImage(eventId, file) {
+        if (!file) return null;
+        ensureFirebase();
+        const storage = firebase.storage();
+        const ext = (file.name || '').split('.').pop() || 'jpg';
+        const path = `events/${eventId}/cover.${ext}`;
+        const ref = storage.ref().child(path);
+        await ref.put(file, { contentType: file.type || 'image/jpeg' });
+        return path;
+    }
+
+    async function createEvent() {
+        if (!state.isAdmin || !state.user) {
+            setEventNotice('Admin access required.');
+            return;
+        }
+
+        const title = $('eventTitle')?.value?.trim();
+        const location = $('eventLocation')?.value?.trim();
+        const timeInput = $('eventTime')?.value;
+        const venue = $('eventVenue')?.value?.trim();
+        const imageFile = $('eventImage')?.files?.[0] || null;
+
+        if (!title || !location || !timeInput || !venue) {
+            setEventNotice('Please fill in all fields.');
+            return;
+        }
+
+        setEventNotice('');
+
+        try {
+            ensureFirebase();
+            const db = firebase.firestore();
+            const docRef = await db.collection('trainingEvents').add({
+                title,
+                location,
+                venue,
+                time: firebase.firestore.Timestamp.fromDate(new Date(timeInput)),
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                createdBy: state.user.uid,
+                imagePath: null,
+            });
+
+            let imagePath = null;
+            if (imageFile) {
+                imagePath = await uploadEventImage(docRef.id, imageFile);
+                await docRef.update({ imagePath });
+            }
+
+            toggleEventForm(false);
+        } catch (err) {
+            setEventNotice('Unable to publish event.');
         }
     }
 
@@ -267,6 +386,9 @@
         });
 
         $('generateCashCodeBtn')?.addEventListener('click', createCashCode);
+        $('newEventBtn')?.addEventListener('click', () => toggleEventForm(true));
+        $('cancelEventBtn')?.addEventListener('click', () => toggleEventForm(false));
+        $('saveEventBtn')?.addEventListener('click', createEvent);
     }
 
     function subscribeApplications() {
@@ -291,6 +413,27 @@
             }, () => {
                 setLoading(false);
                 setNotice('Unable to load applications.');
+            });
+    }
+
+    function subscribeEvents() {
+        if (state.unsubscribeEvents) state.unsubscribeEvents();
+        state.unsubscribeEvents = null;
+
+        if (!state.isAdmin) {
+            renderEvents([]);
+            return;
+        }
+
+        ensureFirebase();
+        const db = firebase.firestore();
+        state.unsubscribeEvents = db.collection('trainingEvents').orderBy('time', 'asc').limit(50)
+            .onSnapshot((snap) => {
+                const events = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+                renderEvents(events);
+            }, () => {
+                renderEvents([]);
+                setEventNotice('Unable to load events.');
             });
     }
 
@@ -324,6 +467,7 @@
         }
 
         subscribeApplications();
+        subscribeEvents();
     }
 
     document.addEventListener('DOMContentLoaded', () => {
