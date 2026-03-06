@@ -1,4 +1,5 @@
 (function () {
+    var POLL_INTERVAL_MS = 15000; // milliseconds between application list refreshes
     function getApiBase() {
         return (window.API_BASE_URL || '').replace(/\/$/, '');
     }
@@ -277,7 +278,7 @@
 
         setLoading(true);
         poll();
-        state.pollTimer = setInterval(poll, 15000);
+        state.pollTimer = setInterval(poll, POLL_INTERVAL_MS);
     }
 
     function signOut() {

@@ -10,30 +10,27 @@
         return (window.API_BASE_URL || '').replace(/\/$/, '');
     }
 
+    function generateSecureId() {
+        if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+            return 'sess-' + crypto.randomUUID();
+        }
+        // Fallback for older browsers
+        const arr = new Uint8Array(16);
+        crypto.getRandomValues(arr);
+        return 'sess-' + Array.from(arr, (b) => b.toString(16).padStart(2, '0')).join('');
+    }
+
     function getSessionId() {
         try {
             let id = localStorage.getItem('rollex_session_id');
             if (!id) {
-                id = 'sess-' + Math.random().toString(36).slice(2) + '-' + Date.now().toString(36);
+                id = generateSecureId();
                 localStorage.setItem('rollex_session_id', id);
             }
             return id;
         } catch (e) {
-            return 'sess-' + Math.random().toString(36).slice(2);
+            return generateSecureId();
         }
-    }
-
-    function fileExtensionFromMime(file) {
-        const type = (file && file.type || '').toLowerCase();
-        if (type === 'image/jpeg') return 'jpg';
-        if (type === 'image/png') return 'png';
-        if (type === 'image/webp') return 'webp';
-        if (type === 'video/mp4') return 'mp4';
-        if (type === 'video/quicktime') return 'mov';
-        const name = (file && file.name || '').toLowerCase();
-        const dot = name.lastIndexOf('.');
-        if (dot !== -1 && dot < name.length - 1) return name.slice(dot + 1).replace(/[^a-z0-9]/g, '').slice(0, 6) || 'bin';
-        return 'bin';
     }
 
     async function submitApplication(payload) {

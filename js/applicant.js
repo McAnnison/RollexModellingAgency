@@ -3,17 +3,31 @@
         return (window.API_BASE_URL || '').replace(/\/$/, '');
     }
 
+    function generateSecureId() {
+        if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+            return 'sess-' + crypto.randomUUID();
+        }
+        if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+            return 'sess-' + Array.from(crypto.getRandomValues(new Uint8Array(16)), function (b) {
+                return b.toString(16).padStart(2, '0');
+            }).join('');
+        }
+        // Last resort fallback (should not occur in modern browsers)
+        return 'sess-' + Date.now().toString(36) + '-' + (Math.random() * 0xffffffff | 0).toString(36);
+    }
+
     function getSessionId() {
+        // Prefer the shared helper from api-client.js if loaded
         if (typeof window.getSessionId === 'function') return window.getSessionId();
         try {
             let id = localStorage.getItem('rollex_session_id');
             if (!id) {
-                id = 'sess-' + Math.random().toString(36).slice(2) + '-' + Date.now().toString(36);
+                id = generateSecureId();
                 localStorage.setItem('rollex_session_id', id);
             }
             return id;
         } catch (e) {
-            return 'sess-' + Math.random().toString(36).slice(2);
+            return generateSecureId();
         }
     }
 

@@ -24,6 +24,7 @@
 require('dotenv').config();
 
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const multer = require('multer');
@@ -38,7 +39,14 @@ const { v4: uuidv4 } = require('uuid');
 
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/rollex';
+if (!process.env.JWT_SECRET && process.env.NODE_ENV === 'production') {
+  console.error('FATAL: JWT_SECRET must be set in production. Exiting.');
+  process.exit(1);
+}
 const JWT_SECRET = process.env.JWT_SECRET || 'change-me-in-production';
+if (!process.env.JWT_SECRET) {
+  console.warn('WARNING: JWT_SECRET is not set. Set JWT_SECRET before deploying to production.');
+}
 const SENDGRID_KEY = process.env.SENDGRID_KEY || '';
 const EMAIL_FROM = process.env.EMAIL_FROM || '';
 const EMAIL_ADMIN = process.env.EMAIL_ADMIN || '';
@@ -46,6 +54,41 @@ const UPLOADS_DIR = process.env.UPLOADS_DIR
   ? path.resolve(process.env.UPLOADS_DIR)
   : path.join(__dirname, 'uploads');
 const CORS_ORIGIN = process.env.CORS_ORIGIN || '*';
+
+// --- Rate Limiters -----------------------------------------------------------
+
+// Generous limiter for most API routes
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please try again later.' },
+});
+
+// Strict limiter for auth to prevent brute force
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many login attempts, please try again later.' },
+});
+
+// Limiter for application submissions and code redemption
+const submitLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many submissions, please try again later.' },
+});
+
+// --- Constants ---------------------------------------------------------------
+
+const MAX_FILE_SIZE_BYTES = 200 * 1024 * 1024; // 200 MB
+const JWT_EXPIRES_IN = '12h';
+// POLL_INTERVAL_MS: frontend polls every 15s (see js/admin.js)
 
 // --- MongoDB Models ----------------------------------------------------------
 
@@ -128,15 +171,18 @@ if (!fs.existsSync(UPLOADS_DIR)) {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const appId = req._uploadAppId || 'tmp';
+    const rawId = (req.res && req.res.locals && req.res.locals.uploadAppId) || 'tmp';
+    // Validate to prevent path traversal - only allow alphanumeric, hyphens, underscores
+    const appId = /^[a-zA-Z0-9_-]+$/.test(rawId) ? rawId : 'tmp';
     const dir = path.join(UPLOADS_DIR, appId);
     fs.mkdirSync(dir, { recursive: true });
     cb(null, dir);
   },
   filename: function (req, file, cb) {
-    const rawExt = path.extname(file.originalname || '');
-    const ext = rawExt.replace(/[^a-z0-9.]/gi, '').slice(0, 10);
-    cb(null, `${file.fieldname}${ext ? '.' + ext.replace('.', '') : ''}`);
+    // ext already includes the leading dot e.g. '.jpg'
+    const rawExt = path.extname(file.originalname || '').toLowerCase();
+    const ext = rawExt.replace(/[^a-z0-9.]/g, '').slice(0, 10);
+    cb(null, file.fieldname + (ext || ''));
   },
 });
 
@@ -147,7 +193,7 @@ const ALLOWED_MIME = new Set([
 
 const upload = multer({
   storage,
-  limits: { fileSize: 200 * 1024 * 1024 }, // 200 MB
+  limits: { fileSize: MAX_FILE_SIZE_BYTES },
   fileFilter: function (req, file, cb) {
     if (!ALLOWED_MIME.has(file.mimetype)) {
       return cb(new Error('File type not allowed: ' + file.mimetype));
@@ -159,7 +205,7 @@ const upload = multer({
 // --- Auth Helpers ------------------------------------------------------------
 
 function signAdminToken(adminId, email) {
-  return jwt.sign({ sub: String(adminId), email, role: 'admin' }, JWT_SECRET, { expiresIn: '12h' });
+  return jwt.sign({ sub: String(adminId), email, role: 'admin' }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 }
 
 function requireAdmin(req, res, next) {
@@ -242,7 +288,7 @@ app.use('/uploads', express.static(UPLOADS_DIR));
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
 // POST /api/auth/login  { email, password }
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', authLimiter, async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
@@ -264,9 +310,10 @@ app.post('/api/auth/login', async (req, res) => {
 // POST /api/applications  (multipart/form-data)
 app.post(
   '/api/applications',
+  submitLimiter,
   (req, res, next) => {
     // Pre-assign a temp ID so multer can create the right folder
-    req._uploadAppId = uuidv4();
+    res.locals.uploadAppId = uuidv4();
     next();
   },
   upload.fields([
@@ -284,7 +331,7 @@ app.post(
         if (!arr || !arr.length) return null;
         const f = arr[0];
         return {
-          path: path.join(req._uploadAppId, f.filename),
+          path: path.join(res.locals.uploadAppId, f.filename),
           filename: f.filename,
           contentType: f.mimetype || null,
           size: f.size || null,
@@ -319,7 +366,7 @@ app.post(
 
       // Move uploaded files to a directory named after the real Mongo _id
       const appId = String(newApp._id);
-      const tmpDir = path.join(UPLOADS_DIR, req._uploadAppId);
+      const tmpDir = path.join(UPLOADS_DIR, res.locals.uploadAppId);
       const finalDir = path.join(UPLOADS_DIR, appId);
       if (fs.existsSync(tmpDir)) {
         fs.renameSync(tmpDir, finalDir);
@@ -347,7 +394,7 @@ app.post(
 );
 
 // GET /api/applications  (admin only)
-app.get('/api/applications', requireAdmin, async (req, res) => {
+app.get('/api/applications', apiLimiter, requireAdmin, async (req, res) => {
   try {
     const apps = await Application.find()
       .sort({ createdAt: -1 })
@@ -376,7 +423,7 @@ app.get('/api/applications', requireAdmin, async (req, res) => {
 });
 
 // GET /api/my-applications?sessionId=xxx
-app.get('/api/my-applications', async (req, res) => {
+app.get('/api/my-applications', apiLimiter, async (req, res) => {
   try {
     const sessionId = String(req.query.sessionId || '').trim();
     if (!sessionId) return res.status(400).json({ error: 'sessionId is required' });
@@ -398,7 +445,7 @@ app.get('/api/my-applications', async (req, res) => {
 });
 
 // PATCH /api/applications/:id  (admin only)  { status }
-app.patch('/api/applications/:id', requireAdmin, async (req, res) => {
+app.patch('/api/applications/:id', apiLimiter, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
@@ -419,7 +466,7 @@ app.patch('/api/applications/:id', requireAdmin, async (req, res) => {
 });
 
 // GET /api/applications/:id/files/:kind  (admin only)
-app.get('/api/applications/:id/files/:kind', requireAdmin, async (req, res) => {
+app.get('/api/applications/:id/files/:kind', apiLimiter, requireAdmin, async (req, res) => {
   try {
     const { id, kind } = req.params;
     if (!['headshot', 'runway', 'fullBody'].includes(kind)) {
@@ -437,7 +484,8 @@ app.get('/api/applications/:id/files/:kind', requireAdmin, async (req, res) => {
 
     if (fileInfo.contentType) res.setHeader('Content-Type', fileInfo.contentType);
     if (fileInfo.name) {
-      const safeName = fileInfo.name.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 100);
+      // Strip any characters that could break the header value
+      const safeName = fileInfo.name.replace(/[\r\n"\\]/g, '_').replace(/[^a-zA-Z0-9._\- ]/g, '_').slice(0, 100);
       res.setHeader('Content-Disposition', 'inline; filename="' + safeName + '"');
     }
     res.sendFile(filePath);
@@ -457,7 +505,7 @@ function generateCode() {
   return 'RM-' + out;
 }
 
-app.post('/api/payment-codes', requireAdmin, async (req, res) => {
+app.post('/api/payment-codes', apiLimiter, requireAdmin, async (req, res) => {
   try {
     const amount = Number(req.body && req.body.amount) || null;
     const code = generateCode();
@@ -478,7 +526,7 @@ app.post('/api/payment-codes', requireAdmin, async (req, res) => {
 });
 
 // POST /api/payment-codes/redeem  { code, sessionId? }
-app.post('/api/payment-codes/redeem', async (req, res) => {
+app.post('/api/payment-codes/redeem', submitLimiter, async (req, res) => {
   try {
     const code = String((req.body && req.body.code) || '').trim().toUpperCase();
     if (!code) return res.status(400).json({ error: 'Code is required' });
