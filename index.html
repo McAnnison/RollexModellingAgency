@@ -471,26 +471,14 @@
     </div>
 </div>
 
-<!-- Firebase (compat SDKs) -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+<!-- MongoDB REST API config -->
 <script src="https://js.paystack.co/v1/inline.js"></script>
 <script src="public-config.js"></script>
 <script>
-    // Firebase Web App config
-    window.FIREBASE_CONFIG = window.RUNTIME_CONFIG?.FIREBASE_CONFIG || {
-        apiKey: "AIzaSyBZsPqtu2a0A-75HvQxa14v9KY1vS4pPdc",
-        authDomain: "rolex-modelling.firebaseapp.com",
-        projectId: "rolex-modelling",
-        storageBucket: "rolex-modelling.firebasestorage.app",
-        messagingSenderId: "633376014550",
-        appId: "1:633376014550:web:a6a993a9805d8db8340977",
-        measurementId: "G-FYY4BM20PR"
-    };
+    // Backend API URL — update to your deployed server URL in production
+    window.API_BASE_URL = (window.RUNTIME_CONFIG && window.RUNTIME_CONFIG.API_BASE_URL) || "http://localhost:3000";
 </script>
-<script src="js/firebase-client.js"></script>
+<script src="js/api-client.js"></script>
 
 <script>
     // Paystack
@@ -672,11 +660,11 @@
 
         (async () => {
             try {
-                if (typeof window.submitApplicationToFirebase !== 'function') {
-                    throw new Error('Firebase submission is not available yet.');
+                if (typeof window.submitApplicationToAPI !== 'function') {
+                    throw new Error('API client is not available yet.');
                 }
 
-                const result = await window.submitApplicationToFirebase({
+                const result = await window.submitApplicationToAPI({
                     fullName: document.getElementById('fullName')?.value,
                     email: document.getElementById('email')?.value,
                     phone: document.getElementById('phoneNumber')?.value,
@@ -779,35 +767,10 @@
         }
 
         try {
-            if (!window.firebase || !window.FIREBASE_CONFIG) {
-                throw new Error('Firebase not available.');
+            if (typeof window.redeemCashCodeAPI !== 'function') {
+                throw new Error('API client is not available yet.');
             }
-            if (!firebase.apps.length) {
-                firebase.initializeApp(window.FIREBASE_CONFIG);
-            }
-            const auth = firebase.auth();
-            if (!auth.currentUser) {
-                await auth.signInAnonymously();
-            }
-
-            const db = firebase.firestore();
-            const ref = db.collection('paymentCodes').doc(code);
-            const snap = await ref.get();
-
-            if (!snap.exists || snap.data()?.used) {
-                if (errorEl) {
-                    errorEl.textContent = 'Invalid or already used code.';
-                    errorEl.classList.remove('hidden');
-                }
-                return;
-            }
-
-            await ref.update({
-                used: true,
-                usedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                usedBy: auth.currentUser?.uid || null,
-            });
-
+            await window.redeemCashCodeAPI(code);
             submitFinal(`CASH-${code}`, 'cash', code);
         } catch (err) {
             if (errorEl) {
