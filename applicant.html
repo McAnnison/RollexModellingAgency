@@ -80,20 +80,12 @@
             </div>
         </main>
 
-        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+        <!-- MongoDB REST API config -->
         <script>
-            window.FIREBASE_CONFIG = {
-                apiKey: "AIzaSyBZsPqtu2a0A-75HvQxa14v9KY1vS4pPdc",
-                authDomain: "rolex-modelling.firebaseapp.com",
-                projectId: "rolex-modelling",
-                storageBucket: "rolex-modelling.firebasestorage.app",
-                messagingSenderId: "633376014550",
-                appId: "1:633376014550:web:a6a993a9805d8db8340977",
-                measurementId: "G-FYY4BM20PR"
-            };
+            // Backend API URL — update to your deployed server URL in production
+            window.API_BASE_URL = (window.RUNTIME_CONFIG && window.RUNTIME_CONFIG.API_BASE_URL) || "http://localhost:3000";
         </script>
+        <script src="js/api-client.js"></script>
         <script src="js/applicant.js"></script>
     </body>
 </html>

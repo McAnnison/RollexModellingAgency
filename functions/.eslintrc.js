@@ -4,35 +4,17 @@ module.exports = {
     es6: true,
     node: true,
   },
-  extends: [
-    "eslint:recommended",
-    "plugin:import/errors",
-    "plugin:import/warnings",
-    "plugin:import/typescript",
-    "google",
-    "plugin:@typescript-eslint/recommended",
-  ],
-  parser: "@typescript-eslint/parser",
+  extends: ['eslint:recommended'],
   parserOptions: {
-    project: ["tsconfig.json", "tsconfig.dev.json"],
-    sourceType: "module",
+    ecmaVersion: 2020,
   },
   ignorePatterns: [
-    "/lib/**/*", // Ignore built files.
-    "/generated/**/*", // Ignore generated files.
-    "/index.js", // Ignore legacy JS entry if present.
-    "/src/genkit-sample.ts", // Ignore generated Genkit sample.
-    "/tools/**/*", // Ignore admin tooling scripts.
-  ],
-  plugins: [
-    "@typescript-eslint",
-    "import",
+    '/lib/**/*',
+    '/generated/**/*',
+    '/node_modules/**/*',
   ],
   rules: {
-    "quotes": ["error", "double"],
-    "import/no-unresolved": 0,
-    "indent": ["error", 2],
-    "require-jsdoc": "off",
-    "@typescript-eslint/no-explicit-any": "off",
+    'no-console': 'off',
+    'semi': ['error', 'always'],
   },
 };

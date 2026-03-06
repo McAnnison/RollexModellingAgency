@@ -1,13 +1,19 @@
 (function () {
-    function ensureFirebase() {
-        if (!window.firebase) {
-            throw new Error('Firebase SDK not loaded.');
-        }
-        if (!window.FIREBASE_CONFIG) {
-            throw new Error('Missing FIREBASE_CONFIG.');
-        }
-        if (!firebase.apps.length) {
-            firebase.initializeApp(window.FIREBASE_CONFIG);
+    function getApiBase() {
+        return (window.API_BASE_URL || '').replace(/\/$/, '');
+    }
+
+    function getSessionId() {
+        if (typeof window.getSessionId === 'function') return window.getSessionId();
+        try {
+            let id = localStorage.getItem('rollex_session_id');
+            if (!id) {
+                id = 'sess-' + Math.random().toString(36).slice(2) + '-' + Date.now().toString(36);
+                localStorage.setItem('rollex_session_id', id);
+            }
+            return id;
+        } catch (e) {
+            return 'sess-' + Math.random().toString(36).slice(2);
         }
     }
 
@@ -15,10 +21,10 @@
         return document.getElementById(id);
     }
 
-    function show(el, display = 'block') {
+    function show(el, display) {
         if (!el) return;
         el.classList.remove('hidden');
-        el.style.display = display;
+        el.style.display = display || 'block';
     }
 
     function hide(el) {
@@ -53,7 +59,7 @@
     function formatDate(value) {
         if (!value) return '—';
         try {
-            const date = value.toDate ? value.toDate() : new Date(value);
+            const date = new Date(value);
             if (Number.isNaN(date.getTime())) return '—';
             return date.toLocaleString();
         } catch (err) {
@@ -71,69 +77,49 @@
             return;
         }
 
-        apps.forEach((app) => {
+        apps.forEach(function (app) {
             const row = document.createElement('tr');
             row.className = 'border-b border-black/5';
-            row.innerHTML = `
-                <td class="py-4 pr-4 font-semibold">${app.id}</td>
-                <td class="py-4 pr-4 capitalize">${app.status || 'submitted'}</td>
-                <td class="py-4 pr-4">${formatDate(app.createdAt)}</td>
-            `;
+            row.innerHTML =
+                '<td class="py-4 pr-4 font-semibold">' + app.id + '</td>' +
+                '<td class="py-4 pr-4 capitalize">' + (app.status || 'submitted') + '</td>' +
+                '<td class="py-4 pr-4">' + formatDate(app.createdAt) + '</td>';
             body.appendChild(row);
         });
     }
 
-    function subscribeApplications(uid) {
-        ensureFirebase();
-        const db = firebase.firestore();
-        setLoading(true);
-
-        return db.collection('applications')
-            .where('uid', '==', uid)
-            .orderBy('createdAt', 'desc')
-            .limit(20)
-            .onSnapshot((snap) => {
-                const apps = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-                setLoading(false);
-                render(apps);
-            }, () => {
-                setLoading(false);
-                setNotice('Unable to load submissions.');
-            });
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        try {
-            ensureFirebase();
-        } catch (err) {
-            setNotice('Firebase initialization failed.');
+    async function fetchApplications() {
+        const base = getApiBase();
+        if (!base) {
+            setNotice('API_BASE_URL is not configured.');
+            setLoading(false);
             return;
         }
 
-        let unsubscribe = null;
+        const sessionId = getSessionId();
+        setLoading(true);
 
-        $('refreshBtn')?.addEventListener('click', () => {
-            if (unsubscribe) unsubscribe();
-            const user = firebase.auth().currentUser;
-            if (user) {
-                unsubscribe = subscribeApplications(user.uid);
-            }
-        });
-
-        firebase.auth().onAuthStateChanged(async (user) => {
-            setNotice('');
-
-            if (!user) {
-                try {
-                    await firebase.auth().signInAnonymously();
-                } catch (err) {
-                    setNotice('Sign-in failed. Please retry.');
-                }
+        try {
+            const res = await fetch(base + '/api/my-applications?sessionId=' + encodeURIComponent(sessionId));
+            if (!res.ok) {
+                setLoading(false);
+                setNotice('Unable to load submissions.');
                 return;
             }
+            const apps = await res.json();
+            setLoading(false);
+            render(apps);
+        } catch (err) {
+            setLoading(false);
+            setNotice('Unable to load submissions.');
+        }
+    }
 
-            if (unsubscribe) unsubscribe();
-            unsubscribe = subscribeApplications(user.uid);
+    document.addEventListener('DOMContentLoaded', function () {
+        $('refreshBtn') && $('refreshBtn').addEventListener('click', function () {
+            fetchApplications();
         });
+
+        fetchApplications();
     });
 })();
