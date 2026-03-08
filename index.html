@@ -21,6 +21,7 @@
             background-color: var(--sand);
             color: var(--ink);
             overflow-x: hidden;
+            max-width: 100vw;
         }
         .serif { font-family: 'Cinzel', serif; letter-spacing: 0.02em; }
         .accent-gradient { background: linear-gradient(135deg, var(--copper), var(--gold)); }
@@ -110,8 +111,8 @@
 </head>
 <body>
 
-    <div class="page-bg" aria-hidden="true">
-        <div class="bg-grid"></div>
+    <div class="page-bg"">
+        <div class="bg-grid aria-hidden="true"></div>
         <div class="orb orb-a"></div>
         <div class="orb orb-b"></div>
         <div class="orb orb-c"></div>
@@ -127,15 +128,15 @@
         </div>
     </div>
 
-    <nav class="w-full px-6 md:px-10 py-6">
+    <nav class="w-full px-4 md:px-10 py-4 md:py-6">
         <div class="w-full max-w-6xl mx-auto flex justify-between items-center">
-            <a href="index.html" class="flex items-center gap-3 serif text-lg md:text-xl tracking-widest font-bold focus-ring rounded-sm">
-                <img src="assets/logo.jpeg" alt="Rolex Modeling Agency logo" class="w-12 h-12 object-contain" loading="eager" decoding="async">
+            <a href="index.html" class="flex items-center gap-2 md:gap-3 serif text-base md:text-xl tracking-widest font-bold focus-ring rounded-sm">
+                <img src="assets/logo.jpeg" alt="Rolex Modeling Agency logo" class="w-10 md:w-12 h-10 md:h-12 object-contain" loading="eager" decoding="async">
                 <span>
-                    ROLEX MODELLING <br><span class="text-[10px] font-light tracking-[0.35em] uppercase opacity-70"> AGENCY</span>
+                    ROLEX <br><span class="text-[8px] md:text-[10px] font-light tracking-[0.35em] uppercase opacity-70">AGENCY</span>
                 </span>
             </a>
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 md:gap-3">
                 <!-- Desktop nav (hidden on mobile) -->
                 <div class="hidden md:flex flex-col items-end gap-2 text-right md:flex-row md:items-center md:gap-6 md:text-left">
                     <a href="about.html" class="inline-flex items-center whitespace-nowrap text-[11px] leading-none tracking-widest uppercase opacity-70 hover:opacity-100 transition-opacity focus-ring rounded-sm">About</a>
@@ -146,7 +147,7 @@
                 <div class="md:hidden relative">
                     <button id="navMenuButton"
                         type="button"
-                        class="w-11 h-11 rounded-full border border-black/10 bg-white/70 glass flex items-center justify-center focus-ring"
+                        class="w-10 md:w-11 h-10 md:h-11 rounded-full border border-black/10 bg-white/70 glass flex items-center justify-center focus-ring"
                         aria-label="Open menu"
                         aria-expanded="false"
                         aria-controls="navMenuPanel">
@@ -155,7 +156,7 @@
                         </svg>
                     </button>
 
-                    <div id="navMenuPanel" class="hidden absolute right-0 mt-3 w-60 z-50 glass soft-shadow rounded-2xl border border-black/10 p-4">
+                    <div id="navMenuPanel" class="hidden absolute right-0 mt-3 w-56 md:w-60 z-50 glass soft-shadow rounded-2xl border border-black/10 p-4">
                         <a href="about.html" class="block px-3 py-2 rounded-xl text-[11px] tracking-widest uppercase opacity-80 hover:opacity-100 hover:bg-black/5 focus-ring">
                             About
                         </a>
@@ -223,7 +224,6 @@
                     };
 
                     function getIndicatorEl() {
-                        // Targets the existing "01 / 04 — The Entry" element in the nav
                         return document.querySelector('nav div.tracking-widest.uppercase.opacity-60');
                     }
 
@@ -283,304 +283,282 @@
         </div>
         
         <div class="relative z-10 text-center px-4">
-            <div class="flex justify-center mb-5">
+            <div class="flex justify-center mb-4 md:mb-5">
                 <span class="badge">Casting 2026 open</span>
             </div>
-            <h1 class="serif text-5xl md:text-7xl mb-6 tracking-tight leading-none text-white hero-text-shadow">UNLEASH YOUR<br><span class="italic text-transparent bg-clip-text accent-gradient hero-accent-shadow">POTENTIAL</span></h1>
-            <p class="text-xs md:text-base font-light tracking-[0.28em] mb-12 text-white/90 uppercase hero-sub-shadow">Apply to the future of fashion</p>
+            <h1 class="serif text-3xl sm:text-4xl md:text-6xl lg:text-7xl mb-4 sm:mb-5 md:mb-6 tracking-tight leading-none text-white hero-text-shadow">UNLEASH YOUR<br><span class="italic text-transparent bg-clip-text accent-gradient hero-accent-shadow">POTENTIAL</span></h1>
+            <p class="text-xs md:text-sm font-light tracking-[0.28em] mb-8 md:mb-12 text-white/90 uppercase hero-sub-shadow">Apply to the future of fashion</p>
             
-            <button onclick="goToStep(2)" class="btn-primary relative px-12 py-4 rounded-full accent-gradient text-white uppercase text-xs font-semibold transition-opacity hover:opacity-90 focus-ring">
+            <button onclick="goToStep(2)" class="btn-primary relative px-8 md:px-12 py-3 md:py-4 rounded-full accent-gradient text-white uppercase text-[10px] md:text-xs font-semibold transition-opacity hover:opacity-90 focus-ring">
                 Begin Application
             </button>
 
-            <div class="mt-10 flex flex-wrap justify-center gap-6 text-[10px] tracking-[0.28em] uppercase text-white/80">
+            <div class="mt-8 md:mt-10 flex flex-wrap justify-center gap-4 md:gap-6 text-[9px] md:text-[10px] tracking-[0.28em] uppercase text-white/80">
                 <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full" style="background:#d1a864"></span>Editorial</span>
                 <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full" style="background:#c97b5a"></span>Runway</span>
-                <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full" style="background:#ffffff"></span>Digital casting</span>
+                <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full" style="background:#ffffff"></span>Digital</span>
             </div>
         </div>
 
-        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-white/90 opacity-40 hero-sub-shadow">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+        <div class="absolute bottom-8 md:bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-white/90 opacity-40 hero-sub-shadow">
+            <svg class="w-5 md:w-6 h-5 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
         </div>
     </section>
 
     <section id="step2" class="hidden min-h-[100svh] flex items-center justify-center section-sand">
-        <form id="applicationForm" novalidate class="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-12 p-8">
-            <div class="flex flex-col justify-center">
-                <h2 class="serif text-3xl mb-2">Tell Us About<br>Yourself</h2>
-                <p class="text-[11px] tracking-[0.24em] uppercase opacity-60 mb-8">Casting details</p>
-                <div class="space-y-6">
+        <form id="applicationForm" novalidate class="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 p-4 md:p-8">
+            <div class="flex flex-col justify-center order-2 md:order-1">
+                <h2 class="serif text-2xl md:text-3xl mb-2">Tell Us About<br>Yourself</h2>
+                <p class="text-[11px] tracking-[0.24em] uppercase opacity-60 mb-6 md:mb-8">Casting details</p>
+                <div class="space-y-4 md:space-y-6">
                     <div class="relative">
                         <label for="fullName" class="sr-only">Full name</label>
                         <input id="fullName" name="fullName" type="text" placeholder="Full Name" autocomplete="name" required
-                            class="focus-ring w-full bg-transparent border-b border-black/15 py-3 focus:outline-none focus:border-black/40 transition-colors placeholder:text-black/30">
+                            class="focus-ring w-full bg-transparent border-b border-black/15 py-3 focus:outline-none focus:border-black/40 transition-colors placeholder:text-black/30 text-base">
                         <p id="fullNameError" class="mt-2 text-xs text-rose-700 hidden" aria-live="polite"></p>
                     </div>
                     <div class="relative">
                         <label for="email" class="sr-only">Email address</label>
                         <input id="email" name="email" type="email" placeholder="Email Address" autocomplete="email" required
-                            class="focus-ring w-full bg-transparent border-b border-black/15 py-3 focus:outline-none focus:border-black/40 transition-colors placeholder:text-black/30">
+                            class="focus-ring w-full bg-transparent border-b border-black/15 py-3 focus:outline-none focus:border-black/40 transition-colors placeholder:text-black/30 text-base">
                         <p id="emailError" class="mt-2 text-xs text-rose-700 hidden" aria-live="polite"></p>
                     </div>
 
                     <div class="relative">
                         <label for="phoneNumber" class="sr-only">Phone Number</label>
                         <input id="phoneNumber" name="phoneNumber" type="tel" placeholder="Phone Number" autocomplete="tel" required
-                            class="focus-ring w-full bg-transparent border-b border-black/15 py-3 focus:outline-none focus:border-black/40 transition-colors placeholder:text-black/30">
+                            class="focus-ring w-full bg-transparent border-b border-black/15 py-3 focus:outline-none focus:border-black/40 transition-colors placeholder:text-black/30 text-base">
                         <p id="phoneNumberError" class="mt-2 text-xs text-rose-700 hidden" aria-live="polite"></p>
                     </div>
                     <div class="relative">
                         <label for="instagram" class="sr-only">Instagram handle</label>
                         <input id="instagram" name="instagram" type="text" placeholder="Instagram Handle (optional)" autocomplete="off"
                             inputmode="text"
-                            class="focus-ring w-full bg-transparent border-b border-black/15 py-3 focus:outline-none focus:border-black/40 transition-colors placeholder:text-black/30">
+                            class="focus-ring w-full bg-transparent border-b border-black/15 py-3 focus:outline-none focus:border-black/40 transition-colors placeholder:text-black/30 text-base">
                         <p class="mt-2 text-[11px] opacity-60">Tip: use @yourhandle</p>
                     </div>
-                    <button type="button" onclick="goToStep(3)" class="mt-6 accent-gradient text-white w-full py-4 rounded-lg uppercase tracking-widest text-xs font-bold soft-shadow transition-opacity hover:opacity-90 focus-ring">Continue</button>
+                    <button type="button" onclick="goToStep(3)" class="mt-4 md:mt-6 accent-gradient text-white w-full py-3 md:py-4 rounded-lg uppercase tracking-widest text-xs font-bold soft-shadow transition-opacity hover:opacity-90 focus-ring">Continue</button>
                 </div>
             </div>
-            <div class="block md:block glass rounded-2xl overflow-hidden soft-shadow order-last md:order-none mt-8 md:mt-0 w-full aspect-[3/4] md:aspect-auto md:h-auto">
-                <img loading="lazy" decoding="async" src="assets/model.jpeg" class="w-full h-full object-fit" alt="Editorial model portrait">
+            <div class="block md:block glass rounded-2xl overflow-hidden soft-shadow order-1 md:order-2 mt-6 md:mt-0 w-full aspect-[3/4] md:aspect-auto md:h-auto">
+                <img loading="lazy" decoding="async" src="assets/model.jpeg" class="w-full h-full object-cover" alt="Editorial model portrait">
             </div>
         </form>
     </section>
 
     <section id="step3" class="hidden min-h-[100svh] flex items-center justify-center section-sand overflow-hidden">
-        <div class="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-10 p-8 items-center">
-            <div class="rounded-3xl bg-white/80 border border-black/10 shadow-[0_30px_60px_rgba(17,24,39,0.08)] p-8 md:p-10 space-y-8">
+        <div class="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 p-4 md:p-8 items-center">
+            <div class="rounded-3xl bg-white/80 border border-black/10 shadow-[0_30px_60px_rgba(17,24,39,0.08)] p-6 md:p-10 space-y-6 md:space-y-8 order-2 md:order-1">
                 <div>
                     <p class="text-[10px] uppercase tracking-[0.3em] opacity-60">Model metrics</p>
-                    <h2 class="serif text-4xl mt-2">The Specs</h2>
+                    <h2 class="serif text-3xl md:text-4xl mt-2">The Specs</h2>
                     <p class="text-[11px] tracking-[0.24em] opacity-60 uppercase mt-2">Precision is key for digital casting</p>
                 </div>
 
-                <div class="grid gap-5">
+                <div class="grid gap-4 md:gap-5">
                     <div class="rounded-2xl border border-black/10 p-4 bg-white">
                         <div class="flex justify-between items-end">
                             <label class="text-xs uppercase tracking-widest opacity-70">Height</label>
-                            <span class="text-2xl font-light"><span id="heightVal">175</span><span class="text-sm opacity-50 ml-1">cm</span></span>
+                            <span class="text-xl md:text-2xl font-light"><span id="heightVal">175</span><span class="text-sm opacity-50 ml-1">cm</span></span>
                         </div>
                         <input type="range" min="150" max="210" value="175" 
-                            class="w-full mt-4 h-2 bg-black/10 rounded-full appearance-none cursor-pointer accent-[color:#B76E79]" 
+                            class="w-full mt-3 md:mt-4 h-2 bg-black/10 rounded-full appearance-none cursor-pointer accent-[color:#B76E79]" 
                             oninput="document.getElementById('heightVal').innerText = this.value">
                     </div>
 
                     <div class="rounded-2xl border border-black/10 p-4 bg-white">
                         <div class="flex justify-between items-end">
                             <label class="text-xs uppercase tracking-widest opacity-70">Waist</label>
-                            <span class="text-2xl font-light"><span id="waistVal">60</span><span class="text-sm opacity-50 ml-1">cm</span></span>
+                            <span class="text-xl md:text-2xl font-light"><span id="waistVal">60</span><span class="text-sm opacity-50 ml-1">cm</span></span>
                         </div>
                         <input type="range" min="50" max="100" value="60" 
-                            class="w-full mt-4 h-2 bg-black/10 rounded-full appearance-none cursor-pointer accent-[color:#B76E79]" 
+                            class="w-full mt-3 md:mt-4 h-2 bg-black/10 rounded-full appearance-none cursor-pointer accent-[color:#B76E79]" 
                             oninput="document.getElementById('waistVal').innerText = this.value">
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="rounded-2xl border border-black/10 p-4 text-center bg-white">
+                <div class="grid grid-cols-2 gap-3 md:gap-4">
+                    <div class="rounded-2xl border border-black/10 p-3 md:p-4 text-center bg-white">
                         <p class="text-[10px] uppercase opacity-50 mb-1">Shoe Size (EU)</p>
                         <label class="sr-only" for="shoeSize">Shoe size (EU)</label>
-                        <select id="shoeSize" name="shoeSize" class="bg-transparent text-xl outline-none w-full text-center focus-ring rounded-md">
+                        <select id="shoeSize" name="shoeSize" class="bg-transparent text-lg md:text-xl outline-none w-full text-center focus-ring rounded-md">
                             <option>38</option><option>39</option><option selected>40</option><option>41</option>
                         </select>
                     </div>
-                    <div class="rounded-2xl border border-black/10 p-4 text-center bg-white">
+                    <div class="rounded-2xl border border-black/10 p-3 md:p-4 text-center bg-white">
                         <p class="text-[10px] uppercase opacity-50 mb-1">Eye Color</p>
                         <label class="sr-only" for="eyeColor">Eye color</label>
-                        <select id="eyeColor" name="eyeColor" class="bg-transparent text-xl outline-none w-full text-center focus-ring rounded-md">
+                        <select id="eyeColor" name="eyeColor" class="bg-transparent text-lg md:text-xl outline-none w-full text-center focus-ring rounded-md">
                             <option>Brown</option><option>Blue</option><option>Green</option>
                         </select>
                     </div>
                 </div>
 
-                <div class="flex flex-wrap gap-3 text-[10px] uppercase tracking-[0.28em] opacity-60">
-                    <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full" style="background:#B76E79"></span> Digital casting ready</span>
-                    <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full" style="background:#C9A227"></span> Editorial standard</span>
+                <div class="flex flex-wrap gap-2 md:gap-3 text-[9px] md:text-[10px] uppercase tracking-[0.28em] opacity-60">
+                    <span class="flex items-center gap-1 md:gap-2"><span class="w-2 h-2 rounded-full" style="background:#B76E79"></span>Digital</span>
+                    <span class="flex items-center gap-1 md:gap-2"><span class="w-2 h-2 rounded-full" style="background:#C9A227"></span>Editorial</span>
                 </div>
 
-                <button type="button" onclick="goToStep(4)" class="accent-gradient text-white transition-opacity hover:opacity-90 w-full py-4 rounded-full uppercase tracking-widest text-xs font-bold focus-ring">
+                <button type="button" onclick="goToStep(4)" class="accent-gradient text-white transition-opacity hover:opacity-90 w-full py-3 md:py-4 rounded-full uppercase tracking-widest text-xs font-bold focus-ring">
                     Continue to Portfolio
                 </button>
             </div>
 
-            <div class="relative flex justify-center items-center order-last md:order-none">
-                <div class="rounded-3xl border border-black/10 bg-white/70 p-4 w-full max-w-sm md:max-w-md lg:max-w-lg aspect-[3/4] md:aspect-auto md:h-[560px] shadow-[0_30px_60px_rgba(17,24,39,0.08)] overflow-hidden">
-                    <img loading="lazy" decoding="async" src="assets/model2.jpeg" class="w-full h-full object-fit" alt="Editorial model portrait">
+            <div class="relative flex justify-center items-center order-1 md:order-2">
+                <div class="rounded-3xl border border-black/10 bg-white/70 p-3 md:p-4 w-full max-w-xs md:max-w-md lg:max-w-lg aspect-[3/4] md:aspect-auto md:h-[450px] lg:h-[560px] shadow-[0_30px_60px_rgba(17,24,39,0.08)] overflow-hidden">
+                    <img loading="lazy" decoding="async" src="assets/model2.jpeg" class="w-full h-full object-cover" alt="Editorial model portrait">
                 </div>
             </div> 
         </div>
     </section>
 
 <section id="step4" class="hidden min-h-[100svh] flex items-center justify-center section-sand">
-    <div class="max-w-5xl w-full p-8">
-        <div class="text-center mb-12">
-            <h2 class="serif text-5xl mb-4">The Showcase</h2>
+    <div class="max-w-5xl w-full p-4 md:p-8">
+        <div class="text-center mb-8 md:mb-12">
+            <h2 class="serif text-3xl md:text-5xl mb-3 md:mb-4">The Showcase</h2>
             <p class="text-[11px] tracking-[0.3em] opacity-60 uppercase">Upload your digital comp card</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 items-stretch">
             <!-- Headshot -->
-            <div class="glass soft-shadow rounded-2xl border border-black/10 hover:border-black/25 transition-colors p-6 flex flex-col">
-                <div class="flex items-start justify-between gap-4">
+            <div class="glass soft-shadow rounded-2xl border border-black/10 hover:border-black/25 transition-colors p-4 md:p-6 flex flex-col">
+                <div class="flex items-start justify-between gap-3 md:gap-4">
                     <div>
                         <p class="text-[10px] uppercase tracking-widest font-bold">Headshot</p>
                         <p class="text-[10px] opacity-60 mt-1">Close-up face, well lit</p>
                     </div>
-                    <div class="w-10 h-10 rounded-full border border-black/10 flex items-center justify-center bg-white/70">
-                        <svg class="w-5 h-5 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <div class="w-8 md:w-10 h-8 md:h-10 rounded-full border border-black/10 flex items-center justify-center bg-white/70">
+                        <svg class="w-4 md:w-5 h-4 md:h-5 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                     </div>
                 </div>
 
-                <div class="mt-5 flex-1 flex items-center justify-center">
-                    <img id="headshotPreview" alt="Headshot preview" class="hidden w-full max-w-[220px] h-44 object-cover rounded-xl mx-auto border border-black/10" />
-                    <div id="headshotPlaceholder" class="w-full max-w-[220px] h-44 rounded-xl border border-dashed border-black/15 bg-white/40 flex items-center justify-center text-center px-6">
-                        <p class="text-[11px] opacity-70">JPG/PNG/WebP recommended</p>
+                <div class="mt-4 flex-1 flex items-center justify-center">
+                    <img id="headshotPreview" alt="Headshot preview" class="hidden w-full max-w-[180px] md:max-w-[220px] h-36 md:h-44 object-cover rounded-xl mx-auto border border-black/10" />
+                    <div id="headshotPlaceholder" class="w-full max-w-[180px] md:max-w-[220px] h-36 md:h-44 rounded-xl border border-dashed border-black/15 bg-white/40 flex items-center justify-center text-center px-4 md:px-6">
+                        <p class="text-[11px] opacity-70">JPG/PNG/WebP</p>
                     </div>
                 </div>
 
-                <div class="mt-5 flex items-center gap-3">
-                    <label for="headshotFile" class="px-4 py-2 rounded-full accent-gradient text-white transition-opacity hover:opacity-90 uppercase tracking-widest text-[10px] font-semibold focus-ring cursor-pointer">
-                        Choose file
+                <div class="mt-4 flex items-center gap-2 md:gap-3">
+                    <label for="headshotFile" class="px-3 md:px-4 py-2 rounded-full accent-gradient text-white transition-opacity hover:opacity-90 uppercase tracking-widest text-[9px] md:text-[10px] font-semibold focus-ring cursor-pointer">
+                        Choose
                     </label>
                     <p id="headshotName" class="text-[11px] opacity-70 truncate flex-1 text-right"></p>
                 </div>
 
                 <input id="headshotFile" name="headshotFile" type="file" accept="image/*" required class="sr-only" />
-                <p id="headshotError" class="mt-3 text-xs text-rose-700 hidden" aria-live="polite"></p>
+                <p id="headshotError" class="mt-2 md:mt-3 text-xs text-rose-700 hidden" aria-live="polite"></p>
             </div>
 
             <!-- Runway Walk -->
-            <div class="glass soft-shadow rounded-2xl border border-black/10 hover:border-black/25 transition-colors p-6 flex flex-col" style="background: rgba(183,110,121,0.05); border-color: rgba(183,110,121,0.35);">
-                <div class="flex items-start justify-between gap-4">
+            <div class="glass soft-shadow rounded-2xl border border-black/10 hover:border-black/25 transition-colors p-4 md:p-6 flex flex-col" style="background: rgba(183,110,121,0.05); border-color: rgba(183,110,121,0.35);">
+                <div class="flex items-start justify-between gap-3 md:gap-4">
                     <div>
                         <p class="text-[10px] uppercase tracking-widest font-bold">Runway Walk</p>
-                        <p class="text-[10px] opacity-60 mt-1">Short reel, steady framing</p>
+                        <p class="text-[10px] opacity-60 mt-1">Short reel, steady</p>
                     </div>
-                    <div class="w-10 h-10 rounded-full flex items-center justify-center bg-white" style="box-shadow: 0 16px 34px rgba(183,110,121,0.20);">
-                        <svg class="w-4 h-4 text-black fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                    </div>
-                </div>
-
-                <div class="mt-5 flex-1 flex items-center justify-center">
-                    <video id="runwayPreview" class="hidden w-full max-w-[260px] rounded-xl mx-auto border border-black/10 bg-black/90" playsinline muted controls></video>
-                    <div id="runwayPlaceholder" class="w-full max-w-[260px] h-44 rounded-xl border border-dashed border-black/15 bg-white/40 flex items-center justify-center text-center px-6">
-                        <p class="text-[11px] opacity-70">MP4/MOV supported</p>
+                    <div class="w-8 md:w-10 h-8 md:h-10 rounded-full flex items-center justify-center bg-white" style="box-shadow: 0 16px 34px rgba(183,110,121,0.20);">
+                        <svg class="w-3 md:w-4 h-3 md:h-4 text-black fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                     </div>
                 </div>
 
-                <div class="mt-5 flex items-center gap-3">
-                    <label for="runwayFile" class="px-4 py-2 rounded-full accent-gradient text-white transition-opacity hover:opacity-90 uppercase tracking-widest text-[10px] font-semibold focus-ring cursor-pointer">
-                        Choose file
+                <div class="mt-4 flex-1 flex items-center justify-center">
+                    <video id="runwayPreview" class="hidden w-full max-w-[200px] md:max-w-[260px] rounded-xl mx-auto border border-black/10 bg-black/90" playsinline muted controls></video>
+                    <div id="runwayPlaceholder" class="w-full max-w-[200px] md:max-w-[260px] h-36 md:h-44 rounded-xl border border-dashed border-black/15 bg-white/40 flex items-center justify-center text-center px-4 md:px-6">
+                        <p class="text-[11px] opacity-70">MP4/MOV</p>
+                    </div>
+                </div>
+
+                <div class="mt-4 flex items-center gap-2 md:gap-3">
+                    <label for="runwayFile" class="px-3 md:px-4 py-2 rounded-full accent-gradient text-white transition-opacity hover:opacity-90 uppercase tracking-widest text-[9px] md:text-[10px] font-semibold focus-ring cursor-pointer">
+                        Choose
                     </label>
                     <p id="runwayName" class="text-[11px] opacity-70 truncate flex-1 text-right"></p>
                 </div>
 
                 <input id="runwayFile" name="runwayFile" type="file" accept="video/*" required class="sr-only" />
-                <p id="runwayError" class="mt-3 text-xs text-rose-700 hidden" aria-live="polite"></p>
+                <p id="runwayError" class="mt-2 md:mt-3 text-xs text-rose-700 hidden" aria-live="polite"></p>
             </div>
 
             <!-- Full Body -->
-            <div class="glass soft-shadow rounded-2xl border border-black/10 hover:border-black/25 transition-colors p-6 flex flex-col">
-                <div class="flex items-start justify-between gap-4">
+            <div class="glass soft-shadow rounded-2xl border border-black/10 hover:border-black/25 transition-colors p-4 md:p-6 flex flex-col">
+                <div class="flex items-start justify-between gap-3 md:gap-4">
                     <div>
                         <p class="text-[10px] uppercase tracking-widest font-bold">Full Body</p>
-                        <p class="text-[10px] opacity-60 mt-1">Front or profile shot</p>
+                        <p class="text-[10px] opacity-60 mt-1">Front or profile</p>
                     </div>
-                    <div class="w-10 h-10 rounded-full border border-black/10 flex items-center justify-center bg-white/70">
-                        <svg class="w-5 h-5 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                    </div>
-                </div>
-
-                <div class="mt-5 flex-1 flex items-center justify-center">
-                    <img id="fullBodyPreview" alt="Full body preview" class="hidden w-full max-w-[220px] h-44 object-cover rounded-xl mx-auto border border-black/10" />
-                    <div id="fullBodyPlaceholder" class="w-full max-w-[220px] h-44 rounded-xl border border-dashed border-black/15 bg-white/40 flex items-center justify-center text-center px-6">
-                        <p class="text-[11px] opacity-70">Natural light preferred</p>
+                    <div class="w-8 md:w-10 h-8 md:h-10 rounded-full border border-black/10 flex items-center justify-center bg-white/70">
+                        <svg class="w-4 md:w-5 h-4 md:h-5 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                     </div>
                 </div>
 
-                <div class="mt-5 flex items-center gap-3">
-                    <label for="fullBodyFile" class="px-4 py-2 rounded-full accent-gradient text-white transition-opacity hover:opacity-90 uppercase tracking-widest text-[10px] font-semibold focus-ring cursor-pointer">
-                        Choose file
+                <div class="mt-4 flex-1 flex items-center justify-center">
+                    <img id="fullBodyPreview" alt="Full body preview" class="hidden w-full max-w-[180px] md:max-w-[220px] h-36 md:h-44 object-cover rounded-xl mx-auto border border-black/10" />
+                    <div id="fullBodyPlaceholder" class="w-full max-w-[180px] md:max-w-[220px] h-36 md:h-44 rounded-xl border border-dashed border-black/15 bg-white/40 flex items-center justify-center text-center px-4 md:px-6">
+                        <p class="text-[11px] opacity-70">Natural light</p>
+                    </div>
+                </div>
+
+                <div class="mt-4 flex items-center gap-2 md:gap-3">
+                    <label for="fullBodyFile" class="px-3 md:px-4 py-2 rounded-full accent-gradient text-white transition-opacity hover:opacity-90 uppercase tracking-widest text-[9px] md:text-[10px] font-semibold focus-ring cursor-pointer">
+                        Choose
                     </label>
                     <p id="fullBodyName" class="text-[11px] opacity-70 truncate flex-1 text-right"></p>
                 </div>
 
                 <input id="fullBodyFile" name="fullBodyFile" type="file" accept="image/*" required class="sr-only" />
-                <p id="fullBodyError" class="mt-3 text-xs text-rose-700 hidden" aria-live="polite"></p>
+                <p id="fullBodyError" class="mt-2 md:mt-3 text-xs text-rose-700 hidden" aria-live="polite"></p>
             </div>
         </div>
 
-        <div class="mt-10 text-center">
-            <p class="text-[11px] tracking-[0.32em] uppercase opacity-60">Registration fee applies</p>
-            <p class="mt-2 text-xs opacity-60">Pay via mobile money or enter a cash code from the admin.</p>
-            <p class="mt-2 text-[10px] tracking-[0.24em] uppercase opacity-50">Demo code: DEMO2026</p>
+        <div class="mt-8 md:mt-10 text-center">
+            <p class="text-[11px] tracking-[0.32em] uppercase opacity-60">Submit your application</p>
+            <p class="mt-2 text-xs opacity-60">Payment will be processed manually after submission.</p>
         </div>
 
-        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <button id="submitButton" type="button" onclick="startPaystackPayment()" class="w-full py-5 accent-gradient text-white rounded-full text-xs font-bold uppercase tracking-[0.4em] transition-opacity hover:opacity-90 soft-shadow focus-ring">
-                Pay for your registration
+        <div class="mt-4 md:mt-6 grid grid-cols-1 gap-3 md:gap-4">
+            <button id="submitButton" type="button" onclick="submitApplication()" class="w-full py-4 md:py-5 accent-gradient text-white rounded-full text-xs font-bold uppercase tracking-[0.4em] transition-opacity hover:opacity-90 soft-shadow focus-ring">
+                Submit Application
             </button>
 
-            <div class="glass rounded-2xl p-4 md:p-5 border border-black/10">
-                <label for="cashCode" class="text-[10px] uppercase tracking-widest opacity-60">Cash payment code</label>
-                <div class="mt-2 flex gap-3">
+            <div class="glass rounded-2xl p-3 md:p-5 border border-black/10">
+                <label for="cashCode" class="text-[10px] uppercase tracking-widest opacity-60">Have a payment code?</label>
+                <div class="mt-2 flex gap-2 md:gap-3">
                     <input id="cashCode" type="text" placeholder="Enter code" class="focus-ring flex-1 bg-transparent border-b border-black/15 py-2 text-sm focus:outline-none focus:border-black/40" />
-                    <button type="button" onclick="redeemCashCode()" class="px-4 py-2 rounded-full accent-gradient text-white text-[10px] uppercase tracking-widest font-semibold transition-opacity hover:opacity-90 focus-ring">
-                        Submit
+                    <button type="button" onclick="redeemCashCode()" class="px-3 md:px-4 py-2 rounded-full accent-gradient text-white text-[9px] md:text-[10px] uppercase tracking-widest font-semibold transition-opacity hover:opacity-90 focus-ring">
+                        Apply
                     </button>
                 </div>
-                <p id="cashCodeError" class="mt-3 text-xs text-rose-700 hidden" aria-live="polite"></p>
+                <p id="cashCodeError" class="mt-2 md:mt-3 text-xs text-rose-700 hidden" aria-live="polite"></p>
             </div>
         </div>
     </div>
 </section>
 
-<div id="success" class="hidden fixed inset-0 z-[100] bg-black/40 text-black flex items-center justify-center text-center p-6" role="dialog" aria-modal="true" aria-labelledby="successTitle">
-    <div class="glass soft-shadow w-full max-w-2xl rounded-3xl p-10 relative animate-shutter">
-        <button id="successClose" type="button" class="absolute top-4 right-4 w-10 h-10 rounded-full accent-gradient text-white transition-opacity hover:opacity-90 focus-ring" aria-label="Close success dialog">
+<div id="success" class="hidden fixed inset-0 z-[100] bg-black/40 text-black flex items-center justify-center text-center p-4 md:p-6" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+    <div class="glass soft-shadow w-full max-w-2xl rounded-3xl p-6 md:p-10 relative animate-shutter">
+        <button id="successClose" type="button" class="absolute top-3 md:top-4 right-3 md:right-4 w-8 md:w-10 h-8 md:h-10 rounded-full accent-gradient text-white transition-opacity hover:opacity-90 focus-ring" aria-label="Close success dialog">
             <span aria-hidden="true">✕</span>
         </button>
-        <p class="text-[11px] tracking-[0.32em] uppercase opacity-60 mb-4">Next step</p>
-        <h3 id="successTitle" class="serif text-5xl md:text-7xl mb-4 tracking-tight">SUCCESS</h3>
+        <p class="text-[11px] tracking-[0.32em] uppercase opacity-60 mb-3 md:mb-4">Next step</p>
+        <h3 id="successTitle" class="serif text-3xl md:text-5xl lg:text-7xl mb-3 md:mb-4 tracking-tight">SUCCESS</h3>
         <p class="text-sm tracking-[0.45em] uppercase font-light opacity-80">Your journey has officially begun.</p>
-        <div class="mt-10 h-px w-24 bg-black/20 mx-auto"></div>
-        <p class="mt-6 text-xs opacity-60 uppercase">A confirmation email is on the way.</p>
-        <p id="referenceId" class="mt-3 text-[11px] tracking-[0.32em] uppercase opacity-70"></p>
-        <button type="button" class="mt-8 px-8 py-3 rounded-full accent-gradient text-white transition-opacity hover:opacity-90 uppercase tracking-widest text-[11px] font-semibold focus-ring" onclick="closeSuccess()">Back to start</button>
-        <a href="training.html" class="mt-3 inline-flex items-center justify-center px-8 py-3 rounded-full border border-black/15 uppercase tracking-widest text-[11px] font-semibold focus-ring">
+        <div class="mt-8 md:mt-10 h-px w-20 md:w-24 bg-black/20 mx-auto"></div>
+        <p class="mt-4 md:mt-6 text-xs opacity-60 uppercase">We will contact you with payment details shortly.</p>
+        <p id="referenceId" class="mt-2 md:mt-3 text-[11px] tracking-[0.32em] uppercase opacity-70"></p>
+        <button type="button" class="mt-6 md:mt-8 px-6 md:px-8 py-2 md:py-3 rounded-full accent-gradient text-white transition-opacity hover:opacity-90 uppercase tracking-widest text-[10px] md:text-[11px] font-semibold focus-ring" onclick="closeSuccess()">Back to start</button>
+        <a href="training.html" class="mt-2 md:mt-3 inline-flex items-center justify-center px-6 md:px-8 py-2 md:py-3 rounded-full border border-black/15 uppercase tracking-widest text-[10px] md:text-[11px] font-semibold focus-ring">
             View training schedule
         </a>
     </div>
 </div>
 
-<!-- Firebase (compat SDKs) -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
-<script src="https://js.paystack.co/v1/inline.js"></script>
-<script src="public-config.js"></script>
-<script>
-    // Firebase Web App config
-    window.FIREBASE_CONFIG = window.RUNTIME_CONFIG?.FIREBASE_CONFIG || {
-        apiKey: "AIzaSyBZsPqtu2a0A-75HvQxa14v9KY1vS4pPdc",
-        authDomain: "rolex-modelling.firebaseapp.com",
-        projectId: "rolex-modelling",
-        storageBucket: "rolex-modelling.firebasestorage.app",
-        messagingSenderId: "633376014550",
-        appId: "1:633376014550:web:a6a993a9805d8db8340977",
-        measurementId: "G-FYY4BM20PR"
-    };
-</script>
-<script src="js/firebase-client.js"></script>
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="js/supabase-client.js"></script>
 
 <script>
-    // Paystack
-    const PAYSTACK_PUBLIC_KEY = window.RUNTIME_CONFIG?.PAYSTACK_PUBLIC_KEY || ""; // e.g. pk_test_xxx or pk_live_xxx
-    const PAYSTACK_AMOUNT_KOBO = 500000; // NGN 5,000 = 500000 kobo
-    const PAYSTACK_CURRENCY = "NGN";
-
     const previewUrls = {
         headshot: null,
         runway: null,
@@ -744,7 +722,7 @@
         showStep(1);
     }
 
-    function submitFinal(paymentRef, paymentMethod, paymentCode) {
+    function submitApplication(paymentMethod, paymentCode) {
         if (!validateStep4()) return;
 
         const submitBtn = document.getElementById('submitButton');
@@ -755,11 +733,11 @@
 
         (async () => {
             try {
-                if (typeof window.submitApplicationToFirebase !== 'function') {
-                    throw new Error('Firebase submission is not available yet.');
+                if (typeof window.submitApplicationToSupabase !== 'function') {
+                    throw new Error('Supabase submission is not available yet.');
                 }
 
-                const result = await window.submitApplicationToFirebase({
+                const result = await window.submitApplicationToSupabase({
                     fullName: document.getElementById('fullName')?.value,
                     email: document.getElementById('email')?.value,
                     phone: document.getElementById('phoneNumber')?.value,
@@ -768,17 +746,15 @@
                     waistCm: document.getElementById('waistVal')?.textContent,
                     shoeSizeEU: document.getElementById('shoeSize')?.value,
                     eyeColor: document.getElementById('eyeColor')?.value,
-                    paymentRef: paymentRef || null,
-                    paymentMethod: paymentMethod || null,
+                    paymentMethod: paymentMethod || 'pending',
                     paymentCode: paymentCode || null,
-                    paymentAmount: PAYSTACK_AMOUNT_KOBO,
-                    paymentCurrency: PAYSTACK_CURRENCY,
                     files: {
                         headshot: document.getElementById('headshotFile')?.files?.[0] || null,
                         runway: document.getElementById('runwayFile')?.files?.[0] || null,
                         fullBody: document.getElementById('fullBodyFile')?.files?.[0] || null,
                     },
                 });
+                
                 if (result?.id) {
                     try {
                         localStorage.setItem('lastApplicationId', result.id);
@@ -793,44 +769,18 @@
             } finally {
                 if (submitBtn) {
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Pay for your registration';
+                    submitBtn.textContent = 'Submit Application';
                 }
             }
         })();
     }
 
-    function startPaystackPayment() {
-        if (!validateStep4()) return;
-
-        const email = document.getElementById('email')?.value?.trim();
-        if (!email) {
-            setError('emailError', 'Please enter your email address.');
-            showStep(2);
-            return;
-        }
-
-        if (!PAYSTACK_PUBLIC_KEY) {
-            alert('Missing Paystack public key. Please add it in the script section.');
-            return;
-        }
-
-        const handler = PaystackPop.setup({
-            key: PAYSTACK_PUBLIC_KEY,
-            email,
-            amount: PAYSTACK_AMOUNT_KOBO,
-            currency: PAYSTACK_CURRENCY,
-            ref: `ROLEX-${Date.now()}`,
-            callback: function (response) {
-                submitFinal(response.reference, 'paystack', null);
-            },
-            onClose: function () {
-                alert('Payment cancelled.');
-            },
-        });
-
-        handler.openIframe();
+    // Simple submit without payment
+    function submitApplication() {
+        submitApplication('pending', null);
     }
 
+    // Redeem cash code
     const DEMO_CASH_CODE = 'DEMO2026';
 
     async function redeemCashCode() {
@@ -861,37 +811,49 @@
             return;
         }
 
+        // Try to validate against Supabase
         try {
-            if (!window.firebase || !window.FIREBASE_CONFIG) {
-                throw new Error('Firebase not available.');
+            if (!window.supabase || !window.SUPABASE_CONFIG) {
+                throw new Error('Supabase not available.');
             }
-            if (!firebase.apps.length) {
-                firebase.initializeApp(window.FIREBASE_CONFIG);
-            }
-            const auth = firebase.auth();
-            if (!auth.currentUser) {
-                await auth.signInAnonymously();
-            }
+            
+            const supabase = window.supabase.createClient(
+                window.SUPABASE_CONFIG.url,
+                window.SUPABASE_CONFIG.anonKey
+            );
 
-            const db = firebase.firestore();
-            const ref = db.collection('paymentCodes').doc(code);
-            const snap = await ref.get();
+            const { data, error } = await supabase
+                .from('payment_codes')
+                .select('*')
+                .eq('code', code)
+                .single();
 
-            if (!snap.exists || snap.data()?.used) {
+            if (error || !data) {
                 if (errorEl) {
-                    errorEl.textContent = 'Invalid or already used code.';
+                    errorEl.textContent = 'Invalid code.';
                     errorEl.classList.remove('hidden');
                 }
                 return;
             }
 
-            await ref.update({
-                used: true,
-                usedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                usedBy: auth.currentUser?.uid || null,
-            });
+            if (data.used) {
+                if (errorEl) {
+                    errorEl.textContent = 'Code already used.';
+                    errorEl.classList.remove('hidden');
+                }
+                return;
+            }
 
-            submitFinal(`CASH-${code}`, 'cash', code);
+            // Mark code as used
+            await supabase
+                .from('payment_codes')
+                .update({ 
+                    used: true, 
+                    used_at: new Date().toISOString() 
+                })
+                .eq('code', code);
+
+            submitApplication('cash', code);
         } catch (err) {
             if (errorEl) {
                 errorEl.textContent = err?.message || 'Unable to validate code.';

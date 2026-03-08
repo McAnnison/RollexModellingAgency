@@ -7,7 +7,7 @@
 		<script src="https://cdn.tailwindcss.com"></script>
 		<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 		<style>
-			body { font-family: 'Inter', sans-serif; background-color: #fbfaf8; color: #111827; }
+			body { font-family: 'Inter', sans-serif; background-color: #fbfaf8; color: #111827; max-width: 100vw; overflow-x: hidden; }
 			.serif { font-family: 'Playfair Display', serif; }
 			.accent-gradient { background: linear-gradient(135deg, #B76E79, #C9A227); }
 			.glass { background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(12px); border: 1px solid rgba(17, 24, 39, 0.08); }
@@ -27,17 +27,17 @@
 		</style>
 	</head>
 	<body>
-		<nav class="sticky top-0 z-50 px-6 md:px-10 py-6 flex justify-between items-center bg-[#fbfaf8]/80" style="backdrop-filter: blur(10px);">
-			<a href="index.html" class="flex items-center gap-3 serif text-lg md:text-xl tracking-widest font-bold focus-ring rounded-sm">
-				<img src="assets/logo.jpeg" alt="Rolex Modeling Agency logo" class="w-12 h-12 object-contain" loading="eager" decoding="async">
+		<nav class="sticky top-0 z-50 px-4 md:px-10 py-4 md:py-6 flex justify-between items-center bg-[#fbfaf8]/80" style="backdrop-filter: blur(10px);">
+			<a href="index.html" class="flex items-center gap-2 md:gap-3 serif text-base md:text-xl tracking-widest font-bold focus-ring rounded-sm">
+				<img src="assets/logo.jpeg" alt="Logo" class="w-10 md:w-12 h-10 md:h-12 object-contain" loading="eager" decoding="async">
 				<span>
-					ROLEX MODELLING <br><span class="text-[10px] font-light tracking-[0.35em] uppercase opacity-70">AGENCY</span>
+					ROLEX <br><span class="text-[8px] md:text-[10px] font-light tracking-[0.35em] uppercase opacity-70">AGENCY</span>
 				</span>
 			</a>
-			<div class="flex items-center gap-6">
-				<a href="index.html" class="text-[11px] tracking-widest uppercase opacity-70 hover:opacity-100 transition-opacity focus-ring rounded-sm">Home</a>
-				<a href="about.html" class="text-[11px] tracking-widest uppercase opacity-70 hover:opacity-100 transition-opacity focus-ring rounded-sm">About</a>
-				<a href="contact.html" class="text-[11px] tracking-widest uppercase opacity-100">Contact</a>
+			<div class="flex items-center gap-3 md:gap-6">
+				<a href="index.html" class="text-[10px] md:text-[11px] tracking-widest uppercase opacity-70 hover:opacity-100 transition-opacity focus-ring rounded-sm">Home</a>
+				<a href="about.html" class="text-[10px] md:text-[11px] tracking-widest uppercase opacity-70 hover:opacity-100 transition-opacity focus-ring rounded-sm">About</a>
+				<a href="contact.html" class="text-[10px] md:text-[11px] tracking-widest uppercase opacity-100">Contact</a>
 			</div>
 		</nav>
 
@@ -46,66 +46,66 @@
 				<img src="https://images.unsplash.com/photo-1520975693410-0018f0f5e6a2?auto=format&fit=crop&q=80&w=2000" alt="" class="w-full h-full object-cover" loading="eager" fetchpriority="high" decoding="async" />
 			</div>
 			<div class="absolute inset-0 bg-gradient-to-b from-white/90 via-white/70 to-[#fbfaf8]/95"></div>
-			<div class="relative px-6 md:px-10 py-16 md:py-20 max-w-6xl mx-auto">
-				<p class="text-[11px] tracking-[0.32em] uppercase opacity-60">Contact</p>
-				<h1 class="serif text-5xl md:text-6xl tracking-tight mt-3">Let’s start the conversation.</h1>
-				<p class="mt-4 max-w-2xl text-sm md:text-base opacity-80">
-					Reach out with press inquiries, booking requests, or partnership proposals. We reply within 1–2 business days.
+			<div class="relative px-4 md:px-10 py-12 md:py-16 lg:py-20 max-w-6xl mx-auto">
+				<p class="text-[10px] md:text-[11px] tracking-[0.32em] uppercase opacity-60">Contact</p>
+				<h1 class="serif text-3xl md:text-5xl lg:text-6xl tracking-tight mt-2 md:mt-3">Let's start the conversation.</h1>
+				<p class="mt-3 md:mt-4 max-w-2xl text-sm md:text-base opacity-80">
+					Reach out with press inquiries, booking requests, or partnership proposals.
 				</p>
-				<div class="mt-8 h-1 w-20 accent-gradient rounded-full"></div>
+				<div class="mt-6 md:mt-8 h-1 w-16 md:w-20 accent-gradient rounded-full"></div>
 			</div>
 		</header>
 
-		<main class="px-6 md:px-10 pb-16">
-			<div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 -mt-10">
-				<section class="glass soft-shadow rounded-3xl p-8 md:p-10">
-					<h2 class="serif text-3xl">Contact Details</h2>
-					<p class="mt-4 opacity-80 leading-relaxed">
+		<main class="px-4 md:px-10 pb-12 md:pb-16">
+			<div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 -mt-8 md:-mt-10">
+				<section class="glass soft-shadow rounded-2xl md:rounded-3xl p-4 md:p-8 lg:p-10">
+					<h2 class="serif text-2xl md:text-3xl">Contact Details</h2>
+					<p class="mt-3 md:mt-4 opacity-80 leading-relaxed text-sm md:text-base">
 						For new talent submissions, please use the application flow on our homepage. For all other requests, use the form or the details below.
 					</p>
-					<div class="mt-6 space-y-3 text-sm">
-						<div class="flex items-center gap-3">
+					<div class="mt-4 md:mt-6 space-y-2 md:space-y-3 text-sm">
+						<div class="flex items-center gap-2 md:gap-3">
 							<span class="inline-block w-2 h-2 rounded-full" style="background:#B76E79"></span>
-							<span class="opacity-80">Email: hello@rolexmodelling.com</span>
+							<span class="opacity-80 text-xs md:text-sm">Email: hello@rolexmodelling.com</span>
 						</div>
-						<div class="flex items-center gap-3">
+						<div class="flex items-center gap-2 md:gap-3">
 							<span class="inline-block w-2 h-2 rounded-full" style="background:#C9A227"></span>
-							<span class="opacity-80">Phone: +1 (212) 555‑0199</span>
+							<span class="opacity-80 text-xs md:text-sm">Phone: +1 (212) 555-0199</span>
 						</div>
-						<div class="flex items-center gap-3">
+						<div class="flex items-center gap-2 md:gap-3">
 							<span class="inline-block w-2 h-2 rounded-full" style="background:#111827"></span>
-							<span class="opacity-80">Studio: 620 Fifth Ave, New York, NY</span>
+							<span class="opacity-80 text-xs md:text-sm">Studio: 620 Fifth Ave, New York</span>
 						</div>
 					</div>
 				</section>
 
-				<section class="glass soft-shadow rounded-3xl p-8 md:p-10">
-					<h2 class="serif text-3xl">Send a Message</h2>
-					<form id="contactForm" class="mt-6 space-y-5" novalidate>
+				<section class="glass soft-shadow rounded-2xl md:rounded-3xl p-4 md:p-8 lg:p-10">
+					<h2 class="serif text-2xl md:text-3xl">Send a Message</h2>
+					<form id="contactForm" class="mt-4 md:mt-6 space-y-4 md:space-y-5" novalidate>
 						<div>
 							<label for="contactName" class="sr-only">Full name</label>
 							<input id="contactName" name="contactName" type="text" placeholder="Full Name" required
-								class="focus-ring w-full bg-transparent border-b border-black/15 py-3 focus:outline-none focus:border-black/40 transition-colors placeholder:text-black/30">
+								class="focus-ring w-full bg-transparent border-b border-black/15 py-2 md:py-3 focus:outline-none focus:border-black/40 transition-colors placeholder:text-black/30 text-sm md:text-base">
 						</div>
 						<div>
 							<label for="contactEmail" class="sr-only">Email address</label>
 							<input id="contactEmail" name="contactEmail" type="email" placeholder="Email Address" required
-								class="focus-ring w-full bg-transparent border-b border-black/15 py-3 focus:outline-none focus:border-black/40 transition-colors placeholder:text-black/30">
+								class="focus-ring w-full bg-transparent border-b border-black/15 py-2 md:py-3 focus:outline-none focus:border-black/40 transition-colors placeholder:text-black/30 text-sm md:text-base">
 						</div>
 						<div>
 							<label for="contactSubject" class="sr-only">Subject</label>
 							<input id="contactSubject" name="contactSubject" type="text" placeholder="Subject" required
-								class="focus-ring w-full bg-transparent border-b border-black/15 py-3 focus:outline-none focus:border-black/40 transition-colors placeholder:text-black/30">
+								class="focus-ring w-full bg-transparent border-b border-black/15 py-2 md:py-3 focus:outline-none focus:border-black/40 transition-colors placeholder:text-black/30 text-sm md:text-base">
 						</div>
 						<div>
 							<label for="contactMessage" class="sr-only">Message</label>
-							<textarea id="contactMessage" name="contactMessage" rows="5" placeholder="Tell us how we can help" required
-								class="focus-ring w-full bg-transparent border border-black/15 rounded-2xl p-4 focus:outline-none focus:border-black/40 transition-colors placeholder:text-black/30"></textarea>
+							<textarea id="contactMessage" name="contactMessage" rows="4" placeholder="Tell us how we can help" required
+								class="focus-ring w-full bg-transparent border border-black/15 rounded-2xl p-3 md:p-4 focus:outline-none focus:border-black/40 transition-colors placeholder:text-black/30 text-sm md:text-base"></textarea>
 						</div>
-						<button type="submit" class="accent-gradient text-white w-full py-4 rounded-full uppercase tracking-widest text-xs font-bold soft-shadow transition-opacity hover:opacity-90 focus-ring">
+						<button type="submit" class="accent-gradient text-white w-full py-3 md:py-4 rounded-full uppercase tracking-widest text-xs font-bold soft-shadow transition-opacity hover:opacity-90 focus-ring">
 							Send Message
 						</button>
-						<p class="text-[11px] tracking-[0.24em] uppercase opacity-60 text-center">We respect your privacy.</p>
+						<p class="text-[10px] md:text-[11px] tracking-[0.24em] uppercase opacity-60 text-center">We respect your privacy.</p>
 					</form>
 				</section>
 			</div>
