@@ -80,9 +80,12 @@
             </div>
         </main>
 
-        <!-- Supabase SDK -->
-        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-        <script src="supabase-config.js"></script>
-        <script src="js/supabase-applicant.js"></script>
+        <!-- MongoDB REST API config -->
+        <script>
+            // Backend API URL — update to your deployed server URL in production
+            window.API_BASE_URL = (window.RUNTIME_CONFIG && window.RUNTIME_CONFIG.API_BASE_URL) || "http://localhost:3000";
+        </script>
+        <script src="js/api-client.js"></script>
+        <script src="js/applicant.js"></script>
     </body>
 </html>
