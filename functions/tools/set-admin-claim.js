@@ -1,5 +1,9 @@
 /* eslint-disable no-console */
-const admin = require('firebase-admin');
+// This script sets an admin claim for a user in MongoDB.
+// Usage: node tools/set-admin-claim.js --email user@example.com
+
+require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
+const mongoose = require('mongoose');
 
 function getArgValue(flag) {
     const index = process.argv.indexOf(flag);
@@ -8,33 +12,35 @@ function getArgValue(flag) {
 }
 
 async function main() {
-    const uid = getArgValue('--uid');
     const email = getArgValue('--email');
-
-    if (!uid && !email) {
-        console.error('Provide --uid or --email');
+    if (!email) {
+        console.error('Provide --email');
         process.exit(1);
     }
 
-    if (!process.env.GOOGLE_APPLICATION_CREDENTIALS) {
-        console.error('Set GOOGLE_APPLICATION_CREDENTIALS to your service account JSON path.');
+    const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/rollex';
+    const adminUserSchema = new mongoose.Schema(
+        {
+            email: { type: String, unique: true, lowercase: true },
+            passwordHash: String,
+            isAdmin: { type: Boolean, default: false },
+        },
+        { timestamps: true }
+    );
+    const AdminUser = mongoose.model('AdminUser', adminUserSchema);
+
+    await mongoose.connect(MONGODB_URI);
+    const user = await AdminUser.findOneAndUpdate(
+        { email: email.toLowerCase() },
+        { isAdmin: true },
+        { new: true }
+    );
+    if (!user) {
+        console.error('User not found:', email);
         process.exit(1);
     }
-
-    admin.initializeApp({
-        credential: admin.credential.applicationDefault(),
-    });
-
-    let userRecord = null;
-    if (uid) {
-        userRecord = await admin.auth().getUser(uid);
-    } else {
-        userRecord = await admin.auth().getUserByEmail(email);
-    }
-
-    await admin.auth().setCustomUserClaims(userRecord.uid, { admin: true });
-
-    console.log(`Admin claim set for ${userRecord.email || userRecord.uid}`);
+    console.log(`Admin claim set for ${user.email}`);
+    await mongoose.disconnect();
     process.exit(0);
 }
 

@@ -202,60 +202,10 @@
         }
     }
 
-    async function uploadEventImage(eventId, file) {
-        if (!file) return null;
-        ensureFirebase();
-        const storage = firebase.storage();
-        const ext = (file.name || '').split('.').pop() || 'jpg';
-        const path = `events/${eventId}/cover.${ext}`;
-        const ref = storage.ref().child(path);
-        await ref.put(file, { contentType: file.type || 'image/jpeg' });
-        return path;
-    }
 
-    async function createEvent() {
-        if (!state.isAdmin || !state.user) {
-            setEventNotice('Admin access required.');
-            return;
-        }
+    // Removed Firebase uploadEventImage. Use backend API for uploads.
 
-        const title = $('eventTitle')?.value?.trim();
-        const location = $('eventLocation')?.value?.trim();
-        const timeInput = $('eventTime')?.value;
-        const venue = $('eventVenue')?.value?.trim();
-        const imageFile = $('eventImage')?.files?.[0] || null;
-
-        if (!title || !location || !timeInput || !venue) {
-            setEventNotice('Please fill in all fields.');
-            return;
-        }
-
-        setEventNotice('');
-
-        try {
-            ensureFirebase();
-            const db = firebase.firestore();
-            const docRef = await db.collection('trainingEvents').add({
-                title,
-                location,
-                venue,
-                time: firebase.firestore.Timestamp.fromDate(new Date(timeInput)),
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                createdBy: state.user.uid,
-                imagePath: null,
-            });
-
-            let imagePath = null;
-            if (imageFile) {
-                imagePath = await uploadEventImage(docRef.id, imageFile);
-                await docRef.update({ imagePath });
-            }
-
-            toggleEventForm(false);
-        } catch (err) {
-            setEventNotice('Unable to publish event.');
-        }
-    }
+    // Removed Firebase createEvent. Use backend API for event creation.
 
     function openDetail(app) {
         state.selected = app;

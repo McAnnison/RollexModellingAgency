@@ -1,33 +1,5 @@
-# Firebase to Supabase Migration - COMPLETED
 
-## Overview
-Migration from Firebase to Supabase backend with manual payment processing has been completed.
-
-## ✅ Completed Changes
-
-### New Files Created
-| File | Purpose |
-|------|---------|
-| `js/supabase-client.js` | Supabase client for applicant submissions |
-| `js/supabase-admin.js` | Admin dashboard functionality |
-| `js/supabase-applicant.js` | Application status tracking |
-| `js/supabase-training.js` | Training events display |
-| `supabase-config.example.js` | Configuration template |
-
-### Files Updated
-| File | Changes |
-|------|---------|
-| `index.html` | Replaced Firebase with Supabase SDK, removed Paystack, simplified payment flow |
-| `admin.html` | Updated to use Supabase |
-| `applicant.html` | Updated to use Supabase |
-| `training.html` | Updated to use Supabase |
-
-### Removed
-- Paystack payment integration (payments now manual)
-- Firebase SDK scripts
-- Firebase configuration
-
----
+Firebase has been fully removed from this project. All backend and frontend logic now uses Supabase and/or MongoDB.
 
 ## 📋 Supabase Setup Instructions
 

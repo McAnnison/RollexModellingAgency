@@ -37,6 +37,7 @@ async function main() {
     {
       email: { type: String, unique: true, lowercase: true },
       passwordHash: String,
+      isAdmin: { type: Boolean, default: false },
     },
     { timestamps: true }
   );
