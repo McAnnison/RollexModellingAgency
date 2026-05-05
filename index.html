@@ -557,10 +557,11 @@
     </div>
 </div>
 
-<!-- Supabase SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js"></script>
-<script src="js/supabase-client.js"></script>
+<!-- MongoDB Atlas API -->
+<script>
+    window.API_BASE_URL = (window.RUNTIME_CONFIG && window.RUNTIME_CONFIG.API_BASE_URL) || "http://localhost:3000";
+</script>
+<script src="js/api-client.js"></script>
 
 <script>
     const previewUrls = {
@@ -737,11 +738,11 @@
 
         (async () => {
             try {
-                if (typeof window.submitApplicationToSupabase !== 'function') {
-                    throw new Error('Supabase submission is not available yet.');
+                if (typeof window.submitApplicationToAPI !== 'function') {
+                    throw new Error('API submission is not available. Please ensure the backend is running.');
                 }
 
-                const result = await window.submitApplicationToSupabase({
+                const result = await window.submitApplicationToAPI({
                     fullName: document.getElementById('fullName')?.value,
                     email: document.getElementById('email')?.value,
                     phone: document.getElementById('phoneNumber')?.value,
@@ -815,49 +816,22 @@
             return;
         }
 
-        // Try to validate against Supabase
+        // Try to validate against MongoDB API
         try {
-            if (!window.supabase || !window.SUPABASE_CONFIG) {
-                throw new Error('Supabase not available.');
+            if (typeof window.redeemCashCodeAPI !== 'function') {
+                throw new Error('API not available. Please ensure the backend is running.');
             }
+
+            const result = await window.redeemCashCodeAPI(code);
             
-            const supabase = window.supabase.createClient(
-                window.SUPABASE_CONFIG.url,
-                window.SUPABASE_CONFIG.anonKey
-            );
-
-            const { data, error } = await supabase
-                .from('payment_codes')
-                .select('*')
-                .eq('code', code)
-                .single();
-
-            if (error || !data) {
+            if (result.success) {
+                submitApplication('cash', code);
+            } else {
                 if (errorEl) {
-                    errorEl.textContent = 'Invalid code.';
+                    errorEl.textContent = result.error || 'Invalid code.';
                     errorEl.classList.remove('hidden');
                 }
-                return;
             }
-
-            if (data.used) {
-                if (errorEl) {
-                    errorEl.textContent = 'Code already used.';
-                    errorEl.classList.remove('hidden');
-                }
-                return;
-            }
-
-            // Mark code as used
-            await supabase
-                .from('payment_codes')
-                .update({ 
-                    used: true, 
-                    used_at: new Date().toISOString() 
-                })
-                .eq('code', code);
-
-            submitApplication('cash', code);
         } catch (err) {
             if (errorEl) {
                 errorEl.textContent = err?.message || 'Unable to validate code.';

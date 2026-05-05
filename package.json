@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@dataconnect/generated": "file:src/dataconnect-generated",
-    "firebase": "^12.8.0"
+    "firebase": "^12.8.0",
+    "mongoose": "^9.3.0"
   }
 }

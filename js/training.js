@@ -1,24 +1,19 @@
+// MongoDB REST API client for training events page.
+// Replaces the previous Firebase client integration.
+
 (function () {
-    function ensureFirebase() {
-        if (!window.firebase) {
-            throw new Error('Firebase SDK not loaded.');
-        }
-        if (!window.FIREBASE_CONFIG) {
-            throw new Error('Missing FIREBASE_CONFIG.');
-        }
-        if (!firebase.apps.length) {
-            firebase.initializeApp(window.FIREBASE_CONFIG);
-        }
+    function getApiBase() {
+        return (window.API_BASE_URL || '').replace(/\/$/, '');
     }
 
     function $(id) {
         return document.getElementById(id);
     }
 
-    function show(el, display = 'block') {
+    function show(el, display) {
         if (!el) return;
         el.classList.remove('hidden');
-        el.style.display = display;
+        el.style.display = display || 'block';
     }
 
     function hide(el) {
@@ -30,7 +25,7 @@
     function formatDate(value) {
         if (!value) return '—';
         try {
-            const date = value.toDate ? value.toDate() : new Date(value);
+            const date = new Date(value);
             if (Number.isNaN(date.getTime())) return '—';
             return date.toLocaleString();
         } catch (err) {
@@ -38,10 +33,11 @@
         }
     }
 
-    async function getImageUrl(path) {
+    function getImageUrl(path) {
         if (!path) return null;
-        const storage = firebase.storage();
-        return storage.ref().child(path).getDownloadURL();
+        const base = getApiBase();
+        if (!base) return null;
+        return base + '/api/events/' + path + '/image';
     }
 
     async function renderEvents(events) {
@@ -54,12 +50,10 @@
             return;
         }
 
-        const urls = await Promise.all(events.map((evt) => getImageUrl(evt.imagePath).catch(() => null)));
-
-        events.forEach((evt, idx) => {
+        events.forEach((evt) => {
             const card = document.createElement('div');
             card.className = 'glass rounded-2xl border border-black/10 p-6';
-            const imageUrl = urls[idx];
+            const imageUrl = evt.imagePath ? getImageUrl(evt.imagePath) : null;
             card.innerHTML = `
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
@@ -76,6 +70,30 @@
         });
     }
 
+    async function fetchEvents() {
+        const base = getApiBase();
+        const loading = $('eventsLoading');
+        
+        if (!base) {
+            if (loading) loading.textContent = 'API_BASE_URL is not configured.';
+            return;
+        }
+
+        try {
+            const res = await fetch(base + '/api/events');
+            if (!res.ok) {
+                if (loading) loading.textContent = 'Unable to load events.';
+                return;
+            }
+            const events = await res.json();
+            if (loading) hide(loading);
+            renderEvents(events);
+        } catch (err) {
+            console.error('Load events error:', err);
+            if (loading) loading.textContent = 'Unable to load events.';
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         const refEl = $('referenceId');
         try {
@@ -85,32 +103,6 @@
             // ignore storage errors
         }
 
-        const loading = $('eventsLoading');
-        try {
-            ensureFirebase();
-        } catch (err) {
-            if (loading) loading.textContent = 'Unable to load events.';
-            return;
-        }
-
-        firebase.auth().onAuthStateChanged(async (user) => {
-            if (!user) {
-                try {
-                    await firebase.auth().signInAnonymously();
-                } catch (err) {
-                    if (loading) loading.textContent = 'Unable to sign in.';
-                }
-                return;
-            }
-
-            const db = firebase.firestore();
-            db.collection('trainingEvents').orderBy('time', 'asc').onSnapshot(async (snap) => {
-                if (loading) hide(loading);
-                const events = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-                await renderEvents(events);
-            }, () => {
-                if (loading) loading.textContent = 'Unable to load events.';
-            });
-        });
+        fetchEvents();
     });
 })();

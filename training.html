@@ -21,7 +21,6 @@
                 <img src="assets/logo.jpeg" alt="Logo" class="w-10 md:w-12 h-10 md:h-12 object-contain" loading="eager" decoding="async">
                 <span>
                     ROLEX <br><span class="text-[8px] md:text-[10px] font-light tracking-[0.35em] uppercase opacity-70">AGENCY</span>
-                </span>
             </a>
             <div class="flex items-center gap-3 md:gap-6">
                 <a href="index.html" class="text-[10px] md:text-[11px] tracking-widest uppercase opacity-70 hover:opacity-100 transition-opacity focus-ring rounded-sm">Home</a>
@@ -41,7 +40,6 @@
                     Below is your orientation timeline. Arrive 15 minutes early and bring a valid ID.
                 </p>
                 <div class="mt-6 md:mt-8 h-1 w-16 md:w-20 accent-gradient rounded-full"></div>
-            </div>
         </header>
 
         <main class="px-4 md:px-10 pb-12 md:pb-16">
@@ -56,7 +54,6 @@
                             <p class="text-[10px] md:text-[11px] tracking-[0.24em] uppercase opacity-60">Reference ID</p>
                             <p id="referenceId" class="text-sm font-semibold">—</p>
                         </div>
-                    </div>
 
                     <div id="eventsLoading" class="mt-4 md:mt-6 text-sm opacity-60">Loading events…</div>
                     <div id="eventsList" class="mt-6 md:mt-8 grid grid-cols-1 gap-3 md:gap-4"></div>
@@ -64,9 +61,12 @@
             </div>
         </main>
 
-        <!-- Supabase SDK -->
-        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-        <script src="supabase-config.js"></script>
-        <script src="js/supabase-training.js"></script>
+        <!-- MongoDB REST API config -->
+        <script>
+            // Backend API URL — update to your deployed server URL in production
+            window.API_BASE_URL = (window.RUNTIME_CONFIG && window.RUNTIME_CONFIG.API_BASE_URL) || "http://localhost:3000";
+        </script>
+        <script src="js/api-client.js"></script>
+        <script src="js/training.js"></script>
     </body>
 </html>

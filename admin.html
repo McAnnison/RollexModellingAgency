@@ -32,7 +32,6 @@
                 <img src="assets/logo.jpeg" alt="Logo" class="w-10 md:w-12 h-10 md:h-12 object-contain" loading="eager" decoding="async">
                 <span>
                     ROLEX <br><span class="text-[8px] md:text-[10px] font-light tracking-[0.35em] uppercase opacity-70">AGENCY</span>
-                </span>
             </a>
             <div class="flex items-center gap-4 md:gap-6">
                 <a href="index.html" class="text-[10px] md:text-[11px] tracking-widest uppercase opacity-70 hover:opacity-100 transition-opacity focus-ring rounded-sm">Home</a>
@@ -52,7 +51,6 @@
                     Review new submissions, update status, and download assets.
                 </p>
                 <div class="mt-6 md:mt-8 h-1 w-16 md:w-20 accent-gradient rounded-full"></div>
-            </div>
         </header>
 
         <main class="px-4 md:px-10 pb-12 md:pb-16">
@@ -74,7 +72,6 @@
                                     <option value="rejected">Rejected</option>
                                 </select>
                             </div>
-                        </div>
 
                         <div id="adminNotice" class="mt-4 md:mt-6 hidden rounded-2xl border border-rose-200 bg-rose-50 p-3 md:p-4 text-sm text-rose-700"></div>
                         <div id="loadingState" class="mt-4 md:mt-6 text-sm opacity-60">Loading applications…</div>
@@ -124,7 +121,6 @@
                                     <label class="text-[10px] uppercase tracking-widest opacity-60" for="eventVenue">Venue</label>
                                     <input id="eventVenue" type="text" placeholder="Studio A" class="focus-ring w-full bg-transparent border-b border-black/15 py-2 text-sm focus:outline-none focus:border-black/40" />
                                 </div>
-                            </div>
                             <div class="mt-3 md:mt-4">
                                 <label class="text-[10px] uppercase tracking-widest opacity-60" for="eventImage">Venue image</label>
                                 <input id="eventImage" type="file" accept="image/*" class="mt-1 md:mt-2 w-full text-sm" />
@@ -139,7 +135,6 @@
                                 </button>
                                 <p id="eventNotice" class="text-xs text-rose-700 hidden w-full" aria-live="polite"></p>
                             </div>
-                        </div>
 
                         <div class="mt-4 md:mt-6 overflow-x-auto">
                             <table class="w-full text-left text-sm min-w-[500px]" aria-label="Events table">
@@ -231,7 +226,6 @@
                         <p id="detailShoe" class="mt-1"></p>
                         <p id="detailEye" class="mt-1"></p>
                     </div>
-                </div>
                 <div class="mt-4 md:mt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4">
                     <div>
                         <p class="text-[10px] md:text-[11px] tracking-[0.24em] uppercase opacity-60">Status</p>
@@ -245,14 +239,15 @@
                     <div>
                         <p class="text-[10px] md:text-[11px] tracking-[0.24em] uppercase opacity-60">Uploads</p>
                         <div class="mt-1 md:mt-2 flex flex-wrap gap-2 md:gap-3" id="detailUploads"></div>
-                    </div>
                 </div>
-            </div>
         </div>
 
-        <!-- Supabase SDK -->
-        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-        <script src="supabase-config.js"></script>
-        <script src="js/supabase-admin.js"></script>
+        <!-- MongoDB REST API config -->
+        <script>
+            // Backend API URL — update to your deployed server URL in production
+            window.API_BASE_URL = (window.RUNTIME_CONFIG && window.RUNTIME_CONFIG.API_BASE_URL) || "http://localhost:3000";
+        </script>
+        <script src="js/api-client.js"></script>
+        <script src="js/admin.js"></script>
     </body>
 </html>
