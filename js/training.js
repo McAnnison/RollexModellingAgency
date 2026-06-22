@@ -2,36 +2,11 @@
 // Replaces the previous Firebase client integration.
 
 (function () {
-    function getApiBase() {
-        return (window.API_BASE_URL || '').replace(/\/$/, '');
-    }
-
-    function $(id) {
-        return document.getElementById(id);
-    }
-
-    function show(el, display) {
-        if (!el) return;
-        el.classList.remove('hidden');
-        el.style.display = display || 'block';
-    }
-
-    function hide(el) {
-        if (!el) return;
-        el.classList.add('hidden');
-        el.style.display = 'none';
-    }
-
-    function formatDate(value) {
-        if (!value) return '—';
-        try {
-            const date = new Date(value);
-            if (Number.isNaN(date.getTime())) return '—';
-            return date.toLocaleString();
-        } catch (err) {
-            return '—';
-        }
-    }
+    var U = window.RollexUtils;
+    var getApiBase = U.getApiBase;
+    var $ = U.$;
+    var hide = U.hide;
+    var formatDate = U.formatDate;
 
     function getImageUrl(path) {
         if (!path) return null;

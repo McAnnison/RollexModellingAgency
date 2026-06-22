@@ -1,8 +1,16 @@
 (function () {
     var POLL_INTERVAL_MS = 15000; // milliseconds between application list refreshes
-    function getApiBase() {
-        return (window.API_BASE_URL || '').replace(/\/$/, '');
-    }
+    var U = window.RollexUtils;
+    var getApiBase = U.getApiBase;
+    var $ = U.$;
+    var show = U.show;
+    var hide = U.hide;
+    var formatDate = U.formatDate;
+
+    var setNotice = U.createNotice('adminNotice');
+    var setCashNotice = U.createNotice('cashCodeNotice');
+    var setEventNotice = U.createNotice('eventNotice');
+    var setLoading = U.createLoader('loadingState', 'Loading applications\u2026');
 
     function getAdminToken() {
         try { return localStorage.getItem('rollex_admin_token') || null; } catch (e) { return null; }
@@ -21,83 +29,20 @@
     }
 
     async function apiFetch(path, options) {
-        const base = getApiBase();
-        const token = getAdminToken();
-        const headers = Object.assign({ 'Content-Type': 'application/json' }, (options && options.headers) || {});
+        var base = getApiBase();
+        var token = getAdminToken();
+        var headers = Object.assign({ 'Content-Type': 'application/json' }, (options && options.headers) || {});
         if (token) headers['Authorization'] = 'Bearer ' + token;
-        const res = await fetch(base + path, Object.assign({}, options, { headers }));
+        var res = await fetch(base + path, Object.assign({}, options, { headers }));
         return res;
     }
 
-    const state = {
+    var state = {
         applications: [],
         pollTimer: null,
         isAdmin: false,
         selected: null,
     };
-
-    function $(id) {
-        return document.getElementById(id);
-    }
-
-    function show(el, display) {
-        if (!el) return;
-        el.classList.remove('hidden');
-        el.style.display = display || 'block';
-    }
-
-    function hide(el) {
-        if (!el) return;
-        el.classList.add('hidden');
-        el.style.display = 'none';
-    }
-
-    function setNotice(message) {
-        const notice = $('adminNotice');
-        if (!notice) return;
-        if (!message) {
-            hide(notice);
-            notice.textContent = '';
-        } else {
-            notice.textContent = message;
-            show(notice, 'block');
-        }
-    }
-
-    function setCashNotice(message) {
-        const notice = $('cashCodeNotice');
-        if (!notice) return;
-        if (!message) {
-            hide(notice);
-            notice.textContent = '';
-        } else {
-            notice.textContent = message;
-            show(notice, 'block');
-        }
-    }
-
-    function setEventNotice(message) {
-        const notice = $('eventNotice');
-        if (!notice) return;
-        if (!message) {
-            hide(notice);
-            notice.textContent = '';
-        } else {
-            notice.textContent = message;
-            show(notice, 'block');
-        }
-    }
-
-    function formatDate(value) {
-        if (!value) return '—';
-        try {
-            const date = new Date(value);
-            if (Number.isNaN(date.getTime())) return '—';
-            return date.toLocaleString();
-        } catch (err) {
-            return '—';
-        }
-    }
 
     function normalizedText(value) {
         return String(value || '').toLowerCase().trim();
@@ -138,17 +83,6 @@
             row.querySelector('button').addEventListener('click', function () { openDetail(app); });
             body.appendChild(row);
         });
-    }
-
-    function setLoading(isLoading) {
-        const loader = $('loadingState');
-        if (!loader) return;
-        if (isLoading) {
-            loader.textContent = 'Loading applications…';
-            show(loader, 'block');
-        } else {
-            hide(loader);
-        }
     }
 
     function renderEvents(events) {
@@ -276,15 +210,6 @@
         } catch (err) {
             setNotice('Unable to update status.');
         }
-    }
-
-    function generateCode() {
-        const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-        let out = '';
-        for (let i = 0; i < 8; i += 1) {
-            out += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-        }
-        return 'RM-' + out;
     }
 
     async function createCashCode() {

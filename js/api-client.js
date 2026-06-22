@@ -6,32 +6,9 @@
 //   e.g. window.API_BASE_URL = "http://localhost:3000";
 
 (function () {
-    function getApiBase() {
-        return (window.API_BASE_URL || '').replace(/\/$/, '');
-    }
-
-    function generateSecureId() {
-        if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-            return 'sess-' + crypto.randomUUID();
-        }
-        // Fallback for older browsers
-        const arr = new Uint8Array(16);
-        crypto.getRandomValues(arr);
-        return 'sess-' + Array.from(arr, (b) => b.toString(16).padStart(2, '0')).join('');
-    }
-
-    function getSessionId() {
-        try {
-            let id = localStorage.getItem('rollex_session_id');
-            if (!id) {
-                id = generateSecureId();
-                localStorage.setItem('rollex_session_id', id);
-            }
-            return id;
-        } catch (e) {
-            return generateSecureId();
-        }
-    }
+    var U = window.RollexUtils;
+    var getApiBase = U.getApiBase;
+    var getSessionId = U.getSessionId;
 
     async function submitApplication(payload) {
         const base = getApiBase();
