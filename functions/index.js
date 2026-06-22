@@ -498,10 +498,14 @@ app.get('/api/applications/:id/files/:kind', apiLimiter, requireAdmin, async (re
 function generateCode() {
   const crypto = require('crypto');
   const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  const bytes = crypto.randomBytes(8);
+  const limit = alphabet.length;
+  const maxValid = 256 - (256 % limit);
   let out = '';
-  for (let i = 0; i < 8; i += 1) {
-    out += alphabet.charAt(bytes[i] % alphabet.length);
+  while (out.length < 8) {
+    const byte = crypto.randomBytes(1)[0];
+    if (byte < maxValid) {
+      out += alphabet.charAt(byte % limit);
+    }
   }
   return 'RM-' + out;
 }
