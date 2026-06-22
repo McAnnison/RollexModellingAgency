@@ -99,6 +99,11 @@
         }
     }
 
+    function escapeHtml(str) {
+        var s = String(str || '');
+        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
     function normalizedText(value) {
         return String(value || '').toLowerCase().trim();
     }
@@ -129,10 +134,10 @@
             row.className = 'border-b border-black/5 hover:bg-black/5 transition-colors';
 
             row.innerHTML =
-                '<td class="py-4 pr-4 font-semibold">' + (app.fullName || '—') + '</td>' +
-                '<td class="py-4 pr-4">' + (app.email || '—') + '</td>' +
-                '<td class="py-4 pr-4 capitalize">' + (app.status || 'submitted') + '</td>' +
-                '<td class="py-4 pr-4">' + formatDate(app.createdAt) + '</td>' +
+                '<td class="py-4 pr-4 font-semibold">' + escapeHtml(app.fullName || '—') + '</td>' +
+                '<td class="py-4 pr-4">' + escapeHtml(app.email || '—') + '</td>' +
+                '<td class="py-4 pr-4 capitalize">' + escapeHtml(app.status || 'submitted') + '</td>' +
+                '<td class="py-4 pr-4">' + escapeHtml(formatDate(app.createdAt)) + '</td>' +
                 '<td class="py-4 pr-4"><button class="text-[11px] uppercase tracking-widest font-semibold underline">View</button></td>';
 
             row.querySelector('button').addEventListener('click', function () { openDetail(app); });
@@ -167,10 +172,10 @@
             const timeText = evt.time ? formatDate(evt.time) : '—';
             const imageLabel = evt.imagePath ? 'View' : '—';
             row.innerHTML = `
-                <td class="py-4 pr-4 font-semibold">${evt.title || '—'}</td>
-                <td class="py-4 pr-4">${timeText}</td>
-                <td class="py-4 pr-4">${evt.location || '—'}</td>
-                <td class="py-4 pr-4">${evt.venue || '—'}</td>
+                <td class="py-4 pr-4 font-semibold">${escapeHtml(evt.title || '—')}</td>
+                <td class="py-4 pr-4">${escapeHtml(timeText)}</td>
+                <td class="py-4 pr-4">${escapeHtml(evt.location || '—')}</td>
+                <td class="py-4 pr-4">${escapeHtml(evt.venue || '—')}</td>
                 <td class="py-4 pr-4">
                     <button class="text-[11px] uppercase tracking-widest font-semibold underline" ${evt.imagePath ? '' : 'disabled'}>
                         ${imageLabel}

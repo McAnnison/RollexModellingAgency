@@ -22,6 +22,11 @@
         el.style.display = 'none';
     }
 
+    function escapeHtml(str) {
+        var s = String(str || '');
+        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
     function formatDate(value) {
         if (!value) return '—';
         try {
@@ -58,12 +63,12 @@
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
                         <p class="text-[10px] uppercase tracking-widest opacity-60">Event</p>
-                        <h3 class="serif text-2xl mt-2">${evt.title || 'Training session'}</h3>
-                        <p class="mt-2 text-sm opacity-70">${formatDate(evt.time)}</p>
-                        <p class="mt-2 text-sm opacity-70">Location: ${evt.location || '—'}</p>
-                        <p class="mt-2 text-sm opacity-70">Venue: ${evt.venue || '—'}</p>
+                        <h3 class="serif text-2xl mt-2">${escapeHtml(evt.title || 'Training session')}</h3>
+                        <p class="mt-2 text-sm opacity-70">${escapeHtml(formatDate(evt.time))}</p>
+                        <p class="mt-2 text-sm opacity-70">Location: ${escapeHtml(evt.location || '—')}</p>
+                        <p class="mt-2 text-sm opacity-70">Venue: ${escapeHtml(evt.venue || '—')}</p>
                     </div>
-                    ${imageUrl ? `<div class="w-full md:w-56 h-32 rounded-xl overflow-hidden border border-black/10"><img src="${imageUrl}" alt="${evt.title || 'Venue'}" class="w-full h-full object-cover"></div>` : ''}
+                    ${imageUrl ? `<div class="w-full md:w-56 h-32 rounded-xl overflow-hidden border border-black/10"><img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(evt.title || 'Venue')}" class="w-full h-full object-cover"></div>` : ''}
                 </div>
             `;
             list.appendChild(card);

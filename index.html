@@ -786,8 +786,6 @@
     }
 
     // Redeem cash code
-    const DEMO_CASH_CODE = 'DEMO2026';
-
     async function redeemCashCode() {
         const errorEl = document.getElementById('cashCodeError');
         if (errorEl) {
@@ -805,18 +803,7 @@
             return;
         }
 
-        if (code === DEMO_CASH_CODE) {
-            const demoId = `DEMO-${Date.now()}`;
-            try {
-                localStorage.setItem('lastApplicationId', demoId);
-            } catch (err) {
-                // ignore storage errors
-            }
-            openSuccess(demoId);
-            return;
-        }
-
-        // Try to validate against MongoDB API
+        // Validate against MongoDB API
         try {
             if (typeof window.redeemCashCodeAPI !== 'function') {
                 throw new Error('API not available. Please ensure the backend is running.');

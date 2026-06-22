@@ -70,6 +70,11 @@
         }
     }
 
+    function escapeHtml(str) {
+        var s = String(str || '');
+        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
     function formatDate(value) {
         if (!value) return '—';
         try {
@@ -95,9 +100,9 @@
             const row = document.createElement('tr');
             row.className = 'border-b border-black/5';
             row.innerHTML =
-                '<td class="py-4 pr-4 font-semibold">' + app.id + '</td>' +
-                '<td class="py-4 pr-4 capitalize">' + (app.status || 'submitted') + '</td>' +
-                '<td class="py-4 pr-4">' + formatDate(app.createdAt) + '</td>';
+                '<td class="py-4 pr-4 font-semibold">' + escapeHtml(app.id) + '</td>' +
+                '<td class="py-4 pr-4 capitalize">' + escapeHtml(app.status || 'submitted') + '</td>' +
+                '<td class="py-4 pr-4">' + escapeHtml(formatDate(app.createdAt)) + '</td>';
             body.appendChild(row);
         });
     }
