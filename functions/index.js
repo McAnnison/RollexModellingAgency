@@ -645,7 +645,7 @@ app.get('/api/events', apiLimiter, async (req, res) => {
 });
 
 // GET /api/events/:id/image  (public)
-app.get('/api/events/:id/image', async (req, res) => {
+app.get('/api/events/:id/image', apiLimiter, async (req, res) => {
   try {
     const evt = await TrainingEvent.findById(req.params.id).lean();
     if (!evt || !evt.imagePath) return res.status(404).json({ error: 'Image not found' });
