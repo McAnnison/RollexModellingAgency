@@ -1,85 +1,14 @@
 (function () {
-    function getApiBase() {
-        return (window.API_BASE_URL || '').replace(/\/$/, '');
-    }
+    var U = window.RollexUtils;
+    var getApiBase = U.getApiBase;
+    var $ = U.$;
+    var show = U.show;
+    var hide = U.hide;
+    var formatDate = U.formatDate;
+    var getSessionId = U.getSessionId;
 
-    function generateSecureId() {
-        if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-            return 'sess-' + crypto.randomUUID();
-        }
-        if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
-            return 'sess-' + Array.from(crypto.getRandomValues(new Uint8Array(16)), function (b) {
-                return b.toString(16).padStart(2, '0');
-            }).join('');
-        }
-        // Last resort fallback (should not occur in modern browsers)
-        return 'sess-' + Date.now().toString(36) + '-' + (Math.random() * 0xffffffff | 0).toString(36);
-    }
-
-    function getSessionId() {
-        // Prefer the shared helper from api-client.js if loaded
-        if (typeof window.getSessionId === 'function') return window.getSessionId();
-        try {
-            let id = localStorage.getItem('rollex_session_id');
-            if (!id) {
-                id = generateSecureId();
-                localStorage.setItem('rollex_session_id', id);
-            }
-            return id;
-        } catch (e) {
-            return generateSecureId();
-        }
-    }
-
-    function $(id) {
-        return document.getElementById(id);
-    }
-
-    function show(el, display) {
-        if (!el) return;
-        el.classList.remove('hidden');
-        el.style.display = display || 'block';
-    }
-
-    function hide(el) {
-        if (!el) return;
-        el.classList.add('hidden');
-        el.style.display = 'none';
-    }
-
-    function setNotice(message) {
-        const notice = $('statusNotice');
-        if (!notice) return;
-        if (!message) {
-            hide(notice);
-            notice.textContent = '';
-        } else {
-            notice.textContent = message;
-            show(notice, 'block');
-        }
-    }
-
-    function setLoading(isLoading) {
-        const loader = $('loadingState');
-        if (!loader) return;
-        if (isLoading) {
-            loader.textContent = 'Loading your submissions…';
-            show(loader, 'block');
-        } else {
-            hide(loader);
-        }
-    }
-
-    function formatDate(value) {
-        if (!value) return '—';
-        try {
-            const date = new Date(value);
-            if (Number.isNaN(date.getTime())) return '—';
-            return date.toLocaleString();
-        } catch (err) {
-            return '—';
-        }
-    }
+    var setNotice = U.createNotice('statusNotice');
+    var setLoading = U.createLoader('loadingState', 'Loading your submissions\u2026');
 
     function render(apps) {
         const body = $('applicationsBody');
