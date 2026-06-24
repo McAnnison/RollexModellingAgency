@@ -137,9 +137,62 @@
     }
 
 
-    // Removed Firebase uploadEventImage. Use backend API for uploads.
+    async function fetchEvents() {
+        try {
+            const res = await apiFetch('/api/events');
+            if (!res.ok) return;
+            const events = await res.json();
+            renderEvents(events);
+        } catch (err) {
+            // silently ignore event fetch errors
+        }
+    }
 
-    // Removed Firebase createEvent. Use backend API for event creation.
+    async function createEvent() {
+        var title = ($('eventTitle') && $('eventTitle').value) || '';
+        if (!title.trim()) {
+            setEventNotice('Event title is required.');
+            return;
+        }
+
+        var form = new FormData();
+        form.append('title', title.trim());
+        form.append('location', (($('eventLocation') && $('eventLocation').value) || '').trim());
+        form.append('venue', (($('eventVenue') && $('eventVenue').value) || '').trim());
+        var timeVal = ($('eventTime') && $('eventTime').value) || '';
+        if (timeVal) form.append('time', new Date(timeVal).toISOString());
+
+        var imageInput = $('eventImage');
+        if (imageInput && imageInput.files && imageInput.files.length > 0) {
+            form.append('image', imageInput.files[0]);
+        }
+
+        try {
+            var base = getApiBase();
+            var token = getAdminToken();
+            var headers = {};
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+            var res = await fetch(base + '/api/events', {
+                method: 'POST',
+                headers: headers,
+                body: form,
+            });
+            if (!res.ok) {
+                setEventNotice('Unable to create event.');
+                return;
+            }
+            toggleEventForm(false);
+            fetchEvents();
+        } catch (err) {
+            setEventNotice('Unable to create event.');
+        }
+    }
+
+    function openStorageFile(imagePath) {
+        var base = getApiBase();
+        if (!base || !imagePath) return;
+        window.open(base + '/uploads/' + imagePath, '_blank');
+    }
 
     function openDetail(app) {
         state.selected = app;
@@ -317,6 +370,14 @@
             updateStatus(e.target.value);
         });
 
+        $('newEventBtn') && $('newEventBtn').addEventListener('click', function () {
+            toggleEventForm(true);
+        });
+        $('cancelEventBtn') && $('cancelEventBtn').addEventListener('click', function () {
+            toggleEventForm(false);
+        });
+        $('saveEventBtn') && $('saveEventBtn').addEventListener('click', createEvent);
+
         $('loginForm') && $('loginForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             setNotice('');
@@ -357,10 +418,11 @@
         const token = getAdminToken();
         const email = getAdminEmail();
         if (token && email) {
-            // Verify token is still valid by fetching applications
             handleSignedIn(email);
         } else {
             setNotice('Sign in with an admin account to view submissions.');
         }
+
+        fetchEvents();
     });
 })();
