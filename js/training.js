@@ -8,11 +8,11 @@
     var hide = U.hide;
     var formatDate = U.formatDate;
 
-    function getImageUrl(path) {
-        if (!path) return null;
+    function getImageUrl(eventId) {
+        if (!eventId) return null;
         const base = getApiBase();
         if (!base) return null;
-        return base + '/api/events/' + path + '/image';
+        return base + '/api/events/' + eventId + '/image';
     }
 
     async function renderEvents(events) {
@@ -28,7 +28,7 @@
         events.forEach((evt) => {
             const card = document.createElement('div');
             card.className = 'glass rounded-2xl border border-black/10 p-6';
-            const imageUrl = evt.imagePath ? getImageUrl(evt.imagePath) : null;
+            const imageUrl = evt.imagePath ? getImageUrl(evt.id) : null;
             card.innerHTML = `
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
