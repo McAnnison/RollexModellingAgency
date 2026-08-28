@@ -2,42 +2,17 @@
 // Replaces the previous Firebase client integration.
 
 (function () {
-    function getApiBase() {
-        return (window.API_BASE_URL || '').replace(/\/$/, '');
-    }
+    var U = window.RollexUtils;
+    var getApiBase = U.getApiBase;
+    var $ = U.$;
+    var hide = U.hide;
+    var formatDate = U.formatDate;
 
-    function $(id) {
-        return document.getElementById(id);
-    }
-
-    function show(el, display) {
-        if (!el) return;
-        el.classList.remove('hidden');
-        el.style.display = display || 'block';
-    }
-
-    function hide(el) {
-        if (!el) return;
-        el.classList.add('hidden');
-        el.style.display = 'none';
-    }
-
-    function formatDate(value) {
-        if (!value) return '—';
-        try {
-            const date = new Date(value);
-            if (Number.isNaN(date.getTime())) return '—';
-            return date.toLocaleString();
-        } catch (err) {
-            return '—';
-        }
-    }
-
-    function getImageUrl(path) {
-        if (!path) return null;
+    function getImageUrl(eventId) {
+        if (!eventId) return null;
         const base = getApiBase();
         if (!base) return null;
-        return base + '/api/events/' + path + '/image';
+        return base + '/api/events/' + eventId + '/image';
     }
 
     async function renderEvents(events) {
@@ -53,7 +28,7 @@
         events.forEach((evt) => {
             const card = document.createElement('div');
             card.className = 'glass rounded-2xl border border-black/10 p-6';
-            const imageUrl = evt.imagePath ? getImageUrl(evt.imagePath) : null;
+            const imageUrl = evt.imagePath ? getImageUrl(evt.id) : null;
             card.innerHTML = `
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>

@@ -81,6 +81,16 @@
             return '—';
         }
     }
+    var U = window.RollexUtils;
+    var getApiBase = U.getApiBase;
+    var $ = U.$;
+    var show = U.show;
+    var hide = U.hide;
+    var formatDate = U.formatDate;
+    var getSessionId = U.getSessionId;
+
+    var setNotice = U.createNotice('statusNotice');
+    var setLoading = U.createLoader('loadingState', 'Loading your submissions\u2026');
 
     function render(apps) {
         const body = $('applicationsBody');

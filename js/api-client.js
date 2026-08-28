@@ -33,6 +33,9 @@
             return generateSecureId();
         }
     }
+    var U = window.RollexUtils;
+    var getApiBase = U.getApiBase;
+    var getSessionId = U.getSessionId;
 
     async function submitApplication(payload) {
         const base = getApiBase();
