@@ -111,8 +111,8 @@
 </head>
 <body>
 
-    <div class="page-bg"">
-        <div class="bg-grid aria-hidden="true"></div>
+    <div class="page-bg">
+        <div class="bg-grid" aria-hidden="true"></div>
         <div class="orb orb-a"></div>
         <div class="orb orb-b"></div>
         <div class="orb orb-c"></div>
@@ -140,6 +140,8 @@
                 <!-- Desktop nav (hidden on mobile) -->
                 <div class="hidden md:flex flex-col items-end gap-2 text-right md:flex-row md:items-center md:gap-6 md:text-left">
                     <a href="about.html" class="inline-flex items-center whitespace-nowrap text-[11px] leading-none tracking-widest uppercase opacity-70 hover:opacity-100 transition-opacity focus-ring rounded-sm">About</a>
+                    <a href="training.html" class="inline-flex items-center whitespace-nowrap text-[11px] leading-none tracking-widest uppercase opacity-70 hover:opacity-100 transition-opacity focus-ring rounded-sm">Training</a>
+                    <a href="contact.html" class="inline-flex items-center whitespace-nowrap text-[11px] leading-none tracking-widest uppercase opacity-70 hover:opacity-100 transition-opacity focus-ring rounded-sm">Contact</a>
                     <div class="text-[11px] tracking-widest uppercase opacity-60">01 / 04 — The Entry</div>
                 </div>
 
@@ -159,6 +161,12 @@
                     <div id="navMenuPanel" class="hidden absolute right-0 mt-3 w-56 md:w-60 z-50 glass soft-shadow rounded-2xl border border-black/10 p-4">
                         <a href="about.html" class="block px-3 py-2 rounded-xl text-[11px] tracking-widest uppercase opacity-80 hover:opacity-100 hover:bg-black/5 focus-ring">
                             About
+                        </a>
+                        <a href="training.html" class="block px-3 py-2 rounded-xl text-[11px] tracking-widest uppercase opacity-80 hover:opacity-100 hover:bg-black/5 focus-ring">
+                            Training
+                        </a>
+                        <a href="contact.html" class="block px-3 py-2 rounded-xl text-[11px] tracking-widest uppercase opacity-80 hover:opacity-100 hover:bg-black/5 focus-ring">
+                            Contact
                         </a>
                         <div id="mobileStepIndicator" class="mt-3 px-3 text-[11px] tracking-widest uppercase opacity-60">
                             01 / 04 — The Entry
@@ -561,6 +569,7 @@
 <script>
     window.API_BASE_URL = (window.RUNTIME_CONFIG && window.RUNTIME_CONFIG.API_BASE_URL) || "http://localhost:3000";
 </script>
+<script src="js/shared-utils.js"></script>
 <script src="js/api-client.js"></script>
 
 <script>
@@ -730,6 +739,9 @@
     function submitApplication(paymentMethod, paymentCode) {
         if (!validateStep4()) return;
 
+        const method = paymentMethod || 'pending';
+        const code = paymentCode || null;
+
         const submitBtn = document.getElementById('submitButton');
         if (submitBtn) {
             submitBtn.disabled = true;
@@ -751,8 +763,8 @@
                     waistCm: document.getElementById('waistVal')?.textContent,
                     shoeSizeEU: document.getElementById('shoeSize')?.value,
                     eyeColor: document.getElementById('eyeColor')?.value,
-                    paymentMethod: paymentMethod || 'pending',
-                    paymentCode: paymentCode || null,
+                    paymentMethod: method,
+                    paymentCode: code,
                     files: {
                         headshot: document.getElementById('headshotFile')?.files?.[0] || null,
                         runway: document.getElementById('runwayFile')?.files?.[0] || null,
@@ -778,11 +790,6 @@
                 }
             }
         })();
-    }
-
-    // Simple submit without payment
-    function submitApplication() {
-        submitApplication('pending', null);
     }
 
     // Redeem cash code

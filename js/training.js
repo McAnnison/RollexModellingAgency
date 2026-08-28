@@ -37,12 +37,17 @@
             return '—';
         }
     }
+    var U = window.RollexUtils;
+    var getApiBase = U.getApiBase;
+    var $ = U.$;
+    var hide = U.hide;
+    var formatDate = U.formatDate;
 
-    function getImageUrl(path) {
-        if (!path) return null;
+    function getImageUrl(eventId) {
+        if (!eventId) return null;
         const base = getApiBase();
         if (!base) return null;
-        return base + '/api/events/' + path + '/image';
+        return base + '/api/events/' + eventId + '/image';
     }
 
     async function renderEvents(events) {
@@ -58,7 +63,7 @@
         events.forEach((evt) => {
             const card = document.createElement('div');
             card.className = 'glass rounded-2xl border border-black/10 p-6';
-            const imageUrl = evt.imagePath ? getImageUrl(evt.imagePath) : null;
+            const imageUrl = evt.imagePath ? getImageUrl(evt.id) : null;
             card.innerHTML = `
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
@@ -87,15 +92,18 @@
         try {
             const res = await fetch(base + '/api/events');
             if (!res.ok) {
-                if (loading) loading.textContent = 'Unable to load events.';
+                let detail = '';
+                try { detail = (await res.json()).error || ''; } catch (e) { /* response not JSON */ }
+                console.error('Load events failed:', res.status, detail);
+                if (loading) loading.textContent = detail || 'Unable to load events (HTTP ' + res.status + ').';
                 return;
             }
             const events = await res.json();
             if (loading) hide(loading);
             renderEvents(events);
         } catch (err) {
-            console.error('Load events error:', err);
-            if (loading) loading.textContent = 'Unable to load events.';
+            console.error('Load events error:', err.message || err);
+            if (loading) loading.textContent = 'Unable to load events. Network error — check your connection.';
         }
     }
 
@@ -105,7 +113,7 @@
             const id = localStorage.getItem('lastApplicationId');
             if (refEl && id) refEl.textContent = id;
         } catch (err) {
-            // ignore storage errors
+            console.warn('localStorage unavailable, cannot restore application ID:', err.message);
         }
 
         fetchEvents();

@@ -4,12 +4,8 @@
 
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 const mongoose = require('mongoose');
-
-function getArgValue(flag) {
-    const index = process.argv.indexOf(flag);
-    if (index === -1 || index + 1 >= process.argv.length) return null;
-    return process.argv[index + 1];
-}
+const { getArgValue } = require('../shared/cli-utils');
+const { getAdminUserModel } = require('../shared/models');
 
 async function main() {
     const email = getArgValue('--email');
@@ -19,15 +15,7 @@ async function main() {
     }
 
     const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/rollex';
-    const adminUserSchema = new mongoose.Schema(
-        {
-            email: { type: String, unique: true, lowercase: true },
-            passwordHash: String,
-            isAdmin: { type: Boolean, default: false },
-        },
-        { timestamps: true }
-    );
-    const AdminUser = mongoose.model('AdminUser', adminUserSchema);
+    const AdminUser = getAdminUserModel();
 
     await mongoose.connect(MONGODB_URI);
     const user = await AdminUser.findOneAndUpdate(

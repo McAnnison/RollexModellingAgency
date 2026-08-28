@@ -27,6 +27,7 @@
             }
             return id;
         } catch (e) {
+            console.warn('localStorage unavailable, using ephemeral session ID:', e.message);
             return generateSecureId();
         }
     }
@@ -85,6 +86,16 @@
             return '—';
         }
     }
+    var U = window.RollexUtils;
+    var getApiBase = U.getApiBase;
+    var $ = U.$;
+    var show = U.show;
+    var hide = U.hide;
+    var formatDate = U.formatDate;
+    var getSessionId = U.getSessionId;
+
+    var setNotice = U.createNotice('statusNotice');
+    var setLoading = U.createLoader('loadingState', 'Loading your submissions\u2026');
 
     function render(apps) {
         const body = $('applicationsBody');
@@ -122,7 +133,10 @@
             const res = await fetch(base + '/api/my-applications?sessionId=' + encodeURIComponent(sessionId));
             if (!res.ok) {
                 setLoading(false);
-                setNotice('Unable to load submissions.');
+                let detail = '';
+                try { detail = (await res.json()).error || ''; } catch (e) { /* response not JSON */ }
+                setNotice(detail || 'Unable to load submissions (HTTP ' + res.status + ').');
+                console.error('Fetch applications failed:', res.status, detail);
                 return;
             }
             const apps = await res.json();
@@ -130,7 +144,8 @@
             render(apps);
         } catch (err) {
             setLoading(false);
-            setNotice('Unable to load submissions.');
+            setNotice('Unable to load submissions. Network error — check your connection.');
+            console.error('Fetch applications error:', err.message || err);
         }
     }
 
