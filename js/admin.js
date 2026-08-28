@@ -1,8 +1,16 @@
 (function () {
     var POLL_INTERVAL_MS = 15000; // milliseconds between application list refreshes
-    function getApiBase() {
-        return (window.API_BASE_URL || '').replace(/\/$/, '');
-    }
+    var U = window.RollexUtils;
+    var getApiBase = U.getApiBase;
+    var $ = U.$;
+    var show = U.show;
+    var hide = U.hide;
+    var formatDate = U.formatDate;
+
+    var setNotice = U.createNotice('adminNotice');
+    var setCashNotice = U.createNotice('cashCodeNotice');
+    var setEventNotice = U.createNotice('eventNotice');
+    var setLoading = U.createLoader('loadingState', 'Loading applications\u2026');
 
     function getAdminToken() {
         try { return localStorage.getItem('rollex_admin_token') || null; } catch (e) { return null; }
@@ -21,83 +29,20 @@
     }
 
     async function apiFetch(path, options) {
-        const base = getApiBase();
-        const token = getAdminToken();
-        const headers = Object.assign({ 'Content-Type': 'application/json' }, (options && options.headers) || {});
+        var base = getApiBase();
+        var token = getAdminToken();
+        var headers = Object.assign({ 'Content-Type': 'application/json' }, (options && options.headers) || {});
         if (token) headers['Authorization'] = 'Bearer ' + token;
-        const res = await fetch(base + path, Object.assign({}, options, { headers }));
+        var res = await fetch(base + path, Object.assign({}, options, { headers }));
         return res;
     }
 
-    const state = {
+    var state = {
         applications: [],
         pollTimer: null,
         isAdmin: false,
         selected: null,
     };
-
-    function $(id) {
-        return document.getElementById(id);
-    }
-
-    function show(el, display) {
-        if (!el) return;
-        el.classList.remove('hidden');
-        el.style.display = display || 'block';
-    }
-
-    function hide(el) {
-        if (!el) return;
-        el.classList.add('hidden');
-        el.style.display = 'none';
-    }
-
-    function setNotice(message) {
-        const notice = $('adminNotice');
-        if (!notice) return;
-        if (!message) {
-            hide(notice);
-            notice.textContent = '';
-        } else {
-            notice.textContent = message;
-            show(notice, 'block');
-        }
-    }
-
-    function setCashNotice(message) {
-        const notice = $('cashCodeNotice');
-        if (!notice) return;
-        if (!message) {
-            hide(notice);
-            notice.textContent = '';
-        } else {
-            notice.textContent = message;
-            show(notice, 'block');
-        }
-    }
-
-    function setEventNotice(message) {
-        const notice = $('eventNotice');
-        if (!notice) return;
-        if (!message) {
-            hide(notice);
-            notice.textContent = '';
-        } else {
-            notice.textContent = message;
-            show(notice, 'block');
-        }
-    }
-
-    function formatDate(value) {
-        if (!value) return '—';
-        try {
-            const date = new Date(value);
-            if (Number.isNaN(date.getTime())) return '—';
-            return date.toLocaleString();
-        } catch (err) {
-            return '—';
-        }
-    }
 
     function normalizedText(value) {
         return String(value || '').toLowerCase().trim();
@@ -138,17 +83,6 @@
             row.querySelector('button').addEventListener('click', function () { openDetail(app); });
             body.appendChild(row);
         });
-    }
-
-    function setLoading(isLoading) {
-        const loader = $('loadingState');
-        if (!loader) return;
-        if (isLoading) {
-            loader.textContent = 'Loading applications…';
-            show(loader, 'block');
-        } else {
-            hide(loader);
-        }
     }
 
     function renderEvents(events) {
@@ -203,9 +137,62 @@
     }
 
 
-    // Removed Firebase uploadEventImage. Use backend API for uploads.
+    async function fetchEvents() {
+        try {
+            const res = await apiFetch('/api/events');
+            if (!res.ok) return;
+            const events = await res.json();
+            renderEvents(events);
+        } catch (err) {
+            // silently ignore event fetch errors
+        }
+    }
 
-    // Removed Firebase createEvent. Use backend API for event creation.
+    async function createEvent() {
+        var title = ($('eventTitle') && $('eventTitle').value) || '';
+        if (!title.trim()) {
+            setEventNotice('Event title is required.');
+            return;
+        }
+
+        var form = new FormData();
+        form.append('title', title.trim());
+        form.append('location', (($('eventLocation') && $('eventLocation').value) || '').trim());
+        form.append('venue', (($('eventVenue') && $('eventVenue').value) || '').trim());
+        var timeVal = ($('eventTime') && $('eventTime').value) || '';
+        if (timeVal) form.append('time', new Date(timeVal).toISOString());
+
+        var imageInput = $('eventImage');
+        if (imageInput && imageInput.files && imageInput.files.length > 0) {
+            form.append('image', imageInput.files[0]);
+        }
+
+        try {
+            var base = getApiBase();
+            var token = getAdminToken();
+            var headers = {};
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+            var res = await fetch(base + '/api/events', {
+                method: 'POST',
+                headers: headers,
+                body: form,
+            });
+            if (!res.ok) {
+                setEventNotice('Unable to create event.');
+                return;
+            }
+            toggleEventForm(false);
+            fetchEvents();
+        } catch (err) {
+            setEventNotice('Unable to create event.');
+        }
+    }
+
+    function openStorageFile(imagePath) {
+        var base = getApiBase();
+        if (!base || !imagePath) return;
+        window.open(base + '/uploads/' + imagePath, '_blank');
+    }
 
     function openDetail(app) {
         state.selected = app;
@@ -276,15 +263,6 @@
         } catch (err) {
             setNotice('Unable to update status.');
         }
-    }
-
-    function generateCode() {
-        const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-        let out = '';
-        for (let i = 0; i < 8; i += 1) {
-            out += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-        }
-        return 'RM-' + out;
     }
 
     async function createCashCode() {
@@ -392,6 +370,14 @@
             updateStatus(e.target.value);
         });
 
+        $('newEventBtn') && $('newEventBtn').addEventListener('click', function () {
+            toggleEventForm(true);
+        });
+        $('cancelEventBtn') && $('cancelEventBtn').addEventListener('click', function () {
+            toggleEventForm(false);
+        });
+        $('saveEventBtn') && $('saveEventBtn').addEventListener('click', createEvent);
+
         $('loginForm') && $('loginForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             setNotice('');
@@ -432,10 +418,11 @@
         const token = getAdminToken();
         const email = getAdminEmail();
         if (token && email) {
-            // Verify token is still valid by fetching applications
             handleSignedIn(email);
         } else {
             setNotice('Sign in with an admin account to view submissions.');
         }
+
+        fetchEvents();
     });
 })();

@@ -27,15 +27,7 @@ const env = parseEnv(fs.readFileSync(envPath, "utf8"));
 
 const runtimeConfig = {
   PAYSTACK_PUBLIC_KEY: env.PAYSTACK_PUBLIC_KEY || "",
-  FIREBASE_CONFIG: {
-    apiKey: env.FIREBASE_API_KEY || "",
-    authDomain: env.FIREBASE_AUTH_DOMAIN || "",
-    projectId: env.FIREBASE_PROJECT_ID || "",
-    storageBucket: env.FIREBASE_STORAGE_BUCKET || "",
-    messagingSenderId: env.FIREBASE_MESSAGING_SENDER_ID || "",
-    appId: env.FIREBASE_APP_ID || "",
-    measurementId: env.FIREBASE_MEASUREMENT_ID || "",
-  },
+  API_BASE_URL: env.API_BASE_URL || "http://localhost:3000",
 };
 
 const fileContents = `window.RUNTIME_CONFIG = ${JSON.stringify(runtimeConfig, null, 2)};\n`;
