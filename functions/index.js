@@ -159,9 +159,22 @@ const adminUserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+const trainingEventSchema = new mongoose.Schema(
+  {
+    title: String,
+    location: String,
+    venue: String,
+    time: Date,
+    imagePath: String,
+    createdBy: String,
+  },
+  { timestamps: true }
+);
+
 const Application = mongoose.model('Application', applicationSchema);
 const PaymentCode = mongoose.model('PaymentCode', paymentCodeSchema);
 const AdminUser = mongoose.model('AdminUser', adminUserSchema);
+const TrainingEvent = mongoose.model('TrainingEvent', trainingEventSchema);
 
 // --- File Storage (Multer) ---------------------------------------------------
 
@@ -382,8 +395,10 @@ app.post(
 
       await newApp.save();
 
-      // Fire-and-forget emails
-      sendEmails(appId, newApp).catch(() => {});
+      // Fire-and-forget emails (log failures but don't block the response)
+      sendEmails(appId, newApp).catch((emailErr) => {
+        console.error('Failed to send emails for application', appId, ':', emailErr.message || emailErr);
+      });
 
       res.status(201).json({ id: appId });
     } catch (err) {
@@ -450,6 +465,10 @@ app.patch('/api/applications/:id', apiLimiter, requireAdmin, async (req, res) =>
     const { id } = req.params;
     const { status } = req.body;
 
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid application ID format' });
+    }
+
     const VALID_STATUSES = ['submitted', 'reviewing', 'approved', 'rejected'];
     if (!status || !VALID_STATUSES.includes(status)) {
       return res.status(400).json({ error: 'Invalid status' });
@@ -469,6 +488,9 @@ app.patch('/api/applications/:id', apiLimiter, requireAdmin, async (req, res) =>
 app.get('/api/applications/:id/files/:kind', apiLimiter, requireAdmin, async (req, res) => {
   try {
     const { id, kind } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid application ID format' });
+    }
     if (!['headshot', 'runway', 'fullBody'].includes(kind)) {
       return res.status(400).json({ error: 'Invalid file kind' });
     }
@@ -544,6 +566,146 @@ app.post('/api/payment-codes/redeem', submitLimiter, async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Unable to redeem code' });
+  }
+});
+
+// --- Multer Error Handling Middleware ----------------------------------------
+
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(413).json({ error: 'File too large. Maximum size is 200 MB.' });
+    }
+    return res.status(400).json({ error: 'File upload error: ' + err.message });
+  }
+  if (err && err.message && err.message.startsWith('File type not allowed')) {
+    return res.status(415).json({ error: err.message });
+  }
+  // Generic fallback error handler
+  console.error('Unhandled express error:', err);
+  res.status(500).json({ error: 'Internal server error' });
+});
+
+// --- Process-Level Error Handlers --------------------------------------------
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+  process.exit(1);
+});
+
+// --- Mongoose Connection Events ----------------------------------------------
+
+mongoose.connection.on('error', (err) => {
+  console.error('MongoDB connection error:', err.message || err);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.warn('MongoDB disconnected. Mongoose will attempt to reconnect.');
+});
+
+mongoose.connection.on('reconnected', () => {
+  console.log('MongoDB reconnected.');
+// --- Training Events ---------------------------------------------------------
+
+const eventUpload = multer({
+  storage: multer.diskStorage({
+    destination: function (req, file, cb) {
+      const dir = path.join(UPLOADS_DIR, 'events');
+      fs.mkdirSync(dir, { recursive: true });
+      cb(null, dir);
+    },
+    filename: function (req, file, cb) {
+      const rawExt = path.extname(file.originalname || '').toLowerCase();
+      const ext = rawExt.replace(/[^a-z0-9.]/g, '').slice(0, 10);
+      cb(null, uuidv4() + (ext || ''));
+    },
+  }),
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: function (req, file, cb) {
+    const allowed = new Set(['image/jpeg', 'image/png', 'image/webp']);
+    if (!allowed.has(file.mimetype)) {
+      return cb(new Error('Only image files are allowed.'));
+    }
+    cb(null, true);
+  },
+});
+
+// POST /api/events  (admin only, with optional image)
+app.post(
+  '/api/events',
+  apiLimiter,
+  requireAdmin,
+  eventUpload.single('image'),
+  async (req, res) => {
+    try {
+      const body = req.body || {};
+      const title = String(body.title || '').trim();
+      if (!title) return res.status(400).json({ error: 'Title is required' });
+
+      const evt = new TrainingEvent({
+        title,
+        location: String(body.location || '').trim(),
+        venue: String(body.venue || '').trim(),
+        time: body.time ? new Date(body.time) : null,
+        imagePath: req.file ? 'events/' + req.file.filename : null,
+        createdBy: req.admin.email,
+      });
+
+      await evt.save();
+      res.status(201).json({
+        id: String(evt._id),
+        title: evt.title,
+        location: evt.location,
+        venue: evt.venue,
+        time: evt.time,
+        imagePath: evt.imagePath,
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Unable to create event' });
+    }
+  }
+);
+
+// GET /api/events  (public)
+app.get('/api/events', apiLimiter, async (req, res) => {
+  try {
+    const events = await TrainingEvent.find()
+      .sort({ time: -1 })
+      .limit(50)
+      .lean();
+
+    res.json(events.map((e) => ({
+      id: String(e._id),
+      title: e.title,
+      location: e.location,
+      venue: e.venue,
+      time: e.time,
+      imagePath: e.imagePath,
+    })));
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Unable to fetch events' });
+  }
+});
+
+// GET /api/events/:id/image  (public)
+app.get('/api/events/:id/image', apiLimiter, async (req, res) => {
+  try {
+    const evt = await TrainingEvent.findById(req.params.id).lean();
+    if (!evt || !evt.imagePath) return res.status(404).json({ error: 'Image not found' });
+
+    const filePath = path.join(UPLOADS_DIR, evt.imagePath);
+    if (!fs.existsSync(filePath)) return res.status(404).json({ error: 'Image file not found on disk' });
+
+    res.sendFile(filePath);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Unable to retrieve image' });
   }
 });
 

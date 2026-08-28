@@ -29,9 +29,13 @@
             }
             return id;
         } catch (e) {
+            console.warn('localStorage unavailable, using ephemeral session ID:', e.message);
             return generateSecureId();
         }
     }
+    var U = window.RollexUtils;
+    var getApiBase = U.getApiBase;
+    var getSessionId = U.getSessionId;
 
     async function submitApplication(payload) {
         const base = getApiBase();
@@ -70,9 +74,11 @@
         });
 
         if (!res.ok) {
-            let msg = 'Submission failed.';
-            try { msg = (await res.json()).error || msg; } catch (e) { /* ignore */ }
-            throw new Error(msg);
+            let msg = 'Submission failed (HTTP ' + res.status + ').';
+            try { msg = (await res.json()).error || msg; } catch (e) { /* response body not JSON */ }
+            const err = new Error(msg);
+            err.status = res.status;
+            throw err;
         }
 
         const data = await res.json();
@@ -96,8 +102,10 @@
             try {
                 const body = await res.json();
                 msg = body.error || msg;
-            } catch (e) { /* ignore */ }
-            throw new Error(msg);
+            } catch (e) { /* response body not JSON */ }
+            const err = new Error(msg);
+            err.status = res.status;
+            throw err;
         }
 
         return res.json();
