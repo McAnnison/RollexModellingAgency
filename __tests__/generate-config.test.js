@@ -9,7 +9,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { execFileSync } = require('child_process');
 
 // ---------------------------------------------------------------------------
 // parseEnv extracted from tools/generate-config.js for unit testing
@@ -157,7 +157,7 @@ describe('generate-config.js end-to-end', () => {
 
     // Run the script in its own process using the tmp dir as cwd
     const scriptPath = path.join(__dirname, '..', 'tools', 'generate-config.js');
-    execSync(`node ${scriptPath}`, { cwd: tmpDir, stdio: 'pipe' });
+    execFileSync('node', [scriptPath], { cwd: tmpDir, stdio: 'pipe' });
 
     const output = fs.readFileSync(path.join(tmpDir, 'public-config.js'), 'utf8');
     expect(output).toContain('window.RUNTIME_CONFIG');
@@ -179,7 +179,8 @@ describe('generate-config.js end-to-end', () => {
     fs.mkdirSync(emptyDir, { recursive: true });
 
     expect(() => {
-      execSync(`node ${path.join(__dirname, '..', 'tools', 'generate-config.js')}`, {
+      const scriptPath = path.join(__dirname, '..', 'tools', 'generate-config.js');
+      execFileSync('node', [scriptPath], {
         cwd: emptyDir,
         stdio: 'pipe',
       });
