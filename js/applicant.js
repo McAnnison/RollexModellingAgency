@@ -1,4 +1,86 @@
 (function () {
+    function getApiBase() {
+        return (window.API_BASE_URL || '').replace(/\/$/, '');
+    }
+
+    function generateSecureId() {
+        if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+            return 'sess-' + crypto.randomUUID();
+        }
+        if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+            return 'sess-' + Array.from(crypto.getRandomValues(new Uint8Array(16)), function (b) {
+                return b.toString(16).padStart(2, '0');
+            }).join('');
+        }
+        // Last resort fallback (should not occur in modern browsers)
+        return 'sess-' + Date.now().toString(36) + '-' + (Math.random() * 0xffffffff | 0).toString(36);
+    }
+
+    function getSessionId() {
+        // Prefer the shared helper from api-client.js if loaded
+        if (typeof window.getSessionId === 'function') return window.getSessionId();
+        try {
+            let id = localStorage.getItem('rollex_session_id');
+            if (!id) {
+                id = generateSecureId();
+                localStorage.setItem('rollex_session_id', id);
+            }
+            return id;
+        } catch (e) {
+            console.warn('localStorage unavailable, using ephemeral session ID:', e.message);
+            return generateSecureId();
+        }
+    }
+
+    function $(id) {
+        return document.getElementById(id);
+    }
+
+    function show(el, display) {
+        if (!el) return;
+        el.classList.remove('hidden');
+        el.style.display = display || 'block';
+    }
+
+    function hide(el) {
+        if (!el) return;
+        el.classList.add('hidden');
+        el.style.display = 'none';
+    }
+
+    function setNotice(message) {
+        const notice = $('statusNotice');
+        if (!notice) return;
+        if (!message) {
+            hide(notice);
+            notice.textContent = '';
+        } else {
+            notice.textContent = message;
+            show(notice, 'block');
+        }
+    }
+
+    function setLoading(isLoading) {
+        const loader = $('loadingState');
+        if (!loader) return;
+        if (isLoading) {
+            loader.textContent = 'Loading your submissions…';
+            show(loader, 'block');
+        } else {
+            hide(loader);
+        }
+    }
+
+    function formatDate(value) {
+        if (!value) return '—';
+        try {
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return '—';
+            return date.toLocaleString();
+        } catch (err) {
+            return '—';
+        }
+    }
     var U = window.RollexUtils;
     var getApiBase = U.getApiBase;
     var $ = U.$;
@@ -46,7 +128,10 @@
             const res = await fetch(base + '/api/my-applications?sessionId=' + encodeURIComponent(sessionId));
             if (!res.ok) {
                 setLoading(false);
-                setNotice('Unable to load submissions.');
+                let detail = '';
+                try { detail = (await res.json()).error || ''; } catch (e) { /* response not JSON */ }
+                setNotice(detail || 'Unable to load submissions (HTTP ' + res.status + ').');
+                console.error('Fetch applications failed:', res.status, detail);
                 return;
             }
             const apps = await res.json();
@@ -54,7 +139,8 @@
             render(apps);
         } catch (err) {
             setLoading(false);
-            setNotice('Unable to load submissions.');
+            setNotice('Unable to load submissions. Network error — check your connection.');
+            console.error('Fetch applications error:', err.message || err);
         }
     }
 

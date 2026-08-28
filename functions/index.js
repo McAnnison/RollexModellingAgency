@@ -395,8 +395,10 @@ app.post(
 
       await newApp.save();
 
-      // Fire-and-forget emails
-      sendEmails(appId, newApp).catch(() => {});
+      // Fire-and-forget emails (log failures but don't block the response)
+      sendEmails(appId, newApp).catch((emailErr) => {
+        console.error('Failed to send emails for application', appId, ':', emailErr.message || emailErr);
+      });
 
       res.status(201).json({ id: appId });
     } catch (err) {
@@ -463,6 +465,10 @@ app.patch('/api/applications/:id', apiLimiter, requireAdmin, async (req, res) =>
     const { id } = req.params;
     const { status } = req.body;
 
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid application ID format' });
+    }
+
     const VALID_STATUSES = ['submitted', 'reviewing', 'approved', 'rejected'];
     if (!status || !VALID_STATUSES.includes(status)) {
       return res.status(400).json({ error: 'Invalid status' });
@@ -482,6 +488,9 @@ app.patch('/api/applications/:id', apiLimiter, requireAdmin, async (req, res) =>
 app.get('/api/applications/:id/files/:kind', apiLimiter, requireAdmin, async (req, res) => {
   try {
     const { id, kind } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid application ID format' });
+    }
     if (!['headshot', 'runway', 'fullBody'].includes(kind)) {
       return res.status(400).json({ error: 'Invalid file kind' });
     }
@@ -560,6 +569,46 @@ app.post('/api/payment-codes/redeem', submitLimiter, async (req, res) => {
   }
 });
 
+// --- Multer Error Handling Middleware ----------------------------------------
+
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(413).json({ error: 'File too large. Maximum size is 200 MB.' });
+    }
+    return res.status(400).json({ error: 'File upload error: ' + err.message });
+  }
+  if (err && err.message && err.message.startsWith('File type not allowed')) {
+    return res.status(415).json({ error: err.message });
+  }
+  // Generic fallback error handler
+  console.error('Unhandled express error:', err);
+  res.status(500).json({ error: 'Internal server error' });
+});
+
+// --- Process-Level Error Handlers --------------------------------------------
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+  process.exit(1);
+});
+
+// --- Mongoose Connection Events ----------------------------------------------
+
+mongoose.connection.on('error', (err) => {
+  console.error('MongoDB connection error:', err.message || err);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.warn('MongoDB disconnected. Mongoose will attempt to reconnect.');
+});
+
+mongoose.connection.on('reconnected', () => {
+  console.log('MongoDB reconnected.');
 // --- Training Events ---------------------------------------------------------
 
 const eventUpload = multer({

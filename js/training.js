@@ -57,15 +57,18 @@
         try {
             const res = await fetch(base + '/api/events');
             if (!res.ok) {
-                if (loading) loading.textContent = 'Unable to load events.';
+                let detail = '';
+                try { detail = (await res.json()).error || ''; } catch (e) { /* response not JSON */ }
+                console.error('Load events failed:', res.status, detail);
+                if (loading) loading.textContent = detail || 'Unable to load events (HTTP ' + res.status + ').';
                 return;
             }
             const events = await res.json();
             if (loading) hide(loading);
             renderEvents(events);
         } catch (err) {
-            console.error('Load events error:', err);
-            if (loading) loading.textContent = 'Unable to load events.';
+            console.error('Load events error:', err.message || err);
+            if (loading) loading.textContent = 'Unable to load events. Network error — check your connection.';
         }
     }
 
@@ -75,7 +78,7 @@
             const id = localStorage.getItem('lastApplicationId');
             if (refEl && id) refEl.textContent = id;
         } catch (err) {
-            // ignore storage errors
+            console.warn('localStorage unavailable, cannot restore application ID:', err.message);
         }
 
         fetchEvents();

@@ -17,7 +17,7 @@
     }
 
     function setAdminToken(token) {
-        try { if (token) { localStorage.setItem('rollex_admin_token', token); } else { localStorage.removeItem('rollex_admin_token'); } } catch (e) { /* ignore */ }
+        try { if (token) { localStorage.setItem('rollex_admin_token', token); } else { localStorage.removeItem('rollex_admin_token'); } } catch (e) { console.warn('Failed to persist admin token to localStorage:', e.message); }
     }
 
     function getAdminEmail() {
@@ -25,10 +25,14 @@
     }
 
     function setAdminEmail(email) {
-        try { if (email) { localStorage.setItem('rollex_admin_email', email); } else { localStorage.removeItem('rollex_admin_email'); } } catch (e) { /* ignore */ }
+        try { if (email) { localStorage.setItem('rollex_admin_email', email); } else { localStorage.removeItem('rollex_admin_email'); } } catch (e) { console.warn('Failed to persist admin email to localStorage:', e.message); }
     }
 
     async function apiFetch(path, options) {
+        const base = getApiBase();
+        if (!base) throw new Error('API_BASE_URL is not configured.');
+        const token = getAdminToken();
+        const headers = Object.assign({ 'Content-Type': 'application/json' }, (options && options.headers) || {});
         var base = getApiBase();
         var token = getAdminToken();
         var headers = Object.assign({ 'Content-Type': 'application/json' }, (options && options.headers) || {});
@@ -258,10 +262,14 @@
                 body: JSON.stringify({ status: newStatus }),
             });
             if (!res.ok) {
-                setNotice('Unable to update status.');
+                let detail = '';
+                try { detail = (await res.json()).error || ''; } catch (e) { /* response not JSON */ }
+                setNotice('Unable to update status.' + (detail ? ' ' + detail : ''));
+                console.error('Status update failed:', res.status, detail);
             }
         } catch (err) {
-            setNotice('Unable to update status.');
+            setNotice('Unable to update status. Network error.');
+            console.error('Status update error:', err.message || err);
         }
     }
 
@@ -277,15 +285,24 @@
                 body: JSON.stringify({ amount: amountValue }),
             });
             if (!res.ok) {
-                setCashNotice('Unable to generate code.');
+                let detail = '';
+                try { detail = (await res.json()).error || ''; } catch (e) { /* response not JSON */ }
+                setCashNotice(detail || 'Unable to generate code.');
+                console.error('Cash code generation failed:', res.status, detail);
                 return;
             }
             const data = await res.json();
+            if (!data.code) {
+                setCashNotice('Code generation failed: empty response.');
+                console.error('Cash code response missing code:', data);
+                return;
+            }
             const output = $('generatedCashCode');
             if (output) output.textContent = 'Code: ' + data.code;
             setCashNotice('');
         } catch (err) {
-            setCashNotice('Unable to generate code.');
+            setCashNotice('Unable to generate code. Network error.');
+            console.error('Cash code error:', err.message || err);
         }
     }
 
@@ -309,16 +326,21 @@
                     return;
                 }
                 if (!res.ok) {
-                    setNotice('Unable to load applications.');
+                    let detail = '';
+                    try { detail = (await res.json()).error || ''; } catch (e) { /* response not JSON */ }
+                    setNotice('Unable to load applications.' + (detail ? ' ' + detail : ''));
+                    console.error('Poll failed:', res.status, detail);
                     return;
                 }
                 const apps = await res.json();
                 state.applications = apps;
                 setLoading(false);
+                setNotice('');
                 renderTable();
             } catch (err) {
                 setLoading(false);
-                setNotice('Unable to load applications.');
+                setNotice('Unable to load applications. Network error.');
+                console.error('Poll error:', err.message || err);
             }
         }
 
@@ -392,15 +414,24 @@
                     body: JSON.stringify({ email, password }),
                 });
                 if (!res.ok) {
-                    setNotice('Sign in failed. Check credentials.');
+                    let detail = '';
+                    try { detail = (await res.json()).error || ''; } catch (e) { /* response not JSON */ }
+                    setNotice(detail || 'Sign in failed. Check credentials.');
+                    console.error('Login failed:', res.status, detail);
                     return;
                 }
                 const data = await res.json();
+                if (!data.token) {
+                    setNotice('Sign in failed: no token received.');
+                    console.error('Login response missing token:', data);
+                    return;
+                }
                 setAdminToken(data.token);
                 setAdminEmail(data.email);
                 handleSignedIn(data.email);
             } catch (err) {
-                setNotice('Sign in failed. Check credentials.');
+                setNotice('Sign in failed. Network error — check your connection.');
+                console.error('Login error:', err.message || err);
             }
         });
 
