@@ -24,6 +24,7 @@
 require('dotenv').config();
 
 const express = require('express');
+const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -53,7 +54,7 @@ const EMAIL_ADMIN = process.env.EMAIL_ADMIN || '';
 const UPLOADS_DIR = process.env.UPLOADS_DIR
   ? path.resolve(process.env.UPLOADS_DIR)
   : path.join(__dirname, 'uploads');
-const CORS_ORIGIN = process.env.CORS_ORIGIN || '*';
+const CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:3000';
 
 // --- Rate Limiters -----------------------------------------------------------
 
@@ -86,7 +87,7 @@ const submitLimiter = rateLimit({
 
 // --- Constants ---------------------------------------------------------------
 
-const MAX_FILE_SIZE_BYTES = 200 * 1024 * 1024; // 200 MB
+const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
 const JWT_EXPIRES_IN = '12h';
 // POLL_INTERVAL_MS: frontend polls every 15s (see js/admin.js)
 
@@ -285,15 +286,13 @@ async function sendEmails(applicationId, data) {
 
 const app = express();
 
+app.use(helmet());
 app.use(cors({
   origin: CORS_ORIGIN,
   methods: ['GET', 'POST', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 app.use(express.json());
-
-// Serve uploaded files
-app.use('/uploads', express.static(UPLOADS_DIR));
 
 // --- Routes ------------------------------------------------------------------
 
@@ -403,7 +402,7 @@ app.post(
       res.status(201).json({ id: appId });
     } catch (err) {
       console.error(err);
-      res.status(500).json({ error: err.message || 'Submission failed' });
+      res.status(500).json({ error: 'Submission failed' });
     }
   }
 );
@@ -519,10 +518,16 @@ app.get('/api/applications/:id/files/:kind', apiLimiter, requireAdmin, async (re
 
 // POST /api/payment-codes  (admin only)  { amount? }
 function generateCode() {
+  const crypto = require('crypto');
   const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const limit = alphabet.length;
+  const maxValid = 256 - (256 % limit);
   let out = '';
-  for (let i = 0; i < 8; i += 1) {
-    out += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+  while (out.length < 8) {
+    const byte = crypto.randomBytes(1)[0];
+    if (byte < maxValid) {
+      out += alphabet.charAt(byte % limit);
+    }
   }
   return 'RM-' + out;
 }
