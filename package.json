@@ -1,5 +1,24 @@
 {
+  "scripts": {
+    "test": "jest --coverage"
+  },
   "dependencies": {
+    "@dataconnect/generated": "file:src/dataconnect-generated",
+    "firebase": "^12.8.0",
+    "mongoose": "^9.3.0"
+  },
+  "devDependencies": {
+    "@sendgrid/mail": "^8.1.6",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.5.2",
+    "jest": "^30.4.2",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.2.0",
+    "supertest": "^7.2.2",
+    "uuid": "^14.0.1"
     "mongoose": "^9.9.4"
   }
 }
